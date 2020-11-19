@@ -1,12 +1,6 @@
 import React, { ReactElement, useState } from 'react';
 import { Layout, Menu } from 'antd';
-import {
-    createFromIconfontCN,
-    MenuUnfoldOutlined,
-    MenuFoldOutlined,
-    LoginOutlined,
-    UserAddOutlined,
-} from '@ant-design/icons';
+import { createFromIconfontCN, MenuUnfoldOutlined, MenuFoldOutlined, LoginOutlined, UserAddOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
 
 const Icon = createFromIconfontCN({
@@ -23,85 +17,36 @@ export default function MainLayout(
             children?: React.ReactNode;
         }>
 ): ReactElement {
-    const [collapsed, setCollapsed] = useState(false);
     const router = useRouter();
-
-    const toggle = () => {
-        setCollapsed(!collapsed);
-    };
 
     return (
         <div className="content">
             <Layout style={{ height: '100vh', backgroundColor: 'transparent' }}>
-                <Sider trigger={null} collapsible collapsed={collapsed}>
+                <Sider>
                     <div className="logo">FiveRP.LT</div>
-                    <Menu
-                        theme="dark"
-                        mode="inline"
-                        defaultSelectedKeys={['1']}
-                    >
-                        <Menu.Item
-                            key="1"
-                            icon={<Icon type="iconnews1" />}
-                            onClick={() => router.push('/')}
-                        >
+                    <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+                        <Menu.Item key="1" icon={<Icon type="iconnews1" />} onClick={() => router.push('/')}>
                             Naujienos
                         </Menu.Item>
-                        <Menu.Item
-                            key="2"
-                            icon={<Icon type="iconupdate" />}
-                            onClick={() => router.push('/updates')}
-                        >
-                            Atnaujinimai
-                        </Menu.Item>
-                        <Menu.Item
-                            key="3"
-                            icon={<Icon type="iconstats" />}
-                            onClick={() => router.push('/stats')}
-                        >
+                        <Menu.Item key="3" icon={<Icon type="iconstats" />} onClick={() => router.push('/stats')}>
                             Statistika
                         </Menu.Item>
-                        <Menu.Item
-                            key="4"
-                            icon={<LoginOutlined />}
-                            onClick={() => router.push('/login')}
-                        >
+                        <Menu.Item key="4" icon={<LoginOutlined />} onClick={() => router.push('/login')}>
                             Prisijungti
                         </Menu.Item>
-                        <Menu.Item
-                            key="5"
-                            icon={<UserAddOutlined />}
-                            onClick={() => router.push('/register')}
-                        >
+                        <Menu.Item key="5" icon={<UserAddOutlined />} onClick={() => router.push('/register')}>
                             Registruotis
                         </Menu.Item>
                     </Menu>
                 </Sider>
-                <Layout
-                    className="site-layout"
-                    style={{ backgroundColor: 'rgba(0, 0, 0, 0.1)' }}
-                >
-                    <Header
-                        className="site-layout-background"
-                        style={{ padding: 0 }}
-                    >
-                        {React.createElement(
-                            collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-                            {
-                                className: 'trigger',
-                                onClick: toggle,
-                            }
-                        )}
+                <Layout>
+                    <Header style={{ backgroundColor: '#141414', padding: 0 }}>
+                        <Menu mode="horizontal">
+                            <Menu.Item key="mail">Navigation One</Menu.Item>
+                            <Menu.Item key="app">Navigation Two</Menu.Item>
+                        </Menu>
                     </Header>
-                    <Content
-                        style={{
-                            margin: '24px 16px',
-                            padding: 24,
-                            minHeight: 280,
-                        }}
-                    >
-                        {props.children}
-                    </Content>
+                    <Content style={{ paddingTop: 3 }}>{props.children}</Content>
                 </Layout>
             </Layout>
         </div>

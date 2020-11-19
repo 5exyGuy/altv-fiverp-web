@@ -1,26 +1,23 @@
-import { Column, Entity, OneToMany } from "typeorm";
-import { CharacterBusiness } from "./CharacterBusiness";
+import { Column, Entity, OneToMany } from 'typeorm';
+import { CharacterBusiness } from './CharacterBusiness';
 
-@Entity("business", { schema: "fiverp" })
+@Entity('business', { schema: 'fiverp' })
 export class Business {
-    @Column("int", { primary: true, name: "id" })
+    @Column('int', { primary: true, name: 'id' })
     id: number;
 
-    @Column("int", { name: "price" })
+    @Column('int', { name: 'price' })
     price: number;
 
-    @Column("tinyint", { name: "lockState" })
+    @Column('tinyint', { name: 'lockState' })
     lockState: number;
 
-    @Column("varchar", { name: "zone", length: 255 })
+    @Column('varchar', { name: 'zone', length: 255 })
     zone: string;
 
-    @Column("varchar", { name: "street", length: 255 })
+    @Column('varchar', { name: 'street', length: 255 })
     street: string;
 
-    @OneToMany(
-        () => CharacterBusiness,
-        (characterbusiness) => characterbusiness.business
-    )
-    characterbusinesses: CharacterBusiness[];
+    @OneToMany(() => CharacterBusiness, (characterbusiness) => characterbusiness.business)
+    characterBusinesses: CharacterBusiness[];
 }

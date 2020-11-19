@@ -1,74 +1,60 @@
-import {
-    Column,
-    Entity,
-    Index,
-    JoinColumn,
-    ManyToOne,
-    OneToMany,
-    OneToOne,
-} from "typeorm";
-import { Character } from "./Character";
-import { Vehicle } from "./Vehicle";
-import { VehicleInventory } from "./VehicleInventory";
-import { VehicleProperties } from "./VehicleProperties";
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, OneToOne } from 'typeorm';
+import { Character } from './Character';
+import { Vehicle } from './Vehicle';
+import { VehicleInventory } from './VehicleInventory';
+import { VehicleProperties } from './VehicleProperties';
 
-@Index("fk_CharacterVehicle_Vehicle", ["vehicleId"], {})
-@Index("fk_CharacterVehicle_Character", ["characterId"], {})
-@Entity("charactervehicle", { schema: "fiverp" })
+@Index('fk_CharacterVehicle_Vehicle', ['vehicleId'], {})
+@Index('fk_CharacterVehicle_Character', ['characterId'], {})
+@Entity('charactervehicle', { schema: 'fiverp' })
 export class CharacterVehicle {
-    @Column("int", { primary: true, name: "id" })
+    @Column('int', { primary: true, name: 'id' })
     id: number;
 
-    @Column("int", { name: "vehicleId" })
+    @Column('int', { name: 'vehicleId' })
     vehicleId: number;
 
-    @Column("int", { name: "characterId" })
+    @Column('int', { name: 'characterId' })
     characterId: number;
 
-    @Column("smallint", { name: "destroyed" })
+    @Column('smallint', { name: 'destroyed' })
     destroyed: number;
 
-    @Column("longtext", { name: "position" })
+    @Column('longtext', { name: 'position' })
     position: string;
 
-    @Column("longtext", { name: "rotation" })
+    @Column('longtext', { name: 'rotation' })
     rotation: string;
 
-    @Column("smallint", { name: "fuel" })
+    @Column('smallint', { name: 'fuel' })
     fuel: number;
 
-    @Column("int", { name: "dimension" })
+    @Column('int', { name: 'dimension' })
     dimension: number;
 
-    @Column("smallint", { name: "lockState" })
+    @Column('smallint', { name: 'lockState' })
     lockState: number;
 
-    @Column("varchar", { name: "numberPlate", length: 255 })
+    @Column('varchar', { name: 'numberPlate', length: 255 })
     numberPlate: string;
 
-    @ManyToOne(() => Character, (character) => character.charactervehicles, {
-        onDelete: "RESTRICT",
-        onUpdate: "RESTRICT",
+    @ManyToOne(() => Character, (character) => character.characterVehicles, {
+        onDelete: 'RESTRICT',
+        onUpdate: 'RESTRICT',
     })
-    @JoinColumn([{ name: "characterId", referencedColumnName: "id" }])
+    @JoinColumn([{ name: 'characterId', referencedColumnName: 'id' }])
     character: Character;
 
-    @ManyToOne(() => Vehicle, (vehicle) => vehicle.charactervehicles, {
-        onDelete: "RESTRICT",
-        onUpdate: "RESTRICT",
+    @ManyToOne(() => Vehicle, (vehicle) => vehicle.characterVehicles, {
+        onDelete: 'RESTRICT',
+        onUpdate: 'RESTRICT',
     })
-    @JoinColumn([{ name: "vehicleId", referencedColumnName: "id" }])
+    @JoinColumn([{ name: 'vehicleId', referencedColumnName: 'id' }])
     vehicle: Vehicle;
 
-    @OneToMany(
-        () => VehicleInventory,
-        (vehicleinventory) => vehicleinventory.vehicle
-    )
-    vehicleinventories: VehicleInventory[];
+    @OneToMany(() => VehicleInventory, (vehicleinventory) => vehicleinventory.vehicle)
+    vehicleInventories: VehicleInventory[];
 
-    @OneToOne(
-        () => VehicleProperties,
-        (vehicleproperties) => vehicleproperties.characterVehicle
-    )
-    vehicleproperties: VehicleProperties[];
+    @OneToOne(() => VehicleProperties, (vehicleproperties) => vehicleproperties.characterVehicle)
+    vehicleProperties: VehicleProperties[];
 }

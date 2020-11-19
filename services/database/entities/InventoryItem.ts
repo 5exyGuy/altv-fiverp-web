@@ -1,37 +1,37 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
-import { Inventory } from "./Inventory";
-import { Item } from "./Item";
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
+import { Inventory } from './Inventory';
+import { Item } from './Item';
 
-@Index("fk_InventoryItems_Items", ["itemId"], {})
-@Index("fk_InventoryItems_Inventories", ["inventoryId"], {})
-@Entity("inventoryitem", { schema: "fiverp" })
+@Index('fk_InventoryItems_Items', ['itemId'], {})
+@Index('fk_InventoryItems_Inventories', ['inventoryId'], {})
+@Entity('inventoryitem', { schema: 'fiverp' })
 export class InventoryItem {
-    @Column("int", { primary: true, name: "id" })
+    @Column('int', { primary: true, name: 'id' })
     id: number;
 
-    @Column("int", { name: "inventoryId" })
+    @Column('int', { name: 'inventoryId' })
     inventoryId: number;
 
-    @Column("int", { name: "itemId" })
+    @Column('int', { name: 'itemId' })
     itemId: number;
 
-    @Column("smallint", { name: "amount" })
+    @Column('smallint', { name: 'amount' })
     amount: number;
 
-    @Column("smallint", { name: "slot" })
+    @Column('smallint', { name: 'slot' })
     slot: number;
 
-    @ManyToOne(() => Inventory, (inventory) => inventory.inventoryitems, {
-        onDelete: "RESTRICT",
-        onUpdate: "RESTRICT",
+    @ManyToOne(() => Inventory, (inventory) => inventory.inventoryItems, {
+        onDelete: 'RESTRICT',
+        onUpdate: 'RESTRICT',
     })
-    @JoinColumn([{ name: "inventoryId", referencedColumnName: "id" }])
+    @JoinColumn([{ name: 'inventoryId', referencedColumnName: 'id' }])
     inventory: Inventory;
 
-    @ManyToOne(() => Item, (item) => item.inventoryitems, {
-        onDelete: "RESTRICT",
-        onUpdate: "RESTRICT",
+    @ManyToOne(() => Item, (item) => item.inventoryItems, {
+        onDelete: 'RESTRICT',
+        onUpdate: 'RESTRICT',
     })
-    @JoinColumn([{ name: "itemId", referencedColumnName: "id" }])
+    @JoinColumn([{ name: 'itemId', referencedColumnName: 'id' }])
     item: Item;
 }

@@ -1,45 +1,35 @@
-import {
-    Column,
-    Entity,
-    Index,
-    JoinColumn,
-    ManyToOne,
-    OneToMany,
-} from "typeorm";
-import { House } from "./House";
-import { Character } from "./Character";
-import { HouseInventory } from "./HouseInventory";
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { House } from './House';
+import { Character } from './Character';
+import { HouseInventory } from './HouseInventory';
 
-@Index("fk_Houses_Characters", ["characterId"], {})
-@Index("fk_CharacterHouse_House", ["houseId"], {})
-@Entity("characterhouse", { schema: "fiverp" })
+@Index('fk_Houses_Characters', ['characterId'], {})
+@Index('fk_CharacterHouse_House', ['houseId'], {})
+@Entity('characterhouse', { schema: 'fiverp' })
 export class CharacterHouse {
-    @Column("int", { primary: true, name: "id" })
+    @Column('int', { primary: true, name: 'id' })
     id: number;
 
-    @Column("int", { name: "houseId" })
+    @Column('int', { name: 'houseId' })
     houseId: number;
 
-    @Column("int", { name: "characterId" })
+    @Column('int', { name: 'characterId' })
     characterId: number;
 
-    @ManyToOne(() => House, (house) => house.characterhouses, {
-        onDelete: "RESTRICT",
-        onUpdate: "RESTRICT",
+    @ManyToOne(() => House, (house) => house.characterHouses, {
+        onDelete: 'RESTRICT',
+        onUpdate: 'RESTRICT',
     })
-    @JoinColumn([{ name: "houseId", referencedColumnName: "id" }])
+    @JoinColumn([{ name: 'houseId', referencedColumnName: 'id' }])
     house: House;
 
-    @ManyToOne(() => Character, (character) => character.characterhouses, {
-        onDelete: "RESTRICT",
-        onUpdate: "RESTRICT",
+    @ManyToOne(() => Character, (character) => character.characterHouses, {
+        onDelete: 'RESTRICT',
+        onUpdate: 'RESTRICT',
     })
-    @JoinColumn([{ name: "characterId", referencedColumnName: "id" }])
+    @JoinColumn([{ name: 'characterId', referencedColumnName: 'id' }])
     character: Character;
 
-    @OneToMany(
-        () => HouseInventory,
-        (houseinventory) => houseinventory.characterHouse
-    )
-    houseinventories: HouseInventory[];
+    @OneToMany(() => HouseInventory, (houseinventory) => houseinventory.characterHouse)
+    houseInventories: HouseInventory[];
 }

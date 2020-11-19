@@ -1,29 +1,15 @@
-import {
-    Button,
-    Card,
-    Checkbox,
-    Col,
-    Input,
-    Row,
-    Form,
-    PageHeader,
-} from 'antd';
+import { Button, Card, Checkbox, Col, Input, Row, Form, PageHeader } from 'antd';
 import React, { ReactElement } from 'react';
 import Link from 'next/link';
 import './style.module.less';
-import MainLayout from '../../components/MainLayout';
 
 export default function Login(): ReactElement {
     return (
-        <Row type="flex" justify="center" align="middle">
+        <Row justify="center" align="middle" style={{ height: '100%' }}>
             <Col>
                 <Card>
                     <PageHeader title="Prisijungimas" />
-                    <Form
-                        name="normal_login"
-                        className="login-form"
-                        initialValues={{ remember: true }}
-                    >
+                    <Form name="normal_login" className="login-form" initialValues={{ remember: false }}>
                         <Form.Item
                             name="username"
                             rules={[
@@ -59,11 +45,7 @@ export default function Login(): ReactElement {
                         </Form.Item>
 
                         <Form.Item>
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                className="login-form-button"
-                            >
+                            <Button type="primary" htmlType="submit" className="login-form-button">
                                 Prisijungti
                             </Button>
                             arba <Link href="/register">registruotis!</Link>

@@ -2,19 +2,14 @@ import { Button, Card, Col, Input, Row, Form, PageHeader } from 'antd';
 import React, { ReactElement } from 'react';
 import Link from 'next/link';
 import './style.module.less';
-import MainLayout from '../../components/MainLayout';
 
 export default function Register(): ReactElement {
     return (
-        <Row type="flex" justify="center" align="middle">
+        <Row justify="center" align="middle" style={{ height: '100%' }}>
             <Col>
                 <Card>
                     <PageHeader title="Registracija" />
-                    <Form
-                        name="normal_login"
-                        className="login-form"
-                        initialValues={{ remember: true }}
-                    >
+                    <Form name="normal_login" className="login-form">
                         <Form.Item
                             name="username"
                             rules={[
@@ -61,17 +56,10 @@ export default function Register(): ReactElement {
                             ]}
                             hasFeedback
                         >
-                            <Input
-                                type="password"
-                                placeholder="Pakartokite slaptažodį"
-                            />
+                            <Input type="password" placeholder="Pakartokite slaptažodį" />
                         </Form.Item>
                         <Form.Item>
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                className="login-form-button"
-                            >
+                            <Button type="primary" htmlType="submit" className="login-form-button">
                                 Registruotis
                             </Button>
                             arba <Link href="/login">prisijungti!</Link>

@@ -5,12 +5,7 @@ import React from 'react';
 export default function Error404() {
     return (
         <div className="content">
-            <Row
-                type="flex"
-                justify="center"
-                align="middle"
-                style={{ minHeight: '100vh' }}
-            >
+            <Row justify="center" align="middle" style={{ minHeight: '100vh' }}>
                 <Col>
                     <Result
                         title="404"
