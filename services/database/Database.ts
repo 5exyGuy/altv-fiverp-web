@@ -1,11 +1,10 @@
-import mysql from 'mysql2';
-import { Connection } from 'typeorm';
+import { Connection, createConnection } from 'typeorm';
 
 export default class Database {
-    private _mysqlPool: mysql.Pool;
+    private _connection: Connection;
 
     public constructor() {
-        this._mysqlPool = mysql.createPool({
+        this._connection = createConnection({
             host: 'localhost',
             user: 'root',
             database: 'fiverp',
@@ -13,10 +12,6 @@ export default class Database {
             connectionLimit: 10,
             queueLimit: 0,
         });
-    }
-
-    public async getConnection() {
-        return await this._mysqlPool.promise().getConnection();
     }
 
     private static _instance: Database = new Database();

@@ -1,40 +1,55 @@
-class Entity {
-    public constructor() {}
-}
+import User from '../entities/User';
+import EntityBuilder from '../EntityBuilder';
+import LoginHistory from '../entities/LoginHistory';
+import Character from '../entities/Character';
+import LoginHistoryBuilder from './LoginHistoryBuilder';
+import CharacterBuilder from './CharacterBuilder';
 
-interface EntityBuilder {
-    build(): Entity;
-}
-
-class User {
-    public username: string;
-    public password: string;
-
-    public constructor() {}
-}
-
-class UserBuilder implements EntityBuilder {
-    private _user: User;
-
-    public constructor() {
-        this._user = new User();
-    }
+export default class UserBuilder extends EntityBuilder {
+    protected _entity: User;
 
     public setUsername(username: string): UserBuilder {
-        this._user.username = username;
+        this._entity.username = username;
+        return this;
+    }
+
+    public setEmail(email: string): UserBuilder {
+        this._entity.email = email;
         return this;
     }
 
     public setPassword(password: string): UserBuilder {
-        this._user.password = password;
+        this._entity.password = password;
         return this;
     }
 
-    public build(): User {
-        return this._user;
+    public setRegistrationDate(registrationDate: Date): UserBuilder {
+        this._entity.registrationDate = registrationDate;
+        return this;
+    }
+
+    public setId(id: number): UserBuilder {
+        this._entity.id = id;
+        return this;
+    }
+
+    public addLoginHistory(
+        loginHistory: LoginHistory | LoginHistoryBuilder
+    ): UserBuilder {
+        if (!this._entity.loginHistories)
+            this._entity.loginHistories = new Array<LoginHistory>();
+        if (loginHistory instanceof LoginHistoryBuilder)
+            loginHistory = <LoginHistory>loginHistory.build();
+        this._entity.loginHistories.push(loginHistory);
+        return this;
+    }
+
+    public addCharacter(character: Character | CharacterBuilder): UserBuilder {
+        if (!this._entity.characters)
+            this._entity.characters = new Array<LoginHistory>();
+        if (character instanceof CharacterBuilder)
+            character = <Character>character.build();
+        this._entity.characters.push(character);
+        return this;
     }
 }
-
-const user: User = new User();
-user.username = 'unknown';
-user.password = 'pw123';

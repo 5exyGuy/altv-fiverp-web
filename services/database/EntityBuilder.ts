@@ -1,6 +1,9 @@
-import Entity from './Entity';
+import { BaseEntity } from 'typeorm';
 
-export default interface EntityBuilder {
-    build(): Entity;
-    save(): void;
+export default class EntityBuilder {
+    protected _entity: BaseEntity;
+
+    public build(): BaseEntity {
+        return this._entity;
+    }
 }

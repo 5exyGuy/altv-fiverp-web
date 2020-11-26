@@ -1,34 +1,34 @@
-export default class LoginHistory {
-    private _id: number;
-    private _date: Date;
-    private _ip: string;
-    private _socialId: string;
-    private _hwidExHash: number;
-    private _hwidHash: number;
+import { BaseEntity, Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
+import User from './User';
 
-    public constructor() {}
+@Index('fk_User_id', ['fkUserId'], { unique: true })
+@Entity('LoginHistory', { schema: 'test' })
+export default class LoginHistory extends BaseEntity {
+    @Column('datetime', { name: 'date' })
+    date: Date;
 
-    public get id(): number {
-        return this._id;
-    }
+    @Column('varchar', { name: 'ip', length: 255 })
+    ip: string;
 
-    public get date(): Date {
-        return this._date;
-    }
+    @Column('varchar', { name: 'socialId', length: 255 })
+    socialId: string;
 
-    public get ip(): string {
-        return this._ip;
-    }
+    @Column('binary', { name: 'hwidExHash', length: 1 })
+    hwidExHash: Buffer;
 
-    public get socialId(): string {
-        return this._socialId;
-    }
+    @Column('binary', { name: 'hwidHash', length: 1 })
+    hwidHash: Buffer;
 
-    public get hwidExHash(): number {
-        return this._hwidExHash;
-    }
+    @Column('int', { primary: true, name: 'id' })
+    id: number;
 
-    public get hwidHash(): number {
-        return this._hwidHash;
-    }
+    @Column('int', { name: 'fk_User_id', unique: true })
+    fkUserId: number;
+
+    @ManyToOne(() => User, (user) => user.loginHistories, {
+        onDelete: 'NO ACTION',
+        onUpdate: 'NO ACTION',
+    })
+    @JoinColumn([{ name: 'fk_User_id', referencedColumnName: 'id' }])
+    fkUser: User;
 }
