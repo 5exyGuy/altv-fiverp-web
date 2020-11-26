@@ -1,11 +1,9 @@
-import nextConnect from 'next-connect';
-import auth from '../../services/auth/Auth';
-import passport from '../../services/auth/Passport';
+import { NextApiRequest, NextApiResponse } from 'next';
+import LoginRequestHandler from '../../services/request/auth/LoginRequestHandler';
+import { RequestMethod } from '../../services/request/RequestMethod';
 
-const handler = nextConnect();
+const loginHandler: LoginRequestHandler = new LoginRequestHandler();
 
-handler.use(auth).post(passport.authenticate('local'), (req, res) => {
-    res.json({ user: req.user });
-});
-
-export default handler;
+export default function (request: NextApiRequest, response: NextApiResponse) {
+    loginHandler.handleMethod(RequestMethod.GET, request, response);
+}

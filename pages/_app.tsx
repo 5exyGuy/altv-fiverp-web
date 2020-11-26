@@ -2,7 +2,7 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import React, { ReactElement } from 'react';
 import MainLayout from '../components/MainLayout';
-import '../styles/global.less';
+import './style.module.less';
 
 export default function App({ Component, pageProps }: AppProps): ReactElement {
     return (

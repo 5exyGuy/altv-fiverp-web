@@ -1,34 +1,34 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
-import { User } from './User';
+export default class LoginHistory {
+    private _id: number;
+    private _date: Date;
+    private _ip: string;
+    private _socialId: string;
+    private _hwidExHash: number;
+    private _hwidHash: number;
 
-@Index('fk_LoginHistories_Users', ['userId'], {})
-@Entity('loginhistory', { schema: 'fiverp' })
-export class LoginHistory {
-    @Column('int', { primary: true, name: 'id' })
-    id: number;
+    public constructor() {}
 
-    @Column('int', { name: 'userId' })
-    userId: number;
+    public get id(): number {
+        return this._id;
+    }
 
-    @Column('datetime', { name: 'date' })
-    date: Date;
+    public get date(): Date {
+        return this._date;
+    }
 
-    @Column('varchar', { name: 'ip', length: 255 })
-    ip: string;
+    public get ip(): string {
+        return this._ip;
+    }
 
-    @Column('varchar', { name: 'socialId', length: 255 })
-    socialId: string;
+    public get socialId(): string {
+        return this._socialId;
+    }
 
-    @Column('varchar', { name: 'hwidExHash', length: 255 })
-    hwidExHash: string;
+    public get hwidExHash(): number {
+        return this._hwidExHash;
+    }
 
-    @Column('varchar', { name: 'hwidHash', length: 255 })
-    hwidHash: string;
-
-    @ManyToOne(() => User, (user) => user.loginHistories, {
-        onDelete: 'RESTRICT',
-        onUpdate: 'RESTRICT',
-    })
-    @JoinColumn([{ name: 'userId', referencedColumnName: 'id' }])
-    user: User;
+    public get hwidHash(): number {
+        return this._hwidHash;
+    }
 }

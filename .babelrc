@@ -12,13 +12,6 @@
             {
                 "loose": false
             }
-        ],
-        [
-            "import",
-            {
-                "libraryName": "antd",
-                "style": true
-            }
         ]
     ]
 }
