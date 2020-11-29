@@ -1,0 +1,33 @@
+[
+  {
+    "resultsPath": "/home/nick/GitHub/altv-fiverp-web/output",
+    "pluralizeNames": true,
+    "noConfigs": false,
+    "convertCaseFile": "pascal",
+    "convertCaseEntity": "pascal",
+    "convertCaseProperty": "camel",
+    "convertEol": "CRLF",
+    "propertyVisibility": "public",
+    "lazy": true,
+    "activeRecord": false,
+    "generateConstructor": false,
+    "customNamingStrategyPath": "",
+    "relationIds": false,
+    "strictMode": "!",
+    "skipSchema": true,
+    "indexFile": true,
+    "exportType": "default"
+  },
+  {
+    "host": "127.0.0.1",
+    "port": 3306,
+    "databaseName": "test",
+    "user": "root",
+    "password": "aurejus45",
+    "databaseType": "mysql",
+    "schemaName": "",
+    "ssl": false,
+    "skipTables": [],
+    "onlyTables": []
+  }
+]

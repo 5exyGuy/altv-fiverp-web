@@ -1,0 +1,14 @@
+[
+  {
+    "name": "default",
+    "type": "mysql",
+    "host": "127.0.0.1",
+    "port": 3306,
+    "username": "root",
+    "password": "aurejus45",
+    "database": "test",
+    "schema": "",
+    "synchronize": false,
+    "entities": ["entities/*.js"]
+  }
+]

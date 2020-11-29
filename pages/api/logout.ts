@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import RequestHandler from '../../services/request/RequestHandler';
-import { RequestMethod } from '../../services/request/RequestMethod';
+import RequestHandler from '../../lib/request/RequestHandler';
+import { RequestMethod } from '../../lib/request/RequestMethod';
 
 class SimpleRequestHandler extends RequestHandler {
     public handle(request: NextApiRequest, response: NextApiResponse): void {

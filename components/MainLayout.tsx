@@ -1,8 +1,21 @@
 import React, { ReactElement, useState } from 'react';
-import { Button, Layout, Input, Menu, Modal, Form, Checkbox, Tabs, message } from 'antd';
-import { createFromIconfontCN, LoginOutlined, UserAddOutlined } from '@ant-design/icons';
+import {
+    Button,
+    Layout,
+    Input,
+    Menu,
+    Modal,
+    Form,
+    Checkbox,
+    Tabs,
+    message,
+} from 'antd';
+import {
+    createFromIconfontCN,
+    LoginOutlined,
+    UserAddOutlined,
+} from '@ant-design/icons';
 import { useRouter } from 'next/router';
-import { useUser } from '../services/request/auth/Hooks';
 
 const Icon = createFromIconfontCN({
     scriptUrl: '//at.alicdn.com/t/font_2209993_s3w4xl9yid.js',
@@ -18,40 +31,60 @@ export default function MainLayout(
             children?: React.ReactNode;
         }>
 ): ReactElement {
-    const [user, { mutate }] = useUser();
+    // const [user, { mutate }] = useUser();
     const [authVisible, setAuthVisible] = useState(false);
     const router = useRouter();
 
-    const submitLogin = async (e: any) => {
-        const result: Response = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({}),
-        });
+    // const submitLogin = async (e: any) => {
+    //     const result: Response = await fetch('/api/login', {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({}),
+    //     });
 
-        if (result.status === 200) {
-            const user: any = await result.json();
-            mutate(user);
-            message.success('This is an success message');
-        } else message.error('This is an error message');
-    };
+    //     if (result.status === 200) {
+    //         const user: any = await result.json();
+    //         mutate(user);
+    //         message.success('This is an success message');
+    //     } else message.error('This is an error message');
+    // };
 
     return (
         <div className="content">
             <Layout style={{ height: '100vh', backgroundColor: 'transparent' }}>
                 <Sider>
                     <div className="logo">FiveRP.LT</div>
-                    <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-                        <Menu.Item key="1" icon={<Icon type="iconnews1" />} onClick={() => router.push('/')}>
+                    <Menu
+                        theme="dark"
+                        mode="inline"
+                        defaultSelectedKeys={['1']}
+                    >
+                        <Menu.Item
+                            key="1"
+                            icon={<Icon type="iconnews1" />}
+                            onClick={() => router.push('/')}
+                        >
                             Naujienos
                         </Menu.Item>
-                        <Menu.Item key="3" icon={<Icon type="iconstats" />} onClick={() => router.push('/stats')}>
+                        <Menu.Item
+                            key="3"
+                            icon={<Icon type="iconstats" />}
+                            onClick={() => router.push('/stats')}
+                        >
                             Statistika
                         </Menu.Item>
-                        <Menu.Item key="4" icon={<LoginOutlined />} onClick={() => setAuthVisible(true)}>
+                        <Menu.Item
+                            key="4"
+                            icon={<LoginOutlined />}
+                            onClick={() => setAuthVisible(true)}
+                        >
                             Prisijungti
                         </Menu.Item>
-                        <Menu.Item key="5" icon={<UserAddOutlined />} onClick={() => setAuthVisible(true)}>
+                        <Menu.Item
+                            key="5"
+                            icon={<UserAddOutlined />}
+                            onClick={() => setAuthVisible(true)}
+                        >
                             Registruotis
                         </Menu.Item>
                     </Menu>
@@ -63,7 +96,9 @@ export default function MainLayout(
                             <Menu.Item key="app">Navigation Two</Menu.Item>
                         </Menu>
                     </Header>
-                    <Content style={{ paddingTop: 3 }}>{props.children}</Content>
+                    <Content style={{ paddingTop: 3 }}>
+                        {props.children}
+                    </Content>
                 </Layout>
             </Layout>
             <Modal
@@ -80,7 +115,10 @@ export default function MainLayout(
             >
                 <Tabs defaultActiveKey="1" centered>
                     <Tabs.TabPane tab="Prisijungti" key="1">
-                        <Form initialValues={{ remember: false }} onFinish={submitLogin}>
+                        <Form
+                            initialValues={{ remember: false }}
+                            // onFinish={submitLogin}
+                        >
                             <Form.Item
                                 name="username"
                                 rules={[
@@ -103,11 +141,16 @@ export default function MainLayout(
                                 ]}
                                 hasFeedback
                             >
-                                <Input type="password" placeholder="Slaptažodis" />
+                                <Input
+                                    type="password"
+                                    placeholder="Slaptažodis"
+                                />
                             </Form.Item>
                             <Form.Item>
                                 <Form.Item name="remember">
-                                    <Checkbox checked={false}>Prisiminti mane</Checkbox>
+                                    <Checkbox checked={false}>
+                                        Prisiminti mane
+                                    </Checkbox>
                                 </Form.Item>
 
                                 {/* <a href="">Pamiršau slaptažodį</a> */}
@@ -156,7 +199,10 @@ export default function MainLayout(
                                 ]}
                                 hasFeedback
                             >
-                                <Input type="password" placeholder="Slaptažodis" />
+                                <Input
+                                    type="password"
+                                    placeholder="Slaptažodis"
+                                />
                             </Form.Item>
                             <Form.Item
                                 name="repeatpassword"
@@ -168,7 +214,10 @@ export default function MainLayout(
                                 ]}
                                 hasFeedback
                             >
-                                <Input type="password" placeholder="Pakartokite slaptažodį" />
+                                <Input
+                                    type="password"
+                                    placeholder="Pakartokite slaptažodį"
+                                />
                             </Form.Item>
                             <Form.Item>
                                 <Button type="primary" htmlType="submit">
@@ -177,7 +226,10 @@ export default function MainLayout(
                             </Form.Item>
                         </Form>
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab={<div style={{ color: '#e84749' }}>Pamiršau</div>} key="3">
+                    <Tabs.TabPane
+                        tab={<div style={{ color: '#e84749' }}>Pamiršau</div>}
+                        key="3"
+                    >
                         <Form>
                             <Form.Item
                                 name="email"
