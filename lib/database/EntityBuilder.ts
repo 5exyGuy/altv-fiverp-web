@@ -1,9 +1,9 @@
-import { BaseEntity } from 'typeorm';
+import Entity from './Entity';
 
 export default class EntityBuilder {
-    protected _entity: BaseEntity = new BaseEntity();
+    protected _entity: Entity = new Entity();
 
-    public build(): BaseEntity {
+    public build(): Entity {
         return this._entity;
     }
 }

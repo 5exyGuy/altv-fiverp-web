@@ -4,6 +4,8 @@ import LoginHistory from '../entities/LoginHistory';
 import Character from '../entities/Character';
 import LoginHistoryBuilder from './LoginHistoryBuilder';
 import CharacterBuilder from './CharacterBuilder';
+import ConfirmationToken from '../entities/ConfirmationToken';
+import ConfirmationTokenBuilder from './ConfirmationTokenBuilder';
 
 export default class UserBuilder extends EntityBuilder {
     protected _entity: User = new User();
@@ -33,17 +35,25 @@ export default class UserBuilder extends EntityBuilder {
         return this;
     }
 
-    public addLoginHistory(loginHistory: LoginHistory | LoginHistoryBuilder): UserBuilder {
-        if (!this._entity.LoginHistory) this._entity.LoginHistory = new Array<LoginHistory>();
-        if (loginHistory instanceof LoginHistoryBuilder) loginHistory = <LoginHistory>loginHistory.build();
-        this._entity.LoginHistory.push(loginHistory);
-        return this;
-    }
-
     public addCharacter(character: Character | CharacterBuilder): UserBuilder {
         if (!this._entity.Character) this._entity.Character = new Array<Character>();
         if (character instanceof CharacterBuilder) character = <Character>character.build();
         this._entity.Character.push(character);
+        return this;
+    }
+
+    public addConfirmationToken(confirmationToken: ConfirmationToken | ConfirmationTokenBuilder): UserBuilder {
+        if (!this._entity.ConfirmationToken) this._entity.ConfirmationToken = new Array<ConfirmationToken>();
+        if (confirmationToken instanceof ConfirmationTokenBuilder)
+            confirmationToken = <ConfirmationToken>confirmationToken.build();
+        this._entity.ConfirmationToken.push(confirmationToken);
+        return this;
+    }
+
+    public addLoginHistory(loginHistory: LoginHistory | LoginHistoryBuilder): UserBuilder {
+        if (!this._entity.LoginHistory) this._entity.LoginHistory = new Array<LoginHistory>();
+        if (loginHistory instanceof LoginHistoryBuilder) loginHistory = <LoginHistory>loginHistory.build();
+        this._entity.LoginHistory.push(loginHistory);
         return this;
     }
 }

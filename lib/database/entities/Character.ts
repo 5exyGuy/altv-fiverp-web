@@ -13,8 +13,8 @@ import Message from './Message';
 export default class Character {
     public firstName: string;
     public lastName: string;
-    public cash: string;
-    public bank: string;
+    public cash: number;
+    public bank: number;
     public dead: boolean;
     public phoneNumber: string;
     public health: number;
@@ -32,10 +32,8 @@ export default class Character {
     public CharacterInventory: CharacterInventory[];
     public CharacterSkill: CharacterSkill[];
     public CharacterVehicle: CharacterVehicle[];
-    public Contact_CharacterToContact_fk_Character_id: Contact;
     public Contact_CharacterToContact_fk_Character_id1: Contact[];
     public Faction: Faction;
     public FactionMember: FactionMember[];
-    public Message_CharacterToMessage_fk_Character_id: Message;
     public Message_CharacterToMessage_fk_Character_id1: Message[];
 }

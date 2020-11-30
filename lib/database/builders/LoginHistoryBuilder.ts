@@ -31,9 +31,14 @@ export default class LoginHistoryBuilder extends EntityBuilder {
         return this;
     }
 
+    public setUserId(id: number): LoginHistoryBuilder {
+        this._entity.fk_User_id = id;
+        return this;
+    }
+
     public setUser(user: User | UserBuilder): LoginHistoryBuilder {
         if (user instanceof UserBuilder) user = <User>user.build();
-        this._entity.fkUser = user;
+        this._entity.User = user;
         return this;
     }
 }

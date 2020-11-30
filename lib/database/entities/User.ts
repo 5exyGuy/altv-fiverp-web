@@ -10,7 +10,7 @@ export default class User {
     public verified: boolean;
     public refreshToken: string;
     public id: number;
-    public Character: Character[];
-    public ConfirmationToken: ConfirmationToken[];
-    public LoginHistory: LoginHistory[];
+    public Character: Array<Character>;
+    public ConfirmationToken: Array<ConfirmationToken>;
+    public LoginHistory: Array<LoginHistory>;
 }

@@ -2,7 +2,7 @@ import CharacterVehicle from './CharacterVehicle';
 
 export default class Vehicle {
     public name: string;
-    public hash: Buffer;
+    public hash: string;
     public price: number;
     public manufacturer: string;
     public seats: number;
