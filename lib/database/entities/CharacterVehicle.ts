@@ -1,12 +1,12 @@
 import Vehicle from './Vehicle';
 import Character from './Character';
-import VechileInventory from './VechileInventory';
+import VechileInventory from './VehicleInventory';
 import VehicleProperties from './VehicleProperties';
 
 export default class CharacterVehicle {
     public destroyed: boolean;
-    public lastPosition: object;
-    public lastRotation: object;
+    public lastPosition: string;
+    public lastRotation: string;
     public fuel: number;
     public dimension: number;
     public lockState: string;

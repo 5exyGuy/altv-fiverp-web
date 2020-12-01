@@ -1,11 +1,25 @@
 import Character from '../entities/Character';
+import CharacterApartment from '../entities/CharacterApartment';
+import CharacterBusiness from '../entities/CharacterBusiness';
+import CharacterHouse from '../entities/CharacterHouse';
+import CharacterInventory from '../entities/CharacterInventory';
+import CharacterSkill from '../entities/CharacterSkill';
+import CharacterVehicle from '../entities/CharacterVehicle';
 import Contact from '../entities/Contact';
 import Faction from '../entities/Faction';
+import FactionMember from '../entities/FactionMember';
 import Message from '../entities/Message';
 import User from '../entities/User';
 import EntityBuilder from '../EntityBuilder';
+import CharacterApartmentBuilder from './CharacterApartmentBuilder';
+import CharacterBusinessBuilder from './CharacterBusinessBuilder';
+import CharacterHouseBuilder from './CharacterHouseBuilder';
+import CharacterInventoryBuilder from './CharacterInventoryBuilder';
+import CharacterSkillBuilder from './CharacterSkillBuilder';
+import CharacterVehicleBuilder from './CharacterVehicleBuilder';
 import ContactBuilder from './ContactBuilder';
 import FactionBuilder from './FactionBuilder';
+import FactionMemberBuilder from './FactionMemberBuilder';
 import MessageBuilder from './MessageBuilder';
 import UserBuilder from './UserBuilder';
 
@@ -88,6 +102,52 @@ export default class CharacterBuilder extends EntityBuilder {
         return this;
     }
 
+    public addBusinessInventory(characterApartment: CharacterApartment | CharacterApartmentBuilder): CharacterBuilder {
+        if (!this._entity.CharacterApartment) this._entity.CharacterApartment = new Array<CharacterApartment>();
+        if (characterApartment instanceof CharacterApartmentBuilder)
+            characterApartment = <CharacterApartment>characterApartment.build();
+        this._entity.CharacterApartment.push(characterApartment);
+        return this;
+    }
+
+    public addCharacterBusiness(characterBusiness: CharacterBusiness | CharacterBusinessBuilder): CharacterBuilder {
+        if (!this._entity.CharacterBusiness) this._entity.CharacterBusiness = new Array<CharacterBusiness>();
+        if (characterBusiness instanceof CharacterBusinessBuilder)
+            characterBusiness = <CharacterBusiness>characterBusiness.build();
+        this._entity.CharacterBusiness.push(characterBusiness);
+        return this;
+    }
+
+    public addCharacterHouse(characterHouse: CharacterHouse | CharacterHouseBuilder): CharacterBuilder {
+        if (!this._entity.CharacterHouse) this._entity.CharacterHouse = new Array<CharacterHouse>();
+        if (characterHouse instanceof CharacterHouseBuilder) characterHouse = <CharacterHouse>characterHouse.build();
+        this._entity.CharacterHouse.push(characterHouse);
+        return this;
+    }
+
+    public addCharacterInventory(characterInventory: CharacterInventory | CharacterInventoryBuilder): CharacterBuilder {
+        if (!this._entity.CharacterInventory) this._entity.CharacterInventory = new Array<CharacterInventory>();
+        if (characterInventory instanceof CharacterInventoryBuilder)
+            characterInventory = <CharacterInventory>characterInventory.build();
+        this._entity.CharacterInventory.push(characterInventory);
+        return this;
+    }
+
+    public addCharacterSkill(characterSkill: CharacterSkill | CharacterSkillBuilder): CharacterBuilder {
+        if (!this._entity.CharacterSkill) this._entity.CharacterSkill = new Array<CharacterSkill>();
+        if (characterSkill instanceof CharacterSkillBuilder) characterSkill = <CharacterSkill>characterSkill.build();
+        this._entity.CharacterSkill.push(characterSkill);
+        return this;
+    }
+
+    public addCharacterVehicle(characterVehicle: CharacterVehicle | CharacterVehicleBuilder): CharacterBuilder {
+        if (!this._entity.CharacterVehicle) this._entity.CharacterVehicle = new Array<CharacterVehicle>();
+        if (characterVehicle instanceof CharacterVehicleBuilder)
+            characterVehicle = <CharacterVehicle>characterVehicle.build();
+        this._entity.CharacterVehicle.push(characterVehicle);
+        return this;
+    }
+
     public addContact(contact: Contact | ContactBuilder): CharacterBuilder {
         if (!this._entity.Contact_CharacterToContact_fk_Character_id1)
             this._entity.Contact_CharacterToContact_fk_Character_id1 = new Array<Contact>();
@@ -99,6 +159,13 @@ export default class CharacterBuilder extends EntityBuilder {
     public setFaction(faction: Faction | FactionBuilder): CharacterBuilder {
         if (faction instanceof FactionBuilder) faction = <Faction>faction.build();
         this._entity.Faction = faction;
+        return this;
+    }
+
+    public addFactionMember(factionMember: FactionMember | FactionMemberBuilder): CharacterBuilder {
+        if (!this._entity.FactionMember) this._entity.FactionMember = new Array<FactionMember>();
+        if (factionMember instanceof FactionMemberBuilder) factionMember = <FactionMember>factionMember.build();
+        this._entity.FactionMember.push(factionMember);
         return this;
     }
 

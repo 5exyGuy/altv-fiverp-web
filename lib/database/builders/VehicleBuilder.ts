@@ -1,6 +1,7 @@
 import CharacterVehicle from '../entities/CharacterVehicle';
 import Vehicle from '../entities/Vehicle';
 import EntityBuilder from '../EntityBuilder';
+import CharacterVehicleBuilder from './CharacterVehicleBuilder';
 
 export default class VehicleBuilder extends EntityBuilder {
     protected _entity: Vehicle;
@@ -82,6 +83,14 @@ export default class VehicleBuilder extends EntityBuilder {
 
     public setId(id: number): VehicleBuilder {
         this._entity.id = id;
+        return this;
+    }
+
+    public addCharacterVehicle(characterVehicle: CharacterVehicle | CharacterVehicleBuilder): VehicleBuilder {
+        if (!this._entity.CharacterVehicle) this._entity.CharacterVehicle = new Array<CharacterVehicle>();
+        if (characterVehicle instanceof CharacterVehicleBuilder)
+            characterVehicle = <CharacterVehicle>characterVehicle.build();
+        this._entity.CharacterVehicle.push(characterVehicle);
         return this;
     }
 }

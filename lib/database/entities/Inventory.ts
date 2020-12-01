@@ -3,7 +3,7 @@ import BusinessInventory from './BusinessInventory';
 import CharacterInventory from './CharacterInventory';
 import HouseInventory from './HouseInventory';
 import InventoryItem from './InventoryItem';
-import VechileInventory from './VechileInventory';
+import VehicleInventory from './VehicleInventory';
 
 export default class Inventory {
     public id: number;
@@ -12,5 +12,5 @@ export default class Inventory {
     public CharacterInventory: CharacterInventory[];
     public HouseInventory: HouseInventory[];
     public InventoryItem: InventoryItem[];
-    public VechileInventory: VechileInventory[];
+    public VehicleInventory: VehicleInventory[];
 }
