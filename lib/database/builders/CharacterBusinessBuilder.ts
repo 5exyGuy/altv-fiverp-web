@@ -6,7 +6,7 @@ import BusinessBuilder from './BusinessBuilder';
 import CharacterBuilder from './CharacterBuilder';
 
 export default class CharacterBusinessBuilder extends EntityBuilder {
-    protected _entity: CharacterBusiness;
+    protected _entity: CharacterBusiness = new CharacterBusiness();
 
     public setId(id: number): CharacterBusinessBuilder {
         this._entity.id = id;

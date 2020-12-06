@@ -6,7 +6,7 @@ import CharacterBuilder from './CharacterBuilder';
 import SkillBuilder from './SkillBuilder';
 
 export default class CharacterSkillBuilder extends EntityBuilder {
-    protected _entity: CharacterSkill;
+    protected _entity: CharacterSkill = new CharacterSkill();
 
     public setLevel(level: number): CharacterSkillBuilder {
         this._entity.level = level;

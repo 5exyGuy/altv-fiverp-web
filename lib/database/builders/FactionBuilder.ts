@@ -6,7 +6,7 @@ import CharacterBuilder from './CharacterBuilder';
 import FactionMemberBuilder from './FactionMemberBuilder';
 
 export default class FactionBuilder extends EntityBuilder {
-    protected _entity: Faction;
+    protected _entity: Faction = new Faction();
 
     public setName(name: string): FactionBuilder {
         this._entity.name = name;

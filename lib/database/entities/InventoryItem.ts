@@ -1,7 +1,8 @@
 import Item from './Item';
 import Inventory from './Inventory';
+import Entity from '../Entity';
 
-export default class InventoryItem {
+export default class InventoryItem extends Entity {
     public slot: number;
     public amount: number;
     public id: number;

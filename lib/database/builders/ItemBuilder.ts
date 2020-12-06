@@ -4,7 +4,7 @@ import EntityBuilder from '../EntityBuilder';
 import InventoryItemBuilder from './InventoryItemBuilder';
 
 export default class ItemBuilder extends EntityBuilder {
-    protected _entity: Item;
+    protected _entity: Item = new Item();
 
     public setName(name: string): ItemBuilder {
         this._entity.name = name;
@@ -26,7 +26,7 @@ export default class ItemBuilder extends EntityBuilder {
         return this;
     }
 
-    public addInventoryItem(inventoryItem: InventoryItem | InventoryItemBuilder): InventoryBuilder {
+    public addInventoryItem(inventoryItem: InventoryItem | InventoryItemBuilder): ItemBuilder {
         if (!this._entity.InventoryItem) this._entity.InventoryItem = new Array<InventoryItem>();
         if (inventoryItem instanceof InventoryItemBuilder) inventoryItem = <InventoryItem>inventoryItem.build();
         this._entity.InventoryItem.push(inventoryItem);

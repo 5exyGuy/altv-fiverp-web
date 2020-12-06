@@ -4,7 +4,7 @@ import EntityBuilder from '../EntityBuilder';
 import UserBuilder from './UserBuilder';
 
 export default class LoginHistoryBuilder extends EntityBuilder {
-    protected _entity: LoginHistory;
+    protected _entity: LoginHistory = new LoginHistory();
 
     public setDate(date: Date): LoginHistoryBuilder {
         this._entity.date = date;

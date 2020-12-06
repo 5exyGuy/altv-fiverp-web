@@ -6,7 +6,7 @@ import CharacterHouseBuilder from './CharacterHouseBuilder';
 import HouseInventoryBuilder from './HouseInventoryBuilder';
 
 export default class HouseBuilder extends EntityBuilder {
-    protected _entity: House;
+    protected _entity: House = new House();
 
     public setPrice(price: number): HouseBuilder {
         this._entity.price = price;

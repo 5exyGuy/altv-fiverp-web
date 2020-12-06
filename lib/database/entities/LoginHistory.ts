@@ -1,6 +1,7 @@
+import Entity from '../Entity';
 import User from './User';
 
-export default class LoginHistory {
+export default class LoginHistory extends Entity {
     public date: Date;
     public ip: string;
     public socialId: string;

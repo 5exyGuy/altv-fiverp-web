@@ -6,7 +6,7 @@ import CharacterBuilder from './CharacterBuilder';
 import FactionBuilder from './FactionBuilder';
 
 export default class FactionMemberBuilder extends EntityBuilder {
-    protected _entity: FactionMember;
+    protected _entity: FactionMember = new FactionMember();
 
     public setJoinDate(joinDate: Date): FactionMemberBuilder {
         this._entity.joinDate = joinDate;

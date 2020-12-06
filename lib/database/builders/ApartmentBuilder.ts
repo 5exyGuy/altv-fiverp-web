@@ -6,7 +6,7 @@ import ApartmentInventoryBuilder from './ApartmentInventoryBuilder';
 import CharacterApartmentBuilder from './CharacterApartmentBuilder';
 
 export default class ApartmentBuilder extends EntityBuilder {
-    protected _entity: Apartment;
+    protected _entity: Apartment = new Apartment();
 
     public setPrice(price: number): ApartmentBuilder {
         this._entity.price = price;

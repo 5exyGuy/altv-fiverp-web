@@ -10,7 +10,7 @@ import VehiclePropertiesBuilder from './VehiclePropertiesBuilder';
 import VehicleInventoryBuilder from './VehicleInventoryBuilder';
 
 export default class CharacterVehicleBuilder extends EntityBuilder {
-    protected _entity: CharacterVehicle;
+    protected _entity: CharacterVehicle = new CharacterVehicle();
 
     public setDestroyed(destroyed: boolean): CharacterVehicleBuilder {
         this._entity.destroyed = destroyed;

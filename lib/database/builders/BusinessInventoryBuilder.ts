@@ -6,7 +6,7 @@ import BusinessBuilder from './BusinessBuilder';
 import InventoryBuilder from './InventoryBuilder';
 
 export default class BusinessInventoryBuilder extends EntityBuilder {
-    protected _entity: BusinessInventory;
+    protected _entity: BusinessInventory = new BusinessInventory();
 
     public setId(id: number): BusinessInventoryBuilder {
         this._entity.id = id;

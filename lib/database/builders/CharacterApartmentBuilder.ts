@@ -6,7 +6,7 @@ import ApartmentBuilder from './ApartmentBuilder';
 import CharacterBuilder from './CharacterBuilder';
 
 export default class CharacterApartmentBuilder extends EntityBuilder {
-    protected _entity: CharacterApartment;
+    protected _entity: CharacterApartment = new CharacterApartment();
 
     public setId(id: number): CharacterApartmentBuilder {
         this._entity.id = id;

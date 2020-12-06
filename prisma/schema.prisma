@@ -11,40 +11,34 @@ model Apartment {
   price              Int
   lockState          String
   location           String
-  id                 Int                  @id @default(autoincrement())
-  ApartmentInventory ApartmentInventory[]
-  CharacterApartment CharacterApartment[]
+  id                 Int                 @id @default(autoincrement())
+  ApartmentInventory ApartmentInventory?
+  CharacterApartment CharacterApartment?
 }
 
 model ApartmentInventory {
   id              Int       @id @default(autoincrement())
-  fk_Inventory_id Int
-  fk_Apartment_id Int
+  fk_Apartment_id Int       @unique
+  fk_Inventory_id Int       @unique
   Apartment       Apartment @relation(fields: [fk_Apartment_id], references: [id])
   Inventory       Inventory @relation(fields: [fk_Inventory_id], references: [id])
-
-  @@index([fk_Apartment_id], name: "fk_Apartment_id")
-  @@index([fk_Inventory_id], name: "fk_Inventory_id")
 }
 
 model Business {
   price             Int
   lockState         String
   location          String
-  id                Int                 @id @default(autoincrement())
-  BusinessInventory BusinessInventory[]
-  CharacterBusiness CharacterBusiness[]
+  id                Int                @id @default(autoincrement())
+  BusinessInventory BusinessInventory?
+  CharacterBusiness CharacterBusiness?
 }
 
 model BusinessInventory {
   id              Int       @id @default(autoincrement())
-  fk_Inventory_id Int
-  fk_Business_id  Int
+  fk_Business_id  Int       @unique
+  fk_Inventory_id Int       @unique
   Business        Business  @relation(fields: [fk_Business_id], references: [id])
   Inventory       Inventory @relation(fields: [fk_Inventory_id], references: [id])
-
-  @@index([fk_Business_id], name: "fk_Business_id")
-  @@index([fk_Inventory_id], name: "fk_Inventory_id")
 }
 
 model Character {
@@ -59,80 +53,65 @@ model Character {
   arrestTime                                  Int
   dimension                                   Int
   lastPosition                                String
-  id                                          Int                  @id @default(autoincrement())
+  id                                          Int                 @id @default(autoincrement())
   fk_User_id                                  Int
-  User                                        User                 @relation(fields: [fk_User_id], references: [id])
-  CharacterApartment                          CharacterApartment[]
-  CharacterBusiness                           CharacterBusiness[]
-  CharacterHouse                              CharacterHouse[]
-  CharacterInventory                          CharacterInventory[]
-  CharacterSkill                              CharacterSkill[]
-  CharacterVehicle                            CharacterVehicle[]
-  Contact_CharacterToContact_fk_Character_id  Contact?             @relation("CharacterToContact_fk_Character_id")
-  Contact_CharacterToContact_fk_Character_id1 Contact[]            @relation("CharacterToContact_fk_Character_id1")
+  User                                        User                @relation(fields: [fk_User_id], references: [id])
+  CharacterApartment                          CharacterApartment?
+  CharacterBusiness                           CharacterBusiness?
+  CharacterHouse                              CharacterHouse?
+  CharacterInventory                          CharacterInventory?
+  CharacterSkill                              CharacterSkill?
+  CharacterVehicle                            CharacterVehicle?
+  Contact_CharacterToContact_fk_Character_id  Contact[]           @relation("CharacterToContact_fk_Character_id")
+  Contact_CharacterToContact_fk_Character_id1 Contact?            @relation("CharacterToContact_fk_Character_id1")
   Faction                                     Faction?
-  FactionMember                               FactionMember[]
-  Message_CharacterToMessage_fk_Character_id  Message[]            @relation("CharacterToMessage_fk_Character_id")
-  Message_CharacterToMessage_fk_Character_id1 Message?             @relation("CharacterToMessage_fk_Character_id1")
+  FactionMember                               FactionMember?
+  Message_CharacterToMessage_fk_Character_id  Message[]           @relation("CharacterToMessage_fk_Character_id")
+  Message_CharacterToMessage_fk_Character_id1 Message?            @relation("CharacterToMessage_fk_Character_id1")
 
   @@index([fk_User_id], name: "fk_User_id")
 }
 
 model CharacterApartment {
   id              Int       @id @default(autoincrement())
-  fk_Character_id Int
-  fk_Apartment_id Int
+  fk_Apartment_id Int       @unique
+  fk_Character_id Int       @unique
   Apartment       Apartment @relation(fields: [fk_Apartment_id], references: [id])
   Character       Character @relation(fields: [fk_Character_id], references: [id])
-
-  @@index([fk_Apartment_id], name: "fk_Apartment_id")
-  @@index([fk_Character_id], name: "fk_Character_id")
 }
 
 model CharacterBusiness {
   id              Int       @id @default(autoincrement())
-  fk_Business_id  Int
-  fk_Character_id Int
+  fk_Character_id Int       @unique
+  fk_Business_id  Int       @unique
   Business        Business  @relation(fields: [fk_Business_id], references: [id])
   Character       Character @relation(fields: [fk_Character_id], references: [id])
-
-  @@index([fk_Business_id], name: "fk_Business_id")
-  @@index([fk_Character_id], name: "fk_Character_id")
 }
 
 model CharacterHouse {
   id              Int       @id @default(autoincrement())
-  fk_Character_id Int
-  fk_House_id     Int
+  fk_House_id     Int       @unique
+  fk_Character_id Int       @unique
   Character       Character @relation(fields: [fk_Character_id], references: [id])
   House           House     @relation(fields: [fk_House_id], references: [id])
-
-  @@index([fk_Character_id], name: "fk_Character_id")
-  @@index([fk_House_id], name: "fk_House_id")
 }
 
 model CharacterInventory {
   id              Int       @id @default(autoincrement())
-  fk_Inventory_id Int
-  fk_Character_id Int
+  fk_Inventory_id Int       @unique
+  fk_Character_id Int       @unique
   Character       Character @relation(fields: [fk_Character_id], references: [id])
   Inventory       Inventory @relation(fields: [fk_Inventory_id], references: [id])
-
-  @@index([fk_Character_id], name: "fk_Character_id")
-  @@index([fk_Inventory_id], name: "fk_Inventory_id")
 }
 
 model CharacterSkill {
   level           Int
   xp              Int
   id              Int       @id @default(autoincrement())
-  fk_Skill_id     Int
-  fk_Character_id Int
+  fk_Character_id Int       @unique
+  fk_Skill_id     Int       @unique
   Character       Character @relation(fields: [fk_Character_id], references: [id])
   Skill           Skill     @relation(fields: [fk_Skill_id], references: [id])
-
-  @@index([fk_Character_id], name: "fk_Character_id")
-  @@index([fk_Skill_id], name: "fk_Skill_id")
 }
 
 model CharacterVehicle {
@@ -144,25 +123,22 @@ model CharacterVehicle {
   lockState         String
   numberPlate       String
   id                Int                @id @default(autoincrement())
-  fk_Character_id   Int
-  fk_Vehicle_id     Int
+  fk_Character_id   Int                @unique
+  fk_Vehicle_id     Int                @unique
   Character         Character          @relation(fields: [fk_Character_id], references: [id])
   Vehicle           Vehicle            @relation(fields: [fk_Vehicle_id], references: [id])
-  VechileInventory  VechileInventory[]
+  VechileInventory  VechileInventory?
   VehicleProperties VehicleProperties?
-
-  @@index([fk_Character_id], name: "fk_Character_id")
-  @@index([fk_Vehicle_id], name: "fk_Vehicle_id")
 }
 
 model Contact {
   id                                            Int       @id @default(autoincrement())
-  fk_Character_id                               Int       @unique
-  fk_Character_id1                              Int
+  fk_Character_id                               Int
+  fk_Character_id1                              Int       @unique
   Character_CharacterToContact_fk_Character_id  Character @relation("CharacterToContact_fk_Character_id", fields: [fk_Character_id], references: [id])
   Character_CharacterToContact_fk_Character_id1 Character @relation("CharacterToContact_fk_Character_id1", fields: [fk_Character_id1], references: [id])
 
-  @@index([fk_Character_id1], name: "fk_Character_id1")
+  @@index([fk_Character_id], name: "fk_Character_id")
 }
 
 model Faction {
@@ -177,12 +153,11 @@ model Faction {
 model FactionMember {
   joinDate        DateTime
   id              Int       @id @default(autoincrement())
-  fk_Character_id Int
   fk_Faction_id   Int
+  fk_Character_id Int       @unique
   Character       Character @relation(fields: [fk_Character_id], references: [id])
   Faction         Faction   @relation(fields: [fk_Faction_id], references: [id])
 
-  @@index([fk_Character_id], name: "fk_Character_id")
   @@index([fk_Faction_id], name: "fk_Faction_id")
 }
 
@@ -190,62 +165,59 @@ model House {
   price          Int
   lockState      String
   location       String
-  id             Int              @id @default(autoincrement())
-  CharacterHouse CharacterHouse[]
-  HouseInventory HouseInventory[]
+  id             Int             @id @default(autoincrement())
+  CharacterHouse CharacterHouse?
+  HouseInventory HouseInventory?
 }
 
 model HouseInventory {
   id              Int       @id @default(autoincrement())
-  fk_Inventory_id Int
-  fk_House_id     Int
+  fk_House_id     Int       @unique
+  fk_Inventory_id Int       @unique
   House           House     @relation(fields: [fk_House_id], references: [id])
   Inventory       Inventory @relation(fields: [fk_Inventory_id], references: [id])
-
-  @@index([fk_House_id], name: "fk_House_id")
-  @@index([fk_Inventory_id], name: "fk_Inventory_id")
 }
 
 model Inventory {
-  id                 Int                  @id @default(autoincrement())
-  ApartmentInventory ApartmentInventory[]
-  BusinessInventory  BusinessInventory[]
-  CharacterInventory CharacterInventory[]
-  HouseInventory     HouseInventory[]
-  InventoryItem      InventoryItem[]
-  VechileInventory   VechileInventory[]
+  id                 Int                 @id @default(autoincrement())
+  ApartmentInventory ApartmentInventory?
+  BusinessInventory  BusinessInventory?
+  CharacterInventory CharacterInventory?
+  HouseInventory     HouseInventory?
+  InventoryItem      InventoryItem?
+  VechileInventory   VechileInventory?
 }
 
 model InventoryItem {
   slot            Int
   amount          Int
   id              Int       @id @default(autoincrement())
-  fk_Item_id      Int
-  fk_Inventory_id Int
+  fk_Inventory_id Int       @unique
+  fk_Item_id      Int       @unique
   Inventory       Inventory @relation(fields: [fk_Inventory_id], references: [id])
   Item            Item      @relation(fields: [fk_Item_id], references: [id])
-
-  @@index([fk_Inventory_id], name: "fk_Inventory_id")
-  @@index([fk_Item_id], name: "fk_Item_id")
 }
 
 model Item {
   name          String
-  hash          String
+  // This type is currently not supported.
+  // hash       binary(1)
   weight        Float
-  id            Int             @id @default(autoincrement())
-  InventoryItem InventoryItem[]
+  id            Int            @id @default(autoincrement())
+  InventoryItem InventoryItem?
 }
 
 model LoginHistory {
-  date       DateTime
-  ip         String
-  socialId   String
-  hwidExHash String
-  hwidHash   String
-  id         Int      @id @default(autoincrement())
-  fk_User_id Int
-  User       User     @relation(fields: [fk_User_id], references: [id])
+  date          DateTime
+  ip            String
+  socialId      String
+  // This type is currently not supported.
+  // hwidExHash binary(1)
+  // This type is currently not supported.
+  // hwidHash   binary(1)
+  id            Int       @id @default(autoincrement())
+  fk_User_id    Int
+  User          User      @relation(fields: [fk_User_id], references: [id])
 
   @@index([fk_User_id], name: "fk_User_id")
 }
@@ -264,39 +236,39 @@ model Message {
 
 model Skill {
   name           String
-  hash           String
+  // This type is currently not supported.
+  // hash        binary(1)
   maxLevel       Int
-  id             Int              @id @default(autoincrement())
-  CharacterSkill CharacterSkill[]
+  id             Int             @id @default(autoincrement())
+  CharacterSkill CharacterSkill?
 }
 
 model User {
-  username          String
-  email             String
+  username          String         @unique
+  email             String         @unique
   password          String
+  role              String
   registrationDate  DateTime
   verified          Boolean
-  refreshToken      String
-  id                Int                 @id @default(autoincrement())
+  confirmationToken String?
+  refreshToken      String?
+  id                Int            @id @default(autoincrement())
   Character         Character[]
-  ConfirmationToken ConfirmationToken[]
   LoginHistory      LoginHistory[]
 }
 
 model VechileInventory {
   id                     Int              @id @default(autoincrement())
-  fk_Inventory_id        Int
-  fk_CharacterVehicle_id Int
+  fk_Inventory_id        Int              @unique
+  fk_CharacterVehicle_id Int              @unique
   CharacterVehicle       CharacterVehicle @relation(fields: [fk_CharacterVehicle_id], references: [id])
   Inventory              Inventory        @relation(fields: [fk_Inventory_id], references: [id])
-
-  @@index([fk_CharacterVehicle_id], name: "fk_CharacterVehicle_id")
-  @@index([fk_Inventory_id], name: "fk_Inventory_id")
 }
 
 model Vehicle {
   name             String
-  hash             String
+  // This type is currently not supported.
+  // hash          binary(1)
   price            Int
   manufacturer     String
   seats            Int
@@ -310,21 +282,12 @@ model Vehicle {
   agility          Float
   maxKnots         Float
   moveResistance   Float
-  id               Int                @id @default(autoincrement())
-  CharacterVehicle CharacterVehicle[]
+  id               Int               @id @default(autoincrement())
+  CharacterVehicle CharacterVehicle?
 }
 
 model VehicleProperties {
   id                     Int              @id @default(autoincrement())
   fk_CharacterVehicle_id Int              @unique
   CharacterVehicle       CharacterVehicle @relation(fields: [fk_CharacterVehicle_id], references: [id])
-}
-
-model ConfirmationToken {
-  token      String
-  id         Int     @id @default(autoincrement())
-  fk_User_id Int
-  User       User    @relation(fields: [fk_User_id], references: [id])
-
-  @@index([fk_User_id], name: "fk_User_id")
 }

@@ -4,7 +4,7 @@ import EntityBuilder from '../EntityBuilder';
 import CharacterVehicleBuilder from './CharacterVehicleBuilder';
 
 export default class VehicleBuilder extends EntityBuilder {
-    protected _entity: Vehicle;
+    protected _entity: Vehicle = new Vehicle();
 
     public setName(name: string): VehicleBuilder {
         this._entity.name = name;

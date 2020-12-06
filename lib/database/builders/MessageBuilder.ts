@@ -4,7 +4,7 @@ import EntityBuilder from '../EntityBuilder';
 import CharacterBuilder from './CharacterBuilder';
 
 export default class MessageBuilder extends EntityBuilder {
-    protected _entity: Message;
+    protected _entity: Message = new Message();
 
     public setContent(content: string): MessageBuilder {
         this._entity.content = content;

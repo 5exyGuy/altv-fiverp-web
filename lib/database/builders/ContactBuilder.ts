@@ -4,7 +4,7 @@ import EntityBuilder from '../EntityBuilder';
 import CharacterBuilder from './CharacterBuilder';
 
 export default class ContactBuilder extends EntityBuilder {
-    protected _entity: Contact;
+    protected _entity: Contact = new Contact();
 
     public setId(id: number): ContactBuilder {
         this._entity.id = id;

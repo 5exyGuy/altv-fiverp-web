@@ -1,6 +1,7 @@
+import Entity from '../Entity';
 import CharacterVehicle from './CharacterVehicle';
 
-export default class Vehicle {
+export default class Vehicle extends Entity {
     public name: string;
     public hash: string;
     public price: number;

@@ -6,7 +6,7 @@ import ApartmentBuilder from './ApartmentBuilder';
 import InventoryBuilder from './InventoryBuilder';
 
 export default class ApartmentInventoryBuilder extends EntityBuilder {
-    protected _entity: ApartmentInventory;
+    protected _entity: ApartmentInventory = new ApartmentInventory();
 
     public setId(id: number): ApartmentInventoryBuilder {
         this._entity.id = id;

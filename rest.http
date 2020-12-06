@@ -1,0 +1,16 @@
+POST http://localhost:3000/api/logout HTTP/1.1
+content-type: application/json
+
+{
+    "username": "nick",
+    "password": "aurejus45"
+}
+
+# POST http://localhost:3000/api/register HTTP/1.1
+# content-type: application/json
+
+# {
+#     "username": "nick",
+#     "email": "nicksss@gmail.com",
+#     "password": "aurejus45"
+# }

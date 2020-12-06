@@ -1,6 +1,7 @@
+import Entity from '../Entity';
 import Character from './Character';
 
-export default class Message {
+export default class Message extends Entity {
     public content: string;
     public date: Date;
     public id: number;

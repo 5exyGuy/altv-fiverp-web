@@ -6,7 +6,7 @@ import CharacterVehicleBuilder from './CharacterVehicleBuilder';
 import InventoryBuilder from './InventoryBuilder';
 
 export default class VehicleInventoryBuilder extends EntityBuilder {
-    protected _entity: VehicleInventory;
+    protected _entity: VehicleInventory = new VehicleInventory();
 
     public setId(id: number): VehicleInventoryBuilder {
         this._entity.id = id;

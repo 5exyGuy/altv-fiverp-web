@@ -24,7 +24,7 @@ import MessageBuilder from './MessageBuilder';
 import UserBuilder from './UserBuilder';
 
 export default class CharacterBuilder extends EntityBuilder {
-    protected _entity: Character;
+    protected _entity: Character = new Character();
 
     public setFirstName(firstName: string): CharacterBuilder {
         this._entity.firstName = firstName;

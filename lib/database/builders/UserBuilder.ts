@@ -25,8 +25,28 @@ export default class UserBuilder extends EntityBuilder {
         return this;
     }
 
+    public setRole(role: string): UserBuilder {
+        this._entity.role = role;
+        return this;
+    }
+
     public setRegistrationDate(registrationDate: Date): UserBuilder {
         this._entity.registrationDate = registrationDate;
+        return this;
+    }
+
+    public setVerified(verified: boolean): UserBuilder {
+        this._entity.verified = verified;
+        return this;
+    }
+
+    public setConfirmationToken(confirmationToken: string): UserBuilder {
+        this._entity.confirmationToken = confirmationToken;
+        return this;
+    }
+
+    public setRefreshToken(refreshToken: string): UserBuilder {
+        this._entity.refreshToken = refreshToken;
         return this;
     }
 
@@ -42,18 +62,14 @@ export default class UserBuilder extends EntityBuilder {
         return this;
     }
 
-    public addConfirmationToken(confirmationToken: ConfirmationToken | ConfirmationTokenBuilder): UserBuilder {
-        if (!this._entity.ConfirmationToken) this._entity.ConfirmationToken = new Array<ConfirmationToken>();
-        if (confirmationToken instanceof ConfirmationTokenBuilder)
-            confirmationToken = <ConfirmationToken>confirmationToken.build();
-        this._entity.ConfirmationToken.push(confirmationToken);
-        return this;
-    }
-
     public addLoginHistory(loginHistory: LoginHistory | LoginHistoryBuilder): UserBuilder {
         if (!this._entity.LoginHistory) this._entity.LoginHistory = new Array<LoginHistory>();
         if (loginHistory instanceof LoginHistoryBuilder) loginHistory = <LoginHistory>loginHistory.build();
         this._entity.LoginHistory.push(loginHistory);
         return this;
+    }
+
+    public build(): User {
+        return this._entity;
     }
 }

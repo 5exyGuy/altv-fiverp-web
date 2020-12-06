@@ -6,7 +6,7 @@ import CharacterBuilder from './CharacterBuilder';
 import InventoryBuilder from './InventoryBuilder';
 
 export default class CharacterInventoryBuilder extends EntityBuilder {
-    protected _entity: CharacterInventory;
+    protected _entity: CharacterInventory = new CharacterInventory();
 
     public setId(id: number): CharacterInventoryBuilder {
         this._entity.id = id;

@@ -1,7 +1,8 @@
+import Entity from '../Entity';
 import Character from './Character';
 import FactionMember from './FactionMember';
 
-export default class Faction {
+export default class Faction extends Entity {
     public name: string;
     public registrationDate: Date;
     public id: number;

@@ -4,7 +4,7 @@ import EntityBuilder from '../EntityBuilder';
 import CharacterVehicleBuilder from './CharacterVehicleBuilder';
 
 export default class VehiclePropertiesBuilder extends EntityBuilder {
-    protected _entity: VehicleProperties;
+    protected _entity: VehicleProperties = new VehicleProperties();
 
     public setId(id: number): VehiclePropertiesBuilder {
         this._entity.id = id;

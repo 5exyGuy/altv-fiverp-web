@@ -6,7 +6,7 @@ import BusinessInventoryBuilder from './BusinessInventoryBuilder';
 import CharacterBusinessBuilder from './CharacterBusinessBuilder';
 
 export default class BusinessBuilder extends EntityBuilder {
-    protected _entity: Business;
+    protected _entity: Business = new Business();
 
     public setPrice(price: number): BusinessBuilder {
         this._entity.price = price;

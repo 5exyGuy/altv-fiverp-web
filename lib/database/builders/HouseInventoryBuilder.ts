@@ -6,7 +6,7 @@ import HouseBuilder from './HouseBuilder';
 import InventoryBuilder from './InventoryBuilder';
 
 export default class HouseInventoryBuilder extends EntityBuilder {
-    protected _entity: HouseInventory;
+    protected _entity: HouseInventory = new HouseInventory();
 
     public setId(id: number): HouseInventoryBuilder {
         this._entity.id = id;

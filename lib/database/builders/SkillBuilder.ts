@@ -4,7 +4,7 @@ import EntityBuilder from '../EntityBuilder';
 import CharacterSkillBuilder from './CharacterSkillBuilder';
 
 export default class SkillBuilder extends EntityBuilder {
-    protected _entity: Skill;
+    protected _entity: Skill = new Skill();
 
     public setName(name: string): SkillBuilder {
         this._entity.name = name;

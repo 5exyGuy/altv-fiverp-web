@@ -6,7 +6,7 @@ import InventoryBuilder from './InventoryBuilder';
 import ItemBuilder from './ItemBuilder';
 
 export default class InventoryItemBuilder extends EntityBuilder {
-    protected _entity: InventoryItem;
+    protected _entity: InventoryItem = new InventoryItem();
 
     public setSlot(slot: number): InventoryItemBuilder {
         this._entity.slot = slot;

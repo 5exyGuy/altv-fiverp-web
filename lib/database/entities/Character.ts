@@ -9,8 +9,9 @@ import Contact from './Contact';
 import Faction from './Faction';
 import FactionMember from './FactionMember';
 import Message from './Message';
+import Entity from '../Entity';
 
-export default class Character {
+export default class Character extends Entity {
     public firstName: string;
     public lastName: string;
     public cash: number;

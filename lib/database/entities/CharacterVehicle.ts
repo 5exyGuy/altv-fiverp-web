@@ -2,8 +2,9 @@ import Vehicle from './Vehicle';
 import Character from './Character';
 import VechileInventory from './VehicleInventory';
 import VehicleProperties from './VehicleProperties';
+import Entity from '../Entity';
 
-export default class CharacterVehicle {
+export default class CharacterVehicle extends Entity {
     public destroyed: boolean;
     public lastPosition: string;
     public lastRotation: string;

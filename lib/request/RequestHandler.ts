@@ -39,11 +39,11 @@ export default abstract class RequestHandler {
      * @param request Route request
      * @param response Route response
      */
-    public next(request: NextApiRequest, response: NextApiResponse): void {
+    public async next(request: NextApiRequest, response: NextApiResponse): Promise<void> {
         if (!this._nextHandler) return;
         if (this.isResponseSent(response)) return;
         if (!this._method || this._method === RequestMethod.ALL || this._method === request.method)
-            this._nextHandler.handle(request, response);
+            await this._nextHandler.handle(request, response);
     }
 
     /**
@@ -51,7 +51,7 @@ export default abstract class RequestHandler {
      * @param request Route request
      * @param response Route response
      */
-    public abstract handle(request: NextApiRequest, response: NextApiResponse): void;
+    public abstract async handle(request: NextApiRequest, response: NextApiResponse): Promise<void>;
 
     /**
      * Handles the received request with specified request method
@@ -59,7 +59,11 @@ export default abstract class RequestHandler {
      * @param request Route request
      * @param response Route response
      */
-    public handleMethod(method: RequestMethod, request: NextApiRequest, response: NextApiResponse): void {
+    public async handleMethod(
+        method: RequestMethod,
+        request: NextApiRequest,
+        response: NextApiResponse
+    ): Promise<void> {
         if (request.method !== method)
             return response.status(StatusCodes.METHOD_NOT_ALLOWED).json(ReasonPhrases.METHOD_NOT_ALLOWED);
         this.handle(request, response);

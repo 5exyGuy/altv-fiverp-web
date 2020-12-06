@@ -1,7 +1,8 @@
+import Entity from '../Entity';
 import ApartmentInventory from './ApartmentInventory';
 import CharacterApartment from './CharacterApartment';
 
-export default class Apartment {
+export default class Apartment extends Entity {
     public price: number;
     public lockState: string;
     public location: string;

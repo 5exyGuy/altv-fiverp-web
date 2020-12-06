@@ -14,7 +14,7 @@ import InventoryItemBuilder from './InventoryItemBuilder';
 import VehicleInventoryBuilder from './VehicleInventoryBuilder';
 
 export default class InventoryBuilder extends EntityBuilder {
-    protected _entity: Inventory;
+    protected _entity: Inventory = new Inventory();
 
     public setId(id: number): InventoryBuilder {
         this._entity.id = id;
