@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import LogoutRequestHandler from '../../lib/request/auth/LogoutRH';
-import { RequestMethod } from '../../lib/request/RequestMethod';
+import LogoutRequestHandler from '../../../lib/server/request/auth/LogoutRH';
+import { RequestMethod } from '../../../lib/server/request/RequestMethod';
 
 const logoutHandler: LogoutRequestHandler = new LogoutRequestHandler();
 

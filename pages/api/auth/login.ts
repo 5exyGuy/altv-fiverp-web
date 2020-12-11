@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import LoginRequestHandler from '../../lib/request/auth/LoginRH';
-import { RequestMethod } from '../../lib/request/RequestMethod';
+import LoginRequestHandler from '../../../lib/server/request/auth/LoginRH';
+import { RequestMethod } from '../../../lib/server/request/RequestMethod';
 
 const loginHandler: LoginRequestHandler = new LoginRequestHandler();
 

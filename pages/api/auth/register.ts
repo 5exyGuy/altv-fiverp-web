@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import RegisterRH from '../../lib/request/auth/RegisterRH';
-import { RequestMethod } from '../../lib/request/RequestMethod';
+import RegisterRH from '../../../lib/server/request/auth/RegisterRH';
+import { RequestMethod } from '../../../lib/server/request/RequestMethod';
 
 const registrationHandler: RegisterRH = new RegisterRH();
 

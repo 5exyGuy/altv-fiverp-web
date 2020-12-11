@@ -51,7 +51,7 @@ export default abstract class RequestHandler {
      * @param request Route request
      * @param response Route response
      */
-    public abstract async handle(request: NextApiRequest, response: NextApiResponse): Promise<void>;
+    public abstract handle(request: NextApiRequest, response: NextApiResponse): Promise<void>;
 
     /**
      * Handles the received request with specified request method

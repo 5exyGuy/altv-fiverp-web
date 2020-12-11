@@ -4,8 +4,6 @@ import LoginHistory from '../entities/LoginHistory';
 import Character from '../entities/Character';
 import LoginHistoryBuilder from './LoginHistoryBuilder';
 import CharacterBuilder from './CharacterBuilder';
-import ConfirmationToken from '../entities/ConfirmationToken';
-import ConfirmationTokenBuilder from './ConfirmationTokenBuilder';
 
 export default class UserBuilder extends EntityBuilder {
     protected _entity: User = new User();

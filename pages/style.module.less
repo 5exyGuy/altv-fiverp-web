@@ -1,72 +1,74 @@
 @import '~antd/dist/antd.less';
 
-.content {
-    /* this is needed or the background will be offset by a few pixels at the top */
+html,
+body,
+body > div:first-child,
+div#__next,
+div#__next > div,
+div#__next > div > div {
+    height: 100%;
+}
+
+.background {
     overflow: auto;
     position: relative;
-}
+    &::before {
+        content: '';
+        position: fixed;
+        left: -5%;
+        top: -5%;
+        right: 0;
+        z-index: -1;
 
-.content:before {
-    content: '';
-    position: fixed;
-    left: -5%;
-    top: -5%;
-    right: 0;
-    z-index: -1;
-
-    display: block;
-    background-image: url('http://localhost:3000/background.jpg');
-    background-size: cover;
-    width: 110%;
-    height: 110%;
-
-    -webkit-filter: blur(5px);
-    -moz-filter: blur(5px);
-    -o-filter: blur(5px);
-    -ms-filter: blur(5px);
-    filter: blur(5px);
-}
-
-.trigger {
-    font-size: 18px;
-    line-height: 64px;
-    padding: 0 24px;
-    cursor: pointer;
-    transition: color 0.3s;
-}
-
-.trigger:hover {
-    color: #1890ff;
-}
-
-.logo {
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 18px;
-    font-family: Avenir, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
-        Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
-    font-weight: 700;
-    height: 32px;
-    margin: 16px;
-    text-align: center;
-}
-
-.news {
-    position: relative;
-    background: #141414;
-    overflow: hidden;
-
-    &:before {
-        content: ' ';
         display: block;
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        opacity: 0.05;
-        background-image: url('https://c4.wallpaperflare.com/wallpaper/578/258/420/grand-theft-auto-v-japanese-cars-fire-gta5-wallpaper-preview.jpg');
-        background-repeat: no-repeat;
+        background-image: url('http://localhost:3000/707224.jpg');
         background-size: cover;
+        width: 110%;
+        height: 110%;
+
+        -webkit-filter: blur(1spx);
+        -moz-filter: blur(1px);
+        -o-filter: blur(1px);
+        -ms-filter: blur(1px);
+        filter: blur(1px);
     }
 }
+
+.layout-content {
+    // background-color: #1f1f1f;
+    margin: 1% 20%;
+}
+
+.page-header {
+    background-color: #ffffff;
+    padding: 1%;
+    border: 1px solid #f0f0f0;
+    margin-bottom: 1%;
+}
+
+.page-content {
+    background-color: #ffffff;
+    padding: 1%;
+    border: 1px solid #f0f0f0;
+}
+
+// .news {
+//     position: relative;
+//     background: #141414;
+//     overflow: hidden;
+
+//     &:before {
+//         content: ' ';
+//         display: block;
+//         position: absolute;
+//         left: 0;
+//         top: 0;
+//         width: 100%;
+//         height: 100%;
+//         z-index: 1;
+//         opacity: 0.05;
+//         background-image: url('https://c4.wallpaperflare.com/wallpaper/578/258/420/grand-theft-auto-v-japanese-cars-fire-gta5-wallpaper-preview.jpg');
+//         background-repeat: no-repeat;
+//         background-size: cover;
+//     }
+// }

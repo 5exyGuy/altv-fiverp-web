@@ -1,11 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import AuthRequestHandler from '../../lib/request/auth/AuthRH';
-import { RequestMethod } from '../../lib/request/RequestMethod';
+import AuthRequestHandler from '../../../lib/server/request/auth/AuthRH';
 
 const authHandler: AuthRequestHandler = new AuthRequestHandler();
 
 export default function (request: NextApiRequest, response: NextApiResponse) {
-    authHandler.handleMethod(RequestMethod.POST, request, response);
+    authHandler.handle(request, response);
 }
 
 export const config = {

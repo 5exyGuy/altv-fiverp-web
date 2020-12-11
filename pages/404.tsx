@@ -4,8 +4,8 @@ import React from 'react';
 
 export default function Error404() {
     return (
-        <div className="content">
-            <Row justify="center" align="middle" style={{ minHeight: '100vh' }}>
+        <div className="page-content">
+            <Row justify="center" align="middle">
                 <Col>
                     <Result
                         title="404"

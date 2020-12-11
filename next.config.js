@@ -1,17 +1,12 @@
 /* eslint-disable */
 const withLess = require('@zeit/next-less');
-// const lessToJS = require('less-vars-to-js');
+const lessToJS = require('less-vars-to-js');
 const fs = require('fs');
 const path = require('path');
-const { getThemeVariables } = require('antd/dist/theme');
+// const { getThemeVariables } = require('antd/dist/theme');
 
 // Where your antd-custom.less file lives
-const themeVariables = JSON.parse(
-    fs.readFileSync(
-        path.resolve(__dirname, './assets/antd-custom.json'),
-        'utf8'
-    )
-);
+const themeVariables = lessToJS(fs.readFileSync(path.resolve(__dirname, './assets/antd-custom.less'), 'utf8'));
 
 // console.log({
 //     ...getThemeVariables({ dark: true, compact: true }),
@@ -22,7 +17,7 @@ module.exports = withLess({
     lessLoaderOptions: {
         javascriptEnabled: true,
         modifyVars: {
-            ...getThemeVariables({ dark: true, compact: true }),
+            // ...getThemeVariables({ dark: true, compact: true }),
             ...themeVariables,
         },
     },
@@ -39,9 +34,7 @@ module.exports = withLess({
                         callback();
                     }
                 },
-                ...(typeof origExternals[0] === 'function'
-                    ? []
-                    : origExternals),
+                ...(typeof origExternals[0] === 'function' ? [] : origExternals),
             ];
 
             config.module.rules.unshift({
