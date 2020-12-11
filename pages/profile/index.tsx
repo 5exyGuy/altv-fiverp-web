@@ -1,18 +1,19 @@
 import { PageHeader } from 'antd';
-import { GetStaticProps } from 'next';
+import { NextPageContext } from 'next';
+import AuthRequestHandler from '../../lib/server/request/auth/AuthRH';
 
-export const getStaticProps: GetStaticProps = async () => {
-    // const result: Response = await fetch('http://localhost:3000/api/user/user');
-    // const data = await result.json();
+// export const getStaticProps: GetStaticProps = async () => {
+//     // const result: Response = await fetch('http://localhost:3000/api/user/user');
+//     // const data = await result.json();
 
-    // console.log(context);
+//     // console.log(context);
 
-    return {
-        props: {},
-    };
-};
+//     return {
+//         props: {},
+//     };
+// };
 
-export default function Profile(): JSX.Element {
+function Profile(): JSX.Element {
     return (
         <>
             <div className="page-header animate__animated animate__fadeIn">
@@ -22,3 +23,10 @@ export default function Profile(): JSX.Element {
         </>
     );
 }
+
+Profile.getInitialProps = async ({ req, res }: NextPageContext) => {
+    await new AuthRequestHandler();
+    return { userAgent };
+};
+
+export default Profile;

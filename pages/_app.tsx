@@ -13,7 +13,7 @@ import './style.module.less';
 import Icon from '../components/Icon';
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
-    const [user, loading, mutate] = useUser();
+    const { user, mutate } = useUser();
 
     const submitLogout = async () => {
         const result: Response = await fetch('/api/auth/logout', {
@@ -74,7 +74,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
                                     key="5"
                                     icon={<Icon component={<FaUserPlus size="1.5em" />} />}
                                     style={{ float: 'right' }}
-                                    onClick={() => Router.push('/register')}
+                                    onClick={() => Router.push('/auth/register')}
                                 >
                                     Registruotis
                                 </Menu.Item>
@@ -82,7 +82,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
                                     key="6"
                                     icon={<Icon component={<FaUserLock size="1.5em" />} />}
                                     style={{ float: 'right' }}
-                                    onClick={() => Router.push('/login')}
+                                    onClick={() => Router.push('/auth/login')}
                                 >
                                     Prisijungti
                                 </Menu.Item>

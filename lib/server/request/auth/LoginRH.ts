@@ -4,37 +4,44 @@ import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 import bcrypt from 'bcryptjs';
 import { Session, TokenType } from '../Session';
 import Database from '../../database/Database';
+import { User, UndefinedUser } from '../../../shared/types/User';
 
-export default class LoginRequestHandler extends RequestHandler {
-    public async handle(request: NextApiRequest, response: NextApiResponse): Promise<void> {
-        if (await Session.instance.isLoggedIn(request)) return response.status(StatusCodes.FORBIDDEN).send(ReasonPhrases.FORBIDDEN);
-
+export default class LoginRequestHandler extends RequestHandler<User> {
+    public async handle(request: NextApiRequest, response: NextApiResponse): Promise<User> {
+        // Checking if the user is not already logged in
+        if (await Session.instance.isLoggedIn(request)) {
+            response.status(StatusCodes.FORBIDDEN).json({ error: 'Already logged in' });
+            return UndefinedUser;
+        }
+        // Extracting user-supplied information
         const { username, password, rememberMe } = request.body;
 
-        if (!username || !password) return response.status(StatusCodes.BAD_REQUEST).send(ReasonPhrases.BAD_REQUEST);
-
-        try {
-            const user = await Database.instance.PrismaClient.user.findFirst({
-                where: { username: { equals: username } },
-            });
-            if (!user) return response.status(StatusCodes.BAD_REQUEST).send(ReasonPhrases.BAD_REQUEST);
-
-            if (!(await bcrypt.compare(password, user.password)))
-                return response.status(StatusCodes.UNAUTHORIZED).send(ReasonPhrases.UNAUTHORIZED);
-        } catch (error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).send(ReasonPhrases.INTERNAL_SERVER_ERROR);
+        // Checking that the information received is not empty
+        if (!username || !password) {
+            response.status(StatusCodes.BAD_REQUEST).json({ error: 'Missing parameters' });
+            return UndefinedUser;
         }
 
         try {
-            const refreshToken: string = await Session.instance.generateRefreshToken({ username }, rememberMe);
-            const accessToken: string = await Session.instance.generateAccessToken({ username });
-
-            await Database.instance.PrismaClient.user.update({
-                where: { username: username },
-                data: { refreshToken: refreshToken },
+            // Checking if such a user is registered
+            const user = await Database.instance.PrismaClient.user.findFirst({
+                where: { username: { equals: username } },
             });
-
-            // TODO: For some reason it doesn't set the cookie. Must be fixed.
+            if (!user) {
+                response.status(StatusCodes.BAD_REQUEST).json({ error: 'Such a user does not exist' });
+                return UndefinedUser;
+            }
+            // Checking that the received password matches the database password
+            if (!(await bcrypt.compare(password, user.password))) {
+                response.status(StatusCodes.UNAUTHORIZED).json({ error: 'Incorrect password' });
+                return UndefinedUser;
+            }
+            // Generating refresh and access token which will be stored in the cookies
+            const refreshToken: string = await Session.instance.generateRefreshToken(
+                { username: user.username, role: user.role },
+                rememberMe
+            );
+            const accessToken: string = await Session.instance.generateAccessToken({ username: user.username, role: user.role });
             Session.instance.addCookie(TokenType.Refresh, refreshToken, {
                 httpOnly: true,
                 maxAge: 60 * 60 * 60,
@@ -45,20 +52,11 @@ export default class LoginRequestHandler extends RequestHandler {
             });
             Session.instance.setCookies(response);
 
-            // response.setHeader('Set-Cookie', [
-            //     cookie.serialize(process.env.ACCESS_TOKEN_COOKIE_NAME, accessToken, {
-            //         httpOnly: true,
-            //         maxAge: 60 * 60,
-            //     }),
-            //     cookie.serialize(process.env.REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
-            //         httpOnly: true,
-            //         maxAge: 60 * 60,
-            //     }),
-            // ]);
-
-            response.status(StatusCodes.OK).json({ username });
+            response.status(StatusCodes.OK).json({ username: user.username, role: user.role });
+            return { username: user.username, role: user.role };
         } catch (error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).send(ReasonPhrases.INTERNAL_SERVER_ERROR);
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Server error' });
+            return UndefinedUser;
         }
     }
 }

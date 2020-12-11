@@ -1,10 +1,10 @@
 import { Button, Checkbox, Col, Input, Row, Form, PageHeader, message } from 'antd';
 import Link from 'next/link';
-import useUser from '../../lib/client/hooks/User';
+import useUser from '../../../lib/client/hooks/User';
 import './style.module.less';
 
 export default function Login(): JSX.Element {
-    const [user, loading, mutate] = useUser({ redirectTo: '/', redirectIfFound: true });
+    const { mutate } = useUser({ redirectTo: '/', redirectIfFound: true });
 
     const submitLogin = async (data: any) => {
         const result: Response = await fetch('/api/auth/login', {
