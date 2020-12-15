@@ -44,6 +44,21 @@ div#__next > div > div {
     padding: 1%;
     border: 1px solid #f0f0f0;
     margin-bottom: 1%;
+    position: relative;
+    &:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        opacity: 0.05;
+        background-image: url('https://2game.com/wp/wp-content/uploads/2020/04/apps.65175.68565266983380288.0f5ef871-88c0-45f7-b108-6aacbc041fcf.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
 }
 
 .page-content {

@@ -1,13 +1,15 @@
 import { Button, Card, Col, Result, Row } from 'antd';
 import Link from 'next/link';
 import React from 'react';
+import MainLayout from '../components/MainLayout';
 
 export default function Error404() {
     return (
-        <div className="page-content">
+        <MainLayout headerTitle="Klaida">
             <Row justify="center" align="middle">
                 <Col>
                     <Result
+                        status="404"
                         title="404"
                         subTitle="Deja, jūsų aplankyto puslapio nėra."
                         extra={
@@ -18,6 +20,6 @@ export default function Error404() {
                     />
                 </Col>
             </Row>
-        </div>
+        </MainLayout>
     );
 }

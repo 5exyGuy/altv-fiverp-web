@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma: PrismaClient = new PrismaClient();
 
-export default class LoginRequestHandler extends RequestHandler {
+export default class LoginRequestHandler extends RequestHandler<void> {
     public async handle(request: NextApiRequest, response: NextApiResponse): Promise<void> {
         // try {
         //     prisma.user.findFirst({ where: {username: }})

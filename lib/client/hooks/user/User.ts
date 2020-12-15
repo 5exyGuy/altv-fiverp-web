@@ -1,21 +1,20 @@
 import useSWR from 'swr';
 import Router from 'next/router';
 import { useEffect } from 'react';
-import { User } from '../../shared/types/User';
-
-type useUser = { user: User; loading: boolean; mutate: (data?: any, shouldRevalidate?: boolean) => Promise<any> };
+import { UserPayload, UserHook } from '../../../shared/types/User';
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
-export default function useUser(options?: { redirectTo: string; redirectIfFound?: boolean }): useUser {
+export default function useUser(options?: { redirectTo: string; redirectIfFound?: boolean; redirectIfNotFound?: boolean }): UserHook {
     const { data, error, mutate } = useSWR('/api/auth/user', fetcher);
-    const loading: boolean = !data;
-    const user: User = error ? undefined : data?.error ? undefined : data;
+    const loading = !data;
+    const user = error ? undefined : data?.error ? undefined : data;
 
     if (options) {
         useEffect(() => {
             if (!options.redirectTo || loading) return;
             if (options.redirectIfFound && user) Router.push(options.redirectTo);
+            else if (options.redirectIfNotFound && !user) Router.push(options.redirectTo);
         }, [options.redirectTo, options.redirectIfFound, loading, user]);
     }
 
