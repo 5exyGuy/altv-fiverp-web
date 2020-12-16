@@ -274,7 +274,9 @@ model Session {
 model User {
   name              String?
   email             String?        @unique
+  password          String?
   emailVerified     DateTime?      @map(name: "email_verified")
+  emailVerifyToken  String?
   image             String?
   role              Role           @default(USER)
   createdAt         DateTime       @default(now()) @map(name: "created_at")

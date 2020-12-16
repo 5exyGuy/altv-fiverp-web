@@ -8,8 +8,8 @@ import CharacterBuilder from './CharacterBuilder';
 export default class UserBuilder extends EntityBuilder {
     protected _entity: User = new User();
 
-    public setUsername(username: string): UserBuilder {
-        this._entity.username = username;
+    public setName(name: string): UserBuilder {
+        this._entity.name = name;
         return this;
     }
 
@@ -23,28 +23,33 @@ export default class UserBuilder extends EntityBuilder {
         return this;
     }
 
+    public setEmailVerified(emailVerified: Date): UserBuilder {
+        this._entity.emailVerified = emailVerified;
+        return this;
+    }
+
+    public setEmailVerifyToken(emailVerifyToken: string): UserBuilder {
+        this._entity.emailVerifyToken = emailVerifyToken;
+        return this;
+    }
+
+    public setImage(image: string): UserBuilder {
+        this._entity.image = image;
+        return this;
+    }
+
     public setRole(role: string): UserBuilder {
         this._entity.role = role;
         return this;
     }
 
-    public setRegistrationDate(registrationDate: Date): UserBuilder {
-        this._entity.registrationDate = registrationDate;
+    public setCreatedAt(createdAt: Date): UserBuilder {
+        this._entity.createdAt = createdAt;
         return this;
     }
 
-    public setVerified(verified: boolean): UserBuilder {
-        this._entity.verified = verified;
-        return this;
-    }
-
-    public setConfirmationToken(confirmationToken: string): UserBuilder {
-        this._entity.confirmationToken = confirmationToken;
-        return this;
-    }
-
-    public setRefreshToken(refreshToken: string): UserBuilder {
-        this._entity.refreshToken = refreshToken;
+    public setUpdatedAt(updatedAt: Date): UserBuilder {
+        this._entity.updatedAt = updatedAt;
         return this;
     }
 

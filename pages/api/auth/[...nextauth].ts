@@ -1,21 +1,18 @@
-import { PrismaClient } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 import NextAuth, { InitOptions } from 'next-auth';
 import Adapters from 'next-auth/adapters';
 import Providers from 'next-auth/providers';
 import Database from '../../../lib/server/database/Database';
 
-const prisma: PrismaClient = Database.instance.PrismaClient;
-
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
 const options: InitOptions = {
     // https://next-auth.js.org/configuration/providers
     providers: [
-        Providers.Email({
-            server: process.env.EMAIL_SERVER,
-            from: process.env.EMAIL_FROM,
-        }),
+        // Providers.Email({
+        //     server: process.env.EMAIL_SERVER,
+        //     from: process.env.EMAIL_FROM,
+        // }),
         // Providers.Apple({
         //     clientId: process.env.APPLE_ID,
         //     clientSecret: {
@@ -29,10 +26,10 @@ const options: InitOptions = {
         //     clientId: process.env.FACEBOOK_ID,
         //     clientSecret: process.env.FACEBOOK_SECRET,
         // }),
-        Providers.GitHub({
-            clientId: process.env.GITHUB_ID,
-            clientSecret: process.env.GITHUB_SECRET,
-        }),
+        // Providers.GitHub({
+        //     clientId: process.env.GITHUB_ID,
+        //     clientSecret: process.env.GITHUB_SECRET,
+        // }),
         // Providers.Google({
         //     clientId: process.env.GOOGLE_ID,
         //     clientSecret: process.env.GOOGLE_SECRET,
@@ -41,6 +38,32 @@ const options: InitOptions = {
         //     clientId: process.env.TWITTER_ID,
         //     clientSecret: process.env.TWITTER_SECRET,
         // }),
+        Providers.Credentials({
+            // The name to display on the sign in form (e.g. 'Sign in with...')
+            name: 'Credentials',
+            // The credentials is used to generate a suitable form on the sign in page.
+            // You can specify whatever fields you are expecting to be submitted.
+            // e.g. domain, username, password, 2FA token, etc.
+            credentials: {
+                username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
+                password: { label: 'Password', type: 'password' },
+            },
+            authorize: async (credentials) => {
+                const user = (credentials) => {
+                    // You need to provide your own logic here that takes the credentials
+                    // submitted and returns either a object representing a user or value
+                    // that is false/null if the credentials are invalid.
+                    // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
+                    return null;
+                };
+                if (user) {
+                    // Any user object returned here will be saved in the JSON Web Token
+                    return Promise.resolve(user);
+                } else {
+                    return Promise.resolve(null);
+                }
+            },
+        }),
     ],
     // Database optional. MySQL, Maria DB, Postgres and MongoDB are supported.
     // https://next-auth.js.org/configuration/database
@@ -49,7 +72,7 @@ const options: InitOptions = {
     // * You must to install an appropriate node_module for your database
     // * The Email provider requires a database (OAuth providers do not)
     adapter: Adapters.Prisma.Adapter({
-        prisma,
+        prisma: Database.instance.PrismaClient,
         modelMapping: { Account: 'account', Session: 'session', User: 'user', VerificationRequest: 'verificationRequest' },
     }),
 
