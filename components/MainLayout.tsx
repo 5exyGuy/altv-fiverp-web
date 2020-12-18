@@ -1,12 +1,12 @@
 import React, { ReactElement } from 'react';
 import { Avatar, Layout, Menu, PageHeader, Spin } from 'antd';
 import { BiNews } from 'react-icons/bi';
-import { FaHome, FaUserAlt, FaUserLock } from 'react-icons/fa';
+import { FaHome, FaUserLock } from 'react-icons/fa';
 import { IoIosStats } from 'react-icons/io';
 import { AiFillSetting, AiOutlineLogout } from 'react-icons/ai';
 import Router from 'next/router';
 import Icon from './Icon';
-import { useSession } from 'next-auth/client';
+import { signOut, useSession } from 'next-auth/client';
 
 export default function MainLayout(props: Readonly<{ children?: React.ReactNode; headerTitle: string }>): ReactElement {
     const [session, loading] = useSession();
@@ -30,7 +30,7 @@ export default function MainLayout(props: Readonly<{ children?: React.ReactNode;
                             <Menu.SubMenu
                                 icon={<Avatar style={{ marginRight: '10px' }} shape="circle" src={session.user.image} />}
                                 style={{ float: 'right' }}
-                                title={session.user.name}
+                                title={session.user.name ? session.user.name : session.user.email}
                             >
                                 <Menu.Item
                                     key="setting:1"
@@ -42,7 +42,7 @@ export default function MainLayout(props: Readonly<{ children?: React.ReactNode;
                                 <Menu.Item
                                     key="setting:2"
                                     icon={<Icon component={<AiOutlineLogout size="1.5em" />} />}
-                                    // onClick={submitLogout}
+                                    onClick={() => signOut()}
                                 >
                                     Atsijungti
                                 </Menu.Item>

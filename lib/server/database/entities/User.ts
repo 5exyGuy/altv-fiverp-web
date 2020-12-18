@@ -3,11 +3,13 @@ import Character from './Character';
 import LoginHistory from './LoginHistory';
 
 export default class User extends Entity {
+    public username: string;
     public name: string;
     public email: string;
     public password: string;
     public emailVerified: Date;
     public emailVerifyToken: string;
+    public verified: boolean;
     public image: string;
     public role: string;
     public createdAt: Date;

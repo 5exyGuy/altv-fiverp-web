@@ -3,16 +3,21 @@ import NextAuth, { InitOptions } from 'next-auth';
 import Adapters from 'next-auth/adapters';
 import Providers from 'next-auth/providers';
 import Database from '../../../lib/server/database/Database';
+import MailSender from '../../../lib/server/email/MailSender';
+import bcrypt from 'bcryptjs';
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
 const options: InitOptions = {
     // https://next-auth.js.org/configuration/providers
     providers: [
-        // Providers.Email({
-        //     server: process.env.EMAIL_SERVER,
-        //     from: process.env.EMAIL_FROM,
-        // }),
+        Providers.Email({
+            server: process.env.EMAIL_SERVER,
+            from: process.env.EMAIL_FROM,
+            sendVerificationRequest: async (options) => {
+                MailSender.instance.sendEmailLoginRequest(options);
+            },
+        }),
         // Providers.Apple({
         //     clientId: process.env.APPLE_ID,
         //     clientSecret: {
@@ -49,19 +54,29 @@ const options: InitOptions = {
                 password: { label: 'Password', type: 'password' },
             },
             authorize: async (credentials) => {
-                const user = (credentials) => {
-                    // You need to provide your own logic here that takes the credentials
-                    // submitted and returns either a object representing a user or value
-                    // that is false/null if the credentials are invalid.
-                    // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
-                    return null;
-                };
-                if (user) {
-                    // Any user object returned here will be saved in the JSON Web Token
-                    return Promise.resolve(user);
-                } else {
-                    return Promise.resolve(null);
-                }
+                const name: string = credentials.username;
+                const password: string = credentials.password;
+
+                if (!name || !password) return Promise.resolve(null);
+
+                const user = await Database.instance.PrismaClient.user.findFirst({ where: { name: name } });
+                if (!user) return Promise.resolve(null);
+                if (!(await bcrypt.compare(password, user.password))) return Promise.resolve(null);
+
+                return Promise.resolve({ id: user.id, name: user.name, email: user.email });
+
+                // const user = { id: 1, name: 'J Smith', email: 'jsmith@example.com' };
+
+                // if (user) {
+                //     // Any object returned will be saved in `user` property of the JWT
+                //     return Promise.resolve(user);
+                // } else {
+                //     // If you return null or false then the credentials will be rejected
+                //     return Promise.resolve(null);
+                //     // You can also Reject this callback with an Error or with a URL:
+                //     // return Promise.reject(new Error('error message')) // Redirect to error page
+                //     // return Promise.reject('/path/to/redirect')        // Redirect to a URL
+                // }
             },
         }),
     ],
@@ -126,7 +141,9 @@ const options: InitOptions = {
     // when an action is performed.
     // https://next-auth.js.org/configuration/callbacks
     callbacks: {
-        // signIn: async (user, account, profile) => { return Promise.resolve(true) },
+        signIn: async (user, account, profile) => {
+            return Promise.resolve(true);
+        },
         // redirect: async (url, baseUrl) => { return Promise.resolve(baseUrl) },
         // session: async (session, user) => { return Promise.resolve(session) },
         // jwt: async (token, user, account, profile, isNewUser) => { return Promise.resolve(token) }

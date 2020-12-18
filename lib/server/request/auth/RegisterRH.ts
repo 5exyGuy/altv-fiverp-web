@@ -7,18 +7,19 @@ import Prisma from '@prisma/client';
 import uniqid from 'uniqid';
 import UserBuilder from '../../database/builders/UserBuilder';
 import User from '../../database/entities/User';
+import MailSender from '../../email/MailSender';
 
 export default class RegisterRequestHandler extends RequestHandler {
     public async handle(request: NextApiRequest, response: NextApiResponse): Promise<void> {
-        const { name, email, password } = request.body;
+        const { username, email, password } = request.body;
 
         // Check that all parameters are received
-        if (!name || !email || !password) return response.status(StatusCodes.BAD_REQUEST).json({ message: ReasonPhrases.BAD_REQUEST });
+        if (!username || !email || !password) return response.status(StatusCodes.BAD_REQUEST).json({ message: ReasonPhrases.BAD_REQUEST });
 
         try {
             // Checking if such a user already exists
             const result = await Database.instance.PrismaClient.user.findFirst({
-                where: { OR: [{ name: { equals: name } }, { email: { equals: email } }] },
+                where: { OR: [{ name: { equals: username } }, { email: { equals: email } }] },
             });
             if (result) return response.status(StatusCodes.BAD_REQUEST).json({ message: ReasonPhrases.BAD_REQUEST });
         } catch (error) {
@@ -28,7 +29,7 @@ export default class RegisterRequestHandler extends RequestHandler {
         const hashedPassword: string = await bcrypt.hash(password, 10); // Hashed password
 
         const user: User = <User>new UserBuilder()
-            .setName(name)
+            .setUsername(username)
             .setEmail(email)
             .setPassword(hashedPassword)
             .setEmailVerifyToken(uniqid()) // A confirmation token will be sent to the specified email
@@ -41,6 +42,7 @@ export default class RegisterRequestHandler extends RequestHandler {
                     ...(<Prisma.UserCreateInput>user.convertToObject()),
                 },
             });
+            await MailSender.instance.sendEmailConfirmRequest(user.email, user.emailVerifyToken);
         } catch (error) {
             response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: ReasonPhrases.INTERNAL_SERVER_ERROR });
         }

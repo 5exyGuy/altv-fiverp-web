@@ -8,6 +8,11 @@ import CharacterBuilder from './CharacterBuilder';
 export default class UserBuilder extends EntityBuilder {
     protected _entity: User = new User();
 
+    public setUsername(username: string): UserBuilder {
+        this._entity.username = username;
+        return this;
+    }
+
     public setName(name: string): UserBuilder {
         this._entity.name = name;
         return this;
@@ -30,6 +35,11 @@ export default class UserBuilder extends EntityBuilder {
 
     public setEmailVerifyToken(emailVerifyToken: string): UserBuilder {
         this._entity.emailVerifyToken = emailVerifyToken;
+        return this;
+    }
+
+    public setVerified(verified: boolean): UserBuilder {
+        this._entity.verified = verified;
         return this;
     }
 

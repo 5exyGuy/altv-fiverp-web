@@ -291,9 +291,13 @@ UNIQUE INDEX `Session.access_token_unique`(`access_token`),
 
 -- CreateTable
 CREATE TABLE `User` (
+    `username` VARCHAR(191),
     `name` VARCHAR(191),
     `email` VARCHAR(191),
+    `password` VARCHAR(191),
     `email_verified` DATETIME(3),
+    `emailVerifyToken` VARCHAR(191),
+    `verified` BOOLEAN NOT NULL DEFAULT false,
     `image` VARCHAR(191),
     `role` ENUM('USER', 'MOD', 'ADMIN') NOT NULL DEFAULT 'USER',
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
