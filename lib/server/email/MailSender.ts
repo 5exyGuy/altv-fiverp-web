@@ -97,7 +97,7 @@ export default class MailSender {
             const from: string = process.env.EMAIL_FROM;
             const baseUrl: string = process.env.NEXTAUTH_URL;
             const url: string = baseUrl.concat(
-                '/api/authentication/forgot?email=',
+                '/api/authentication/reset?email=',
                 encodeURIComponent(email),
                 '&token=',
                 encodeURIComponent(token)

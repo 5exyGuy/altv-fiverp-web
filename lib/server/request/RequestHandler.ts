@@ -15,12 +15,21 @@ export default abstract class RequestHandler {
         return response.headersSent || response.writableEnded;
     }
 
+    /**
+     * Sets the next handler meta
+     * @param key Key name
+     * @param value Key value
+     */
     protected setNextHandlerMeta(key: string, value: any): void {
         if (!this._nextHandler) return;
         if (!this._nextHandler._data) this._nextHandler._data = new Map();
         this._nextHandler._data.set(key, value);
     }
 
+    /**
+     * Returns the specified value according to the specified key
+     * @param key Key name
+     */
     protected getMeta(key: string): any {
         if (!this._data) this._data = new Map();
         return this._data.get(key);

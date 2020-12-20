@@ -43,10 +43,9 @@ export default class RegisterRequestHandler extends RequestHandler {
                 },
             });
             await MailSender.instance.sendEmailConfirmRequest(user.email, user.emailVerifyToken);
+            response.status(StatusCodes.CREATED).json({ message: ReasonPhrases.CREATED });
         } catch (error) {
             response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: ReasonPhrases.INTERNAL_SERVER_ERROR });
         }
-
-        response.status(StatusCodes.CREATED).json({ message: ReasonPhrases.CREATED });
     }
 }

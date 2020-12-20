@@ -28,6 +28,11 @@ export default class UserBuilder extends EntityBuilder {
         return this;
     }
 
+    public setPasswordVerifyToken(passwordVerifyToken: string): UserBuilder {
+        this._entity.passwordVerifyToken = passwordVerifyToken;
+        return this;
+    }
+
     public setEmailVerified(emailVerified: Date): UserBuilder {
         this._entity.emailVerified = emailVerified;
         return this;

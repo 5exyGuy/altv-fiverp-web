@@ -295,6 +295,7 @@ CREATE TABLE `User` (
     `name` VARCHAR(191),
     `email` VARCHAR(191),
     `password` VARCHAR(191),
+    `passwordVerifyToken` VARCHAR(191),
     `email_verified` DATETIME(3),
     `emailVerifyToken` VARCHAR(191),
     `verified` BOOLEAN NOT NULL DEFAULT false,
@@ -303,6 +304,7 @@ CREATE TABLE `User` (
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `id` INT NOT NULL AUTO_INCREMENT,
+UNIQUE INDEX `User.username_unique`(`username`),
 UNIQUE INDEX `User.email_unique`(`email`),
 
     PRIMARY KEY (`id`)

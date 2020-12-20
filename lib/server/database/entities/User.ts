@@ -7,6 +7,7 @@ export default class User extends Entity {
     public name: string;
     public email: string;
     public password: string;
+    public passwordVerifyToken: string;
     public emailVerified: Date;
     public emailVerifyToken: string;
     public verified: boolean;

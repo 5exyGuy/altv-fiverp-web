@@ -5,6 +5,8 @@ import Providers from 'next-auth/providers';
 import Database from '../../../lib/server/database/Database';
 import MailSender from '../../../lib/server/email/MailSender';
 import bcrypt from 'bcryptjs';
+import EventManager from '../../../lib/server/events/EventManager';
+import NextAuthEventManager from '../../../lib/server/events/NextAuthEventManager';
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -54,16 +56,17 @@ const options: InitOptions = {
                 password: { label: 'Password', type: 'password' },
             },
             authorize: async (credentials) => {
-                const name: string = credentials.username;
+                const username: string = credentials.username;
                 const password: string = credentials.password;
 
-                if (!name || !password) return Promise.resolve(null);
+                if (!username || !password) return Promise.resolve(null);
 
-                const user = await Database.instance.PrismaClient.user.findFirst({ where: { name: name } });
+                const user = await Database.instance.PrismaClient.user.findFirst({ where: { username: username } });
                 if (!user) return Promise.resolve(null);
+                if (!user.verified) return Promise.resolve(null);
                 if (!(await bcrypt.compare(password, user.password))) return Promise.resolve(null);
 
-                return Promise.resolve({ id: user.id, name: user.name, email: user.email });
+                return Promise.resolve({ id: user.id, name: user.username, email: user.email });
 
                 // const user = { id: 1, name: 'J Smith', email: 'jsmith@example.com' };
 
@@ -130,10 +133,10 @@ const options: InitOptions = {
     // pages is not specified for that route.
     // https://next-auth.js.org/configuration/pages
     pages: {
-        // signIn: '/auth/login', // Displays signin buttons
-        // signOut: '/api/auth/signout', // Displays form with sign out button
-        // error: '/api/auth/error', // Error code passed in query string as ?error=
-        // verifyRequest: '/api/auth/verify-request', // Used for check email page
+        signIn: '/auth/login', // Displays signin buttons
+        signOut: '/auth/logout', // Displays form with sign out button
+        error: '/auth/error', // Error code passed in query string as ?error=
+        verifyRequest: '/auth/login/verify', // Used for check email page
         newUser: '/', // If set, new users will be directed here on first sign in
     },
 
@@ -141,9 +144,9 @@ const options: InitOptions = {
     // when an action is performed.
     // https://next-auth.js.org/configuration/callbacks
     callbacks: {
-        signIn: async (user, account, profile) => {
-            return Promise.resolve(true);
-        },
+        // signIn: async (user, account, profile) => {
+        //     return Promise.resolve(true);
+        // },
         // redirect: async (url, baseUrl) => { return Promise.resolve(baseUrl) },
         // session: async (session, user) => { return Promise.resolve(session) },
         // jwt: async (token, user, account, profile, isNewUser) => { return Promise.resolve(token) }
@@ -151,10 +154,18 @@ const options: InitOptions = {
 
     // Events are useful for logging
     // https://next-auth.js.org/configuration/events
-    events: {},
+    events: {
+        createUser: async (message) => NextAuthEventManager.instance.notify('createUser', message),
+        error: async (message) => NextAuthEventManager.instance.notify('error', message),
+        linkAccount: async (message) => NextAuthEventManager.instance.notify('linkAccount', message),
+        session: async (message) => NextAuthEventManager.instance.notify('session', message),
+        signIn: async (message) => NextAuthEventManager.instance.notify('signIn', message),
+        signOut: async (message) => NextAuthEventManager.instance.notify('signOut', message),
+        updateUser: async (message) => NextAuthEventManager.instance.notify('updateUser', message),
+    },
 
     // Enable debug messages in the console if you are having problems
-    debug: false,
+    debug: true,
 };
 
 export default (request: NextApiRequest, response: NextApiResponse) => NextAuth(request, response, options);

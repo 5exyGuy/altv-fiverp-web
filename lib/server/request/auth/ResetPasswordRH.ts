@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import Database from '../../database/Database';
 import RequestHandler from '../RequestHandler';
 
-export default class ConfirmEmailRequestHandler extends RequestHandler {
+export default class ResetPasswordRequestHandler extends RequestHandler {
     public async handle(request: NextApiRequest, response: NextApiResponse): Promise<void> {
         const { email, token } = request.query;
 
@@ -13,8 +13,8 @@ export default class ConfirmEmailRequestHandler extends RequestHandler {
 
         try {
             const result = await Database.instance.PrismaClient.user.updateMany({
-                where: { AND: { email: { equals: email }, emailVerifyToken: { equals: token } } },
-                data: { emailVerifyToken: null, verified: true },
+                where: { AND: { email: { equals: email }, passwordVerifyToken: { equals: token } } },
+                data: { passwordVerifyToken: null, password: null },
             });
             if (result.count <= 0) return response.status(StatusCodes.NOT_FOUND).json({ message: ReasonPhrases.NOT_FOUND });
 

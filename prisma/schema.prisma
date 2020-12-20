@@ -272,20 +272,21 @@ model Session {
 }
 
 model User {
-  username          String?        
-  name              String?
-  email             String?        @unique
-  password          String?
-  emailVerified     DateTime?      @map(name: "email_verified")
-  emailVerifyToken  String?
-  verified          Boolean        @default(false)
-  image             String?
-  role              Role           @default(USER)
-  createdAt         DateTime       @default(now()) @map(name: "created_at")
-  updatedAt         DateTime       @default(now()) @map(name: "updated_at")
-  id                Int            @id @default(autoincrement())
-  Character         Character[]
-  LoginHistory      LoginHistory[]
+  username            String?        @unique
+  name                String?
+  email               String?        @unique
+  password            String?
+  passwordVerifyToken String?
+  emailVerified       DateTime?      @map(name: "email_verified")
+  emailVerifyToken    String?
+  verified            Boolean        @default(false)
+  image               String?
+  role                Role           @default(USER)
+  createdAt           DateTime       @default(now()) @map(name: "created_at")
+  updatedAt           DateTime       @default(now()) @map(name: "updated_at")
+  id                  Int            @id @default(autoincrement())
+  Character           Character[]
+  LoginHistory        LoginHistory[]
 }
 
 enum Role {

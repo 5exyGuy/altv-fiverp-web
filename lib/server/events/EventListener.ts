@@ -1,3 +1,3 @@
-export default interface EventSubscriber {
+export default interface EventListener {
     update(...args: Array<any>): void;
 }
