@@ -1,21 +1,22 @@
 import Entity from '../Entity';
 import Character from './Character';
 import LoginHistory from './LoginHistory';
+import Session from './Session';
 
-export default class User extends Entity {
+export default class User extends Entity<User> {
     public username: string;
     public name: string;
     public email: string;
     public password: string;
-    public passwordVerifyToken: string;
     public emailVerified: Date;
-    public emailVerifyToken: string;
     public verified: boolean;
     public image: string;
-    public role: string;
     public createdAt: Date;
     public updatedAt: Date;
+    public role: string;
     public id: number;
-    public Character: Array<Character>;
-    public LoginHistory: Array<LoginHistory>;
+    public accounts: Account[];
+    public characters: Character[];
+    public loginHistories: LoginHistory[];
+    public sessions: Session[];
 }

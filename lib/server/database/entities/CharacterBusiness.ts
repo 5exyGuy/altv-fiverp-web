@@ -2,10 +2,10 @@ import Entity from '../Entity';
 import Business from './Business';
 import Character from './Character';
 
-export default class CharacterBusiness extends Entity {
+export default class CharacterBusiness extends Entity<CharacterBusiness> {
     id: number;
-    fk_Business_id: number;
-    fk_Character_id: number;
-    Business: Business;
-    Character: Character;
+    fkCharacterId: number;
+    fkBusinessId: number;
+    fkCharacter: Character;
+    fkBusiness: Business;
 }

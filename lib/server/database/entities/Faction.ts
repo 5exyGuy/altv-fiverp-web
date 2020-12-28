@@ -2,11 +2,11 @@ import Entity from '../Entity';
 import Character from './Character';
 import FactionMember from './FactionMember';
 
-export default class Faction extends Entity {
+export default class Faction extends Entity<Faction> {
     public name: string;
-    public registrationDate: Date;
+    public createdAt: Date;
     public id: number;
-    public fk_Character_id: number;
-    public Character: Character;
-    public FactionMember: FactionMember[];
+    public fkCharacterId: number;
+    public fkCharacter: Character;
+    public factionMembers: FactionMember[];
 }

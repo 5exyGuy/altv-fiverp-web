@@ -6,12 +6,12 @@ import HouseInventory from './HouseInventory';
 import InventoryItem from './InventoryItem';
 import VehicleInventory from './VehicleInventory';
 
-export default class Inventory extends Entity {
+export default class Inventory extends Entity<Inventory> {
     public id: number;
-    public ApartmentInventory: ApartmentInventory[];
-    public BusinessInventory: BusinessInventory[];
-    public CharacterInventory: CharacterInventory[];
-    public HouseInventory: HouseInventory[];
-    public InventoryItem: InventoryItem[];
-    public VehicleInventory: VehicleInventory[];
+    public apartmentInventories: ApartmentInventory[];
+    public businessInventories: BusinessInventory[];
+    public characterInventories: CharacterInventory[];
+    public houseInventories: HouseInventory[];
+    public inventoryItems: InventoryItem[];
+    public vehicleInventories: VehicleInventory[];
 }

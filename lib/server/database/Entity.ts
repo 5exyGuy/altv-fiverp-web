@@ -1,4 +1,8 @@
-export default class Entity {
+export default class Entity<T> {
+    public constructor(init?: Partial<T>) {
+        Object.assign(this, init);
+    }
+
     public convertToMap(): Map<string, any> {
         const propNames: Array<string> = Object.getOwnPropertyNames(this);
         const properties: Map<string, any> = new Map();

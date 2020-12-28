@@ -2,10 +2,10 @@ import House from './House';
 import Character from './Character';
 import Entity from '../Entity';
 
-export default class CharacterHouse extends Entity {
+export default class CharacterHouse extends Entity<CharacterHouse> {
     public id: number;
-    public fk_Character_id: number;
-    public fk_House_id: number;
-    public Character: Character;
-    public House: House;
+    public fkCharacterId: number;
+    public fkHouseId: number;
+    public fkCharacter: Character;
+    public fkHouse: House;
 }

@@ -1,7 +1,7 @@
 import Entity from '../Entity';
 import CharacterVehicle from './CharacterVehicle';
 
-export default class Vehicle extends Entity {
+export default class Vehicle extends Entity<Vehicle> {
     public name: string;
     public hash: string;
     public price: number;
@@ -18,5 +18,5 @@ export default class Vehicle extends Entity {
     public maxKnots: number;
     public moveResistance: number;
     public id: number;
-    public CharacterVehicle: CharacterVehicle[];
+    public characterVehicles: CharacterVehicle[];
 }

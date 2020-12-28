@@ -11,7 +11,7 @@ import FactionMember from './FactionMember';
 import Message from './Message';
 import Entity from '../Entity';
 
-export default class Character extends Entity {
+export default class Character extends Entity<Character> {
     public firstName: string;
     public lastName: string;
     public cash: number;
@@ -23,18 +23,19 @@ export default class Character extends Entity {
     public arrestTime: number;
     public dimension: number;
     public lastPosition: string;
-    public lastRotation: string;
     public id: number;
-    public fk_User_id: number;
-    public User: User;
-    public CharacterApartment: CharacterApartment[];
-    public CharacterBusiness: CharacterBusiness[];
-    public CharacterHouse: CharacterHouse[];
-    public CharacterInventory: CharacterInventory[];
-    public CharacterSkill: CharacterSkill[];
-    public CharacterVehicle: CharacterVehicle[];
-    public Contact_CharacterToContact_fk_Character_id1: Contact[];
-    public Faction: Faction;
-    public FactionMember: FactionMember[];
-    public Message_CharacterToMessage_fk_Character_id1: Message[];
+    public fkUserId: number;
+    public fkUser: User;
+    public characterApartments: CharacterApartment[];
+    public characterBusinesses: CharacterBusiness[];
+    public characterHouses: CharacterHouse[];
+    public characterInventory: CharacterInventory;
+    public characterSkills: CharacterSkill[];
+    public characterVehicles: CharacterVehicle[];
+    public contacts: Contact[];
+    public contacts2: Contact[];
+    public faction: Faction;
+    public factionMember: FactionMember;
+    public messages: Message[];
+    public messages2: Message[];
 }

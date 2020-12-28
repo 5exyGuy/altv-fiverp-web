@@ -1,10 +1,10 @@
 import Entity from '../Entity';
 import Character from './Character';
 
-export default class Contact extends Entity {
+export default class Contact extends Entity<Contact> {
     public id: number;
-    public fk_Character_id: number;
-    public fk_Character_id1: number;
-    public Character_CharacterToContact_fk_Character_id: Character;
-    public Character_CharacterToContact_fk_Character_id1: Character;
+    public fkCharacterId1: number;
+    public fkCharacterId2: number;
+    public fkCharacter1: Character;
+    public fkCharacter2: Character;
 }
