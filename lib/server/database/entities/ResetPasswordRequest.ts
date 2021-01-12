@@ -1,6 +1,6 @@
 import Entity from '../Entity';
 
-export default class ResetPasswordVerificationRequest extends Entity<ResetPasswordVerificationRequest> {
+export default class ResetPasswordRequest extends Entity<ResetPasswordRequest> {
     public identifier: string;
     public token: string;
     public expires: Date;

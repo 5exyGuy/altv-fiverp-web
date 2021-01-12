@@ -8,6 +8,7 @@ datasource db {
 }
 
 model Account {
+  id                   Int       @id @default(autoincrement())
   compoundId           String    @unique @map(name: "compound_id")
   providerType         String    @map(name: "provider_type")
   providerId           String    @map(name: "provider_id")
@@ -17,369 +18,432 @@ model Account {
   accessTokenExpires   DateTime? @map(name: "access_token_expires")
   createdAt            DateTime  @default(now()) @map(name: "created_at")
   updatedAt            DateTime  @default(now()) @map(name: "updated_at")
-  id                   Int       @id @default(autoincrement())
-  userId               Int
-  User                 User      @relation(fields: [userId], references: [id])
+  fkUserId             Int       @map(name: "user_id")
+  fkUser               User      @relation(fields: [fkUserId], references: [id])
 
   @@index([providerAccountId], name: "providerAccountId")
   @@index([providerId], name: "providerId")
-  @@index([userId], name: "fk_User_id")
+  @@index([fkUserId], name: "fk_User_id")
 
   @@map(name: "accounts")
 }
 
 model Apartment {
-  price              Int
-  locked             Boolean
-  location           String
-  id                 Int                  @id @default(autoincrement())
-  ApartmentInventory ApartmentInventory[]
-  CharacterApartment CharacterApartment?
+  id                   Int                  @id @default(autoincrement())
+  price                Int
+  locked               Boolean
+  location             String
+  apartmentInventories ApartmentInventory[]
+  characterApartment   CharacterApartment?
 
   @@map(name: "apartments")
 }
 
 model ApartmentInventory {
   id              Int       @id @default(autoincrement())
-  fk_Inventory_id Int
-  fk_Apartment_id Int
-  Apartment       Apartment @relation(fields: [fk_Apartment_id], references: [id])
-  Inventory       Inventory @relation(fields: [fk_Inventory_id], references: [id])
+  fkInventoryId   Int       @map(name: "fk_Inventory_id")
+  fkApartmentId   Int       @map(name: "fk_Apartment_id")
+  Inventory       Inventory @relation(fields: [fkInventoryId], references: [id])
+  Apartment       Apartment @relation(fields: [fkApartmentId], references: [id])
 
-  @@index([fk_Apartment_id], name: "fk_Apartment_id")
-  @@index([fk_Inventory_id], name: "fk_Inventory_id")
+  @@index([fkInventoryId], name: "fk_Inventory_id")
+  @@index([fkApartmentId], name: "fk_Apartment_id")
+
+  @@map(name: "apartment_inventories")
 }
 
 model Business {
-  price             Int
-  locked            Boolean
-  location          String
-  id                Int                 @id @default(autoincrement())
-  BusinessInventory BusinessInventory[]
-  CharacterBusiness CharacterBusiness?
+  id                  Int                 @id @default(autoincrement())
+  price               Int
+  locked              Boolean
+  location            String
+  businessInventories BusinessInventory[]
+  characterBusiness   CharacterBusiness?
+
+  @@map(name: "businesses")
 }
 
 model BusinessInventory {
   id              Int       @id @default(autoincrement())
-  fk_Inventory_id Int
-  fk_Business_id  Int
-  Business        Business  @relation(fields: [fk_Business_id], references: [id])
-  Inventory       Inventory @relation(fields: [fk_Inventory_id], references: [id])
+  fkInventoryId   Int       @map(name: "fk_Inventory_id")
+  fkBusinessId    Int       @map(name: "fk_Business_id")
+  Inventory       Inventory @relation(fields: [fkInventoryId], references: [id])
+  Business        Business  @relation(fields: [fkBusinessId], references: [id])
 
-  @@index([fk_Business_id], name: "fk_Business_id")
-  @@index([fk_Inventory_id], name: "fk_Inventory_id")
+  @@index([fkInventoryId], name: "fk_Inventory_id")
+  @@index([fkBusinessId], name: "fk_Business_id")
+
+  @@map(name: "business_inventories")
 }
 
 model Character {
-  first_name                                  String
-  last_name                                   String
+  id                                          Int                  @id @default(autoincrement())
+  firstName                                   String               @map(name: "first_name")
+  lastName                                    String               @map(name: "last_name")
   cash                                        Int
   bank                                        Int
   dead                                        Boolean
-  phone_number                                String
+  phoneNumber                                 String               @map(name: "phone_number")
   health                                      Int
   armor                                       Int
-  arrest_time                                 Int
+  arrestTime                                  Int                  @map(name: "arrest_time")
   dimension                                   Int
-  last_position                               String
-  id                                          Int                  @id @default(autoincrement())
-  fk_User_id                                  Int
-  User                                        User                 @relation(fields: [fk_User_id], references: [id])
-  CharacterApartment                          CharacterApartment[]
-  CharacterBusiness                           CharacterBusiness[]
-  CharacterHouse                              CharacterHouse[]
-  CharacterInventory                          CharacterInventory?
-  CharacterSkill                              CharacterSkill[]
-  CharacterVehicle                            CharacterVehicle[]
-  Contact_CharacterToContact_fk_Character_id  Contact[]            @relation("CharacterToContact_fk_Character_id")
-  Contact_CharacterToContact_fk_Character_id1 Contact[]            @relation("CharacterToContact_fk_Character_id1")
-  Faction                                     Faction?
-  FactionMember                               FactionMember?
-  Message_CharacterToMessage_fk_Character_id  Message[]            @relation("CharacterToMessage_fk_Character_id")
-  Message_CharacterToMessage_fk_Character_id1 Message[]            @relation("CharacterToMessage_fk_Character_id1")
+  lastPosition                                String               @map(name: "last_position")
+  fkUserId                                    Int
+  fkUser                                      User                 @relation(fields: [fkUserId], references: [id])
+  characterApartments                         CharacterApartment[]
+  characterBusinesses                         CharacterBusiness[]
+  characterHouses                             CharacterHouse[]
+  characterInventory                          CharacterInventory?
+  characterSkills                             CharacterSkill[]
+  characterVehicles                           CharacterVehicle[]
+  contacts                                    Contact[]            @relation("CharacterToContact_fk_Character_id")
+  contacts2                                   Contact[]            @relation("CharacterToContact_fk_Character_id1")
+  faction                                     Faction?
+  factionMember                               FactionMember?
+  messages                                    Message[]            @relation("CharacterToMessage_fk_Character_id")
+  messages2                                   Message[]            @relation("CharacterToMessage_fk_Character_id1")
 
-  @@index([fk_User_id], name: "fk_User_id")
+  @@index([fkUserId], name: "fk_User_id")
+
+  @@map(name: "characters")
 }
 
 model CharacterApartment {
   id              Int       @id @default(autoincrement())
-  fk_Character_id Int
-  fk_Apartment_id Int       @unique
-  Apartment       Apartment @relation(fields: [fk_Apartment_id], references: [id])
-  Character       Character @relation(fields: [fk_Character_id], references: [id])
+  fkCharacterId   Int       @map(name: "fk_Character_id")
+  fkApartmentId   Int       @unique @map(name: "fk_Apartment_id")
+  Character       Character @relation(fields: [fkCharacterId], references: [id])
+  Apartment       Apartment @relation(fields: [fkApartmentId], references: [id])
 
-  @@index([fk_Character_id], name: "fk_Character_id")
+  @@index([fkCharacterId], name: "fk_Character_id")
+
+  @@map(name: "character_apartments")
 }
 
 model CharacterBusiness {
-  id              Int       @id @default(autoincrement())
-  fk_Character_id Int
-  fk_Business_id  Int       @unique
-  Business        Business  @relation(fields: [fk_Business_id], references: [id])
-  Character       Character @relation(fields: [fk_Character_id], references: [id])
+  id            Int       @id @default(autoincrement())
+  fkCharacterId Int       @map(name: "fk_Character_id")
+  fkBusinessId  Int       @unique @map(name: "fk_Business_id")
+  Character     Character @relation(fields: [fkCharacterId], references: [id])
+  Business      Business  @relation(fields: [fkBusinessId], references: [id])
 
-  @@index([fk_Character_id], name: "fk_Character_id")
+  @@index([fkCharacterId], name: "fk_Character_id")
+
+  @@map(name: "character_businesses")
 }
 
 model CharacterHouse {
-  id              Int       @id @default(autoincrement())
-  fk_Character_id Int
-  fk_House_id     Int       @unique
-  Character       Character @relation(fields: [fk_Character_id], references: [id])
-  House           House     @relation(fields: [fk_House_id], references: [id])
+  id            Int       @id @default(autoincrement())
+  fkCharacterId Int       @map(name: "fk_Character_id")
+  fkHouseId     Int       @unique @map(name: "fk_House_id")
+  fkCharacter   Character @relation(fields: [fkCharacterId], references: [id])
+  fkHouse       House     @relation(fields: [fkHouseId], references: [id])
 
-  @@index([fk_Character_id], name: "fk_Character_id")
+  @@index([fkCharacterId], name: "fk_Character_id")
+
+  @@map(name: "character_houses")
 }
 
 model CharacterInventory {
   id              Int       @id @default(autoincrement())
-  fk_Inventory_id Int
-  fk_Character_id Int       @unique
-  Character       Character @relation(fields: [fk_Character_id], references: [id])
-  Inventory       Inventory @relation(fields: [fk_Inventory_id], references: [id])
+  fkInventoryId   Int       @map(name: "fk_Inventory_id")
+  fkCharacterId   Int       @unique @map(name: "fk_Character_id")
+  fkInventory     Inventory @relation(fields: [fkInventoryId], references: [id])
+  fkCharacter     Character @relation(fields: [fkCharacterId], references: [id])
 
-  @@index([fk_Inventory_id], name: "fk_Inventory_id")
+  @@index([fkInventoryId], name: "fk_Inventory_id")
+
+  @@map(name: "character_inventories")
 }
 
 model CharacterSkill {
+  id              Int       @id @default(autoincrement())
   level           Int
   xp              Int
-  id              Int       @id @default(autoincrement())
-  fk_Skill_id     Int
-  fk_Character_id Int
-  Character       Character @relation(fields: [fk_Character_id], references: [id])
-  Skill           Skill     @relation(fields: [fk_Skill_id], references: [id])
-
-  @@index([fk_Character_id], name: "fk_Character_id")
-  @@index([fk_Skill_id], name: "fk_Skill_id")
+  fkSkillId       Int       @map(name: "fk_Skill_id")
+  fkCharacterId   Int       @map(name: "fk_Character_id")
+  Skill           Skill     @relation(fields: [fkSkillId], references: [id])
+  Character       Character @relation(fields: [fkCharacterId], references: [id])
+  
+  @@index([fkSkillId], name: "fk_Skill_id")
+  @@index([fkCharacterId], name: "fk_Character_id")
+  
+  @@map(name: "character_skills")
 }
 
 model CharacterVehicle {
+  id                Int                @id @default(autoincrement())
   destroyed         Boolean
-  last_position     String
-  last_rotation     String
+  last_position     String             @map(name: "last_position")
+  last_rotation     String             @map(name: "last_rotation")
   fuel              Int
   dimension         Int
   locked            Boolean
-  number_plate      String
-  id                Int                @id @default(autoincrement())
-  fk_Vehicle_id     Int
-  fk_Character_id   Int
-  Character         Character          @relation(fields: [fk_Character_id], references: [id])
-  Vehicle           Vehicle            @relation(fields: [fk_Vehicle_id], references: [id])
-  VechileInventory  VechileInventory?
-  VehicleProperties VehicleProperties?
+  number_plate      String             @map(name: "number_plate")
+  fkVehicleId       Int                @map(name: "fk_Vehicle_id")
+  fkCharacterId     Int                @map(name: "fk_Character_id")
+  fkVehicle         Vehicle            @relation(fields: [fkVehicleId], references: [id])
+  fkCharacter       Character          @relation(fields: [fkCharacterId], references: [id])
+  vechileInventory  VehicleInventory?
+  vehicleProperties VehicleProperties?
 
-  @@index([fk_Character_id], name: "fk_Character_id")
-  @@index([fk_Vehicle_id], name: "fk_Vehicle_id")
+  @@index([fkVehicleId], name: "fk_Vehicle_id")
+  @@index([fkCharacterId], name: "fk_Character_id")
+  
+  @@map(name: "character_vehicles")
 }
 
 model Contact {
-  id                                            Int       @id @default(autoincrement())
-  fk_Character_id                               Int
-  fk_Character_id1                              Int
-  Character_CharacterToContact_fk_Character_id  Character @relation("CharacterToContact_fk_Character_id", fields: [fk_Character_id], references: [id])
-  Character_CharacterToContact_fk_Character_id1 Character @relation("CharacterToContact_fk_Character_id1", fields: [fk_Character_id1], references: [id])
+  id             Int       @id @default(autoincrement())
+  fkCharacterId1 Int       @map(name: "fk_Character_id")
+  fkCharacterId2 Int       @map(name: "fk_Character_id1")
+  fkCharacter1   Character @relation("CharacterToContact_fk_Character_id", fields: [fkCharacterId1], references: [id])
+  fkCharacter2   Character @relation("CharacterToContact_fk_Character_id1", fields: [fkCharacterId2], references: [id])
 
-  @@index([fk_Character_id], name: "fk_Character_id")
-  @@index([fk_Character_id1], name: "fk_Character_id1")
+  @@index([fkCharacterId1], name: "fk_Character_id")
+  @@index([fkCharacterId2], name: "fk_Character_id1")
+
+  @@map(name: "contacts")
 }
 
 model Faction {
-  name            String
-  created_at      DateTime        @default(now())
   id              Int             @id @default(autoincrement())
-  fk_Character_id Int             @unique
-  Character       Character       @relation(fields: [fk_Character_id], references: [id])
-  FactionMember   FactionMember[]
+  name            String
+  createdAt       DateTime        @default(now()) @map(name: "created_at")
+  fkCharacterId   Int             @unique @map(name: "fk_Character_id")
+  fkCharacter     Character       @relation(fields: [fkCharacterId], references: [id])
+  factionMembers  FactionMember[]
+
+  @@map(name: "factions")
 }
 
 model FactionMember {
-  joined_at       DateTime  @default(now())
-  id              Int       @id @default(autoincrement())
-  fk_Character_id Int       @unique
-  fk_Faction_id   Int
-  Character       Character @relation(fields: [fk_Character_id], references: [id])
-  Faction         Faction   @relation(fields: [fk_Faction_id], references: [id])
+  id            Int       @id @default(autoincrement())
+  joinedAt      DateTime  @default(now()) @map(name: "joined_at")
+  fkCharacterId Int       @unique @map(name: "fk_Character_id")
+  fkFactionId   Int       @map(name: "fk_Faction_id")
+  fkCharacter   Character @relation(fields: [fkCharacterId], references: [id])
+  fkFaction     Faction   @relation(fields: [fkFactionId], references: [id])
 
-  @@index([fk_Faction_id], name: "fk_Faction_id")
+  @@index([fkFactionId], name: "fk_Faction_id")
+
+  @@map(name: "faction_members")
 }
 
 model House {
-  price          Int
-  locked         Boolean
-  location       String
-  id             Int              @id @default(autoincrement())
-  CharacterHouse CharacterHouse?
-  HouseInventory HouseInventory[]
+  id               Int              @id @default(autoincrement())
+  price            Int
+  locked           Boolean
+  location         String
+  characterHouse   CharacterHouse?
+  houseInventories HouseInventory[]
+
+  @@map(name: "houses")
 }
 
 model HouseInventory {
-  id              Int       @id @default(autoincrement())
-  fk_House_id     Int
-  fk_Inventory_id Int
-  House           House     @relation(fields: [fk_House_id], references: [id])
-  Inventory       Inventory @relation(fields: [fk_Inventory_id], references: [id])
+  id            Int       @id @default(autoincrement())
+  fkHouseId     Int       @map(name: "fk_House_id")
+  fkInventoryId Int       @map(name: "fk_Inventory_id")
+  fkHouse       House     @relation(fields: [fkHouseId], references: [id])
+  fkInventory   Inventory @relation(fields: [fkInventoryId], references: [id])
 
-  @@index([fk_House_id], name: "fk_House_id")
-  @@index([fk_Inventory_id], name: "fk_Inventory_id")
+  @@index([fkHouseId], name: "fk_House_id")
+  @@index([fkInventoryId], name: "fk_Inventory_id")
+
+  @@map(name: "house_inventories")
 }
 
 model Inventory {
-  id                 Int                  @id @default(autoincrement())
-  ApartmentInventory ApartmentInventory[]
-  BusinessInventory  BusinessInventory[]
-  CharacterInventory CharacterInventory[]
-  HouseInventory     HouseInventory[]
-  InventoryItem      InventoryItem[]
-  VechileInventory   VechileInventory[]
+  id                   Int                  @id @default(autoincrement())
+  apartmentInventories ApartmentInventory[]
+  businessInventories  BusinessInventory[]
+  characterInventories CharacterInventory[]
+  houseInventories     HouseInventory[]
+  inventoryItems       InventoryItem[]
+  vehicleInventories   VehicleInventory[]
+
+  @@map(name: "inventories")
 }
 
 model InventoryItem {
-  slot            Int
-  amount          Int
-  id              Int       @id @default(autoincrement())
-  fk_Inventory_id Int
-  fk_Item_id      Int
-  Inventory       Inventory @relation(fields: [fk_Inventory_id], references: [id])
-  Item            Item      @relation(fields: [fk_Item_id], references: [id])
+  id            Int       @id @default(autoincrement())
+  slot          Int
+  amount        Int
+  fkInventoryId Int       @map(name: "fk_Inventory_id")
+  fkItemId      Int       @map(name: "fk_Item_id")
+  Inventory     Inventory @relation(fields: [fkInventoryId], references: [id])
+  Item          Item      @relation(fields: [fkItemId], references: [id])
 
-  @@index([fk_Inventory_id], name: "fk_Inventory_id")
-  @@index([fk_Item_id], name: "fk_Item_id")
+  @@index([fkInventoryId], name: "fk_Inventory_id")
+  @@index([fkItemId], name: "fk_Item_id")
+
+  @@map(name: "inventory_items")
 }
 
 model Item {
-  name          String
-  hash          String
-  weight        Float
-  id            Int             @id @default(autoincrement())
-  InventoryItem InventoryItem[]
+  id             Int             @id @default(autoincrement())
+  name           String
+  hash           String
+  weight         Float
+  inventoryItems InventoryItem[]
+
+  @@map(name: "items")
 }
 
 model LoginHistory {
+  id           Int      @id @default(autoincrement())
   date         DateTime @default(now())
   ip           String
-  social_id    String
-  hwid_ex_hash String
-  hwid_hash    String
-  id           Int      @id @default(autoincrement())
-  fk_User_id   Int
-  User         User     @relation(fields: [fk_User_id], references: [id])
+  socialId     String   @map(name: "social_id")
+  hwidExHash   String   @map(name: "hwid_ex_hash")
+  hwidHash     String   @map(name: "hwid_hash")
+  fkUserId     Int      @map(name: "fk_User_id")
+  fkUser       User     @relation(fields: [fkUserId], references: [id])
 
-  @@index([fk_User_id], name: "test")
+  @@index([fkUserId], name: "fk_User_id")
+
+  @@map(name: "login_histories")
 }
 
 model Message {
-  content                                       String
-  sent_at                                       DateTime  @default(now())
-  id                                            Int       @id @default(autoincrement())
-  fk_Character_id                               Int
-  fk_Character_id1                              Int
-  Character_CharacterToMessage_fk_Character_id  Character @relation("CharacterToMessage_fk_Character_id", fields: [fk_Character_id], references: [id])
-  Character_CharacterToMessage_fk_Character_id1 Character @relation("CharacterToMessage_fk_Character_id1", fields: [fk_Character_id1], references: [id])
+  id             Int       @id @default(autoincrement())
+  content        String
+  sent_at        DateTime  @default(now())
+  fkCharacterId1 Int       @map(name: "fk_Character_id")
+  fkCharacterId2 Int       @map(name: "fk_Character_id1")
+  fkCharacter1   Character @relation("CharacterToMessage_fk_Character_id", fields: [fkCharacterId1], references: [id])
+  fkCharacter2   Character @relation("CharacterToMessage_fk_Character_id1", fields: [fkCharacterId2], references: [id])
 
-  @@index([fk_Character_id], name: "fk_Character_id")
-  @@index([fk_Character_id1], name: "fk_Character_id1")
+  @@index([fkCharacterId1], name: "fk_Character_id")
+  @@index([fkCharacterId2], name: "fk_Character_id1")
+
+  @@map(name: "messages")
 }
 
 model RegistrationVerificationRequest {
+  id         Int      @default(autoincrement()) @id
   identifier String
-  token      String
+  token      String   @unique
   expires    DateTime
-  created_at DateTime
-  updated_at DateTime
-  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @map(name: "created_at")
+  updatedAt  DateTime @default(now()) @map(name: "updated_at")
+
+  @@map(name: "registration_verification_requests")
 }
 
 model ResetPasswordVerificationRequest {
+  id         Int      @default(autoincrement()) @id
   identifier String
-  token      String
+  token      String   @unique
   expires    DateTime
-  created_at DateTime
-  updated_at DateTime
-  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @map(name: "created_at")
+  updatedAt  DateTime @default(now()) @map(name: "updated_at")
+
+  @@map(name: "reset_password_verification_requests")
 }
 
 model Session {
-  expires       DateTime?
-  session_token String?
-  access_token  String?
-  created_at    DateTime?
-  updated_at    DateTime?
-  id            Int       @id
-  user_id       Int
-  User          User      @relation(fields: [user_id], references: [id])
+  id           Int      @default(autoincrement()) @id
+  expires      DateTime
+  sessionToken String   @map(name: "session_token")
+  accessToken  String   @map(name: "access_token")
+  createdAt    DateTime @default(now()) @map(name: "created_at")
+  updatedAt    DateTime @default(now()) @map(name: "updated_at")
+  fkUserId     Int      @map(name: "user_id")
+  fkUser       User     @relation(fields: [fkUserId], references: [id])
 
-  @@index([user_id], name: "fk_User_id")
+  @@index([fkUserId], name: "fk_User_id")
+
+  @@map(name: "sessions")
 }
 
 model Skill {
-  name           String
-  hash           String
-  max_level      Int
-  id             Int              @id @default(autoincrement())
-  CharacterSkill CharacterSkill[]
+  id              Int              @id @default(autoincrement())
+  name            String
+  hash            String
+  maxLevel        Int              @map(name: "max_level")
+  characterSkills CharacterSkill[]
+
+  @@map(name: "skills")
 }
 
 model User {
-  username       String
-  name           String
-  email          String
-  password       String
-  email_verified DateTime
-  verified       Boolean
-  image          String
-  created_at     DateTime       @default(now())
-  updated_at     DateTime       @default(now())
-  role           String
+  username       String?
+  name           String?
+  email          String?        @unique
+  password       String?
+  emailVerified  DateTime?      @map(name: "email_verified")
+  verified       Boolean?
+  image          String?
+  createdAt      DateTime       @default(now()) @map(name: "created_at")
+  updatedAt      DateTime       @default(now()) @map(name: "updated_at")
+  role           Role           @default(USER)
   id             Int            @id @default(autoincrement())
-  Account        Account[]
-  Character      Character[]
-  LoginHistory   LoginHistory[]
-  Session        Session[]
+  accounts       Account[]
+  characters     Character[]
+  loginHistories LoginHistory[]
+  sessions       Session[]
+
+  @@map(name: "users")
 }
 
-model VechileInventory {
-  id                     Int              @id @default(autoincrement())
-  fk_CharacterVehicle_id Int              @unique
-  fk_Inventory_id        Int
-  CharacterVehicle       CharacterVehicle @relation(fields: [fk_CharacterVehicle_id], references: [id])
-  Inventory              Inventory        @relation(fields: [fk_Inventory_id], references: [id])
+enum Role {
+  USER
+  MOD
+  ADMIN
+}
 
-  @@index([fk_Inventory_id], name: "fk_Inventory_id")
+model VehicleInventory {
+  id                     Int              @id @default(autoincrement())
+  fkCharacterVehicleId   Int              @unique @map(name: "fk_CharacterVehicle_id")
+  fkInventoryId          Int              @map(name: "fk_Inventory_id")
+  fkCharacterVehicle     CharacterVehicle @relation(fields: [fkCharacterVehicleId], references: [id])
+  fkInventory            Inventory        @relation(fields: [fkInventoryId], references: [id])
+
+  @@index([fkInventoryId], name: "fk_Inventory_id")
+
+  @@map(name: "vehicle_inventories")
 }
 
 model Vehicle {
-  name             String
-  hash             String
-  price            Int
-  manufacturer     String
-  seats            Int
-  class            String
-  type             String
-  max_braking      Float
-  max_braking_mods Float
-  max_speed        Float
-  max_traction     Float
-  acceleration     Float
-  agility          Float
-  max_knots        Float
-  move_resistance  Float
-  id               Int                @id @default(autoincrement())
-  CharacterVehicle CharacterVehicle[]
+  id                Int                @id @default(autoincrement())
+  name              String
+  hash              String
+  price             Int
+  manufacturer      String
+  seats             Int
+  class             String
+  type              String
+  maxBraking        Float              @map(name: "max_braking")
+  maxBrakingMods    Float              @map(name: "max_braking_mods")
+  maxSpeed          Float              @map(name: "max_speed")
+  maxTraction       Float              @map(name: "max_traction")
+  acceleration      Float
+  agility           Float
+  maxKnots          Float              @map(name: "max_knots")
+  moveResistance    Float              @map(name: "move_resistance")
+  characterVehicles CharacterVehicle[]
+
+  @@map(name: "vehicles")
 }
 
 model VehicleProperties {
-  id                     Int              @id @default(autoincrement())
-  fk_CharacterVehicle_id Int              @unique
-  CharacterVehicle       CharacterVehicle @relation(fields: [fk_CharacterVehicle_id], references: [id])
+  id                   Int              @id @default(autoincrement())
+  fkCharacterVehicleId Int              @unique @map(name: "fk_CharacterVehicle_id")
+  fkCharacterVehicle   CharacterVehicle @relation(fields: [fkCharacterVehicleId], references: [id])
+
+  @@map(name: "vehicle_properties")
 }
 
 model VerificationRequest {
-  identifier String?
-  token      String?
-  expires    DateTime?
-  created_at DateTime?
-  updated_at DateTime?
-  id         Int       @id
+  id         Int      @default(autoincrement()) @id
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now()) @map(name: "created_at")
+  updatedAt  DateTime @default(now()) @map(name: "updated_at")
+
+  @@map(name: "verification_requests")
 }

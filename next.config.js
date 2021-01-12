@@ -3,23 +3,14 @@ const withLess = require('@zeit/next-less');
 const lessToJS = require('less-vars-to-js');
 const fs = require('fs');
 const path = require('path');
-// const { getThemeVariables } = require('antd/dist/theme');
 
 // Where your antd-custom.less file lives
 const themeVariables = lessToJS(fs.readFileSync(path.resolve(__dirname, './assets/antd-custom.less'), 'utf8'));
 
-// console.log({
-//     ...getThemeVariables({ dark: true, compact: true }),
-//     ...themeVariables,
-// });
-
 module.exports = withLess({
     lessLoaderOptions: {
         javascriptEnabled: true,
-        modifyVars: {
-            // ...getThemeVariables({ dark: true, compact: true }),
-            ...themeVariables,
-        },
+        modifyVars: themeVariables,
     },
     webpack: (config, { isServer }) => {
         if (isServer) {

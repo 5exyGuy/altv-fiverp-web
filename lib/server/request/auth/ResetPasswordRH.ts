@@ -13,8 +13,8 @@ export default class ResetPasswordRequestHandler extends RequestHandler {
 
         try {
             const result = await Database.instance.PrismaClient.user.updateMany({
-                where: { AND: { email: { equals: email }, passwordVerifyToken: { equals: token } } },
-                data: { passwordVerifyToken: null, password: null },
+                where: { AND: { email: { equals: email } } },
+                data: { password: null },
             });
             if (result.count <= 0) return response.status(StatusCodes.NOT_FOUND).json({ message: ReasonPhrases.NOT_FOUND });
 

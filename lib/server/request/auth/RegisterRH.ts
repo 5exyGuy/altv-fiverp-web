@@ -5,7 +5,6 @@ import RequestHandler from '../RequestHandler';
 import bcrypt from 'bcryptjs';
 import Prisma from '@prisma/client';
 import uniqid from 'uniqid';
-import UserBuilder from '../../database/builders/UserBuilder';
 import User from '../../database/entities/User';
 import MailSender from '../../email/MailSender';
 
@@ -28,22 +27,22 @@ export default class RegisterRequestHandler extends RequestHandler {
 
         const hashedPassword: string = await bcrypt.hash(password, 10); // Hashed password
 
-        const user: User = <User>new UserBuilder()
-            .setUsername(username)
-            .setEmail(email)
-            .setPassword(hashedPassword)
-            .setEmailVerifyToken(uniqid()) // A confirmation token will be sent to the specified email
-            .build();
+        // const user: User = <User>new UserBuilder()
+        //     .setUsername(username)
+        //     .setEmail(email)
+        //     .setPassword(hashedPassword)
+        //     .setEmailVerifyToken(uniqid()) // A confirmation token will be sent to the specified email
+        //     .build();
 
         try {
             // Create a new user with the received data
-            await Database.instance.PrismaClient.user.create({
-                data: {
-                    ...(<Prisma.UserCreateInput>user.convertToObject()),
-                },
-            });
-            await MailSender.instance.sendEmailConfirmRequest(user.email, user.emailVerifyToken);
-            response.status(StatusCodes.CREATED).json({ message: ReasonPhrases.CREATED });
+            // await Database.instance.PrismaClient.user.create({
+            //     data: {
+            //         ...(<Prisma.UserCreateInput>user.convertToObject()),
+            //     },
+            // });
+            // await MailSender.instance.sendEmailConfirmRequest(user.email, user.emailVerifyToken);
+            response.status(StatusCodes.OK).json({ message: ReasonPhrases.OK });
         } catch (error) {
             response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: ReasonPhrases.INTERNAL_SERVER_ERROR });
         }

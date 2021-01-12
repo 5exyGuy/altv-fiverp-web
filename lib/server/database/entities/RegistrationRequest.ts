@@ -1,6 +1,6 @@
 import Entity from '../Entity';
 
-export default class RegistrationVerificationRequest extends Entity<RegistrationVerificationRequest> {
+export default class RegistrationRequest extends Entity<RegistrationRequest> {
     public identifier: string;
     public token: string;
     public expires: Date;

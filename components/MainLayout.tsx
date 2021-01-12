@@ -71,21 +71,9 @@ export default function MainLayout(
                 </Layout.Header>
                 <Layout.Content className="layout-content">
                     {props.protected ? (
-                        !session || loading ? (
-                            <div className="page-content" style={{ padding: '5%', textAlign: 'center' }}>
-                                <Spin size="large" />
-                            </div>
-                        ) : (
-                            <>
-                                {props.headerTitle && (
-                                    <div className="page-header animate__animated animate__fadeIn">
-                                        <PageHeader title={props.headerTitle} />
-                                    </div>
-                                )}
-
-                                <div className="page-content animate__animated animate__fadeIn">{props.children}</div>
-                            </>
-                        )
+                        <div className="page-content" style={{ padding: '5%', textAlign: 'center' }}>
+                            <Spin size="large" />
+                        </div>
                     ) : (
                         <>
                             {props.headerTitle && (

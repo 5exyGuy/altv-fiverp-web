@@ -3,9 +3,9 @@ import MainLayout from '../../../components/MainLayout';
 import { useSession } from 'next-auth/client';
 import Router from 'next/router';
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
-import './register.style.less';
 import Link from 'next/link';
 import { StatusCodes } from 'http-status-codes';
+import { useEffect } from 'react';
 
 type RegistrationData = {
     username: string;
@@ -17,7 +17,12 @@ type RegistrationData = {
 export default function Register(): JSX.Element {
     const [session, loading] = useSession();
 
-    if (!loading && session) Router.push('/');
+    useEffect(() => {
+        const check = async () => {
+            if (!loading && session) await Router.push('/');
+        };
+        check();
+    });
 
     const onFinish = async (data: RegistrationData) => {
         const result: Response = await fetch('/api/authentication/register', {
@@ -27,7 +32,7 @@ export default function Register(): JSX.Element {
             },
             body: JSON.stringify(data),
         });
-        if (result.status !== StatusCodes.CREATED) return; // TODO: Show an error message
+        if (result.status !== StatusCodes.OK) return; // TODO: Show an error message
         // TODO: Show a success message
     };
 

@@ -3,7 +3,6 @@ import MainLayout from '../../../components/MainLayout';
 import { signIn, useSession } from 'next-auth/client';
 import Router from 'next/router';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import './login.style.less';
 import Link from 'next/link';
 
 type LoginData = {

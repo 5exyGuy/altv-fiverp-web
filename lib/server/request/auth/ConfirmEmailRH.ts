@@ -13,8 +13,8 @@ export default class ConfirmEmailRequestHandler extends RequestHandler {
 
         try {
             const result = await Database.instance.PrismaClient.user.updateMany({
-                where: { AND: { email: { equals: email }, emailVerifyToken: { equals: token } } },
-                data: { emailVerifyToken: null, verified: true },
+                where: { AND: { email: { equals: email } } },
+                data: { verified: true },
             });
             if (result.count <= 0) return response.status(StatusCodes.NOT_FOUND).json({ message: ReasonPhrases.NOT_FOUND });
 

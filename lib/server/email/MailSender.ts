@@ -34,12 +34,11 @@ export default class MailSender {
 
     private constructor() {
         this._transporter = createTransport({
-            pool: true,
-            host: 'smtp.ethereal.email',
-            port: 587,
+            host: 'smtp.mailtrap.io',
+            port: 2525,
             auth: {
-                user: 'tiffany.dickinson17@ethereal.email',
-                pass: 'kg3y4VxtB4KvMhURBZ',
+                user: '468163bac818f5',
+                pass: 'aa15aa5d008519',
             },
         });
     }

@@ -19,7 +19,7 @@ export default function Confirm(): JSX.Element {
         setTimeout(() => {
             router.push('/');
         }, 5000);
-    }, [type]);
+    }, [type, title]);
 
     return (
         <MainLayout session={session} loading={loading} protected={Boolean(!type)}>
