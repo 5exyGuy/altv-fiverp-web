@@ -7,42 +7,150 @@ import LoginHistory from './LoginHistory';
 import Session from './Session';
 
 export default class User extends Entity<User> {
-    private _updateFields: Map<string, any> = new Map();
-
     private _id: number;
-    public username: string;
-    public name: string;
-    public email: string;
-    public password: string;
-    public emailVerified: Date;
-    public verified: boolean;
-    public image: string;
-    public createdAt: Date;
-    public updatedAt: Date;
-    public role: string;
-    public accounts?: Account[];
-    public characters?: Character[];
-    public loginHistories?: LoginHistory[];
-    public sessions?: Session[];
+    private _username: string;
+    private _name: string;
+    private _email: string;
+    private _password: string;
+    private _emailVerified: Date;
+    private _verified: boolean;
+    private _image: string;
+    private _createdAt: Date;
+    private _updatedAt: Date;
+    private _role: string;
+    private _accounts: Array<Account>;
+    private _characters: Array<Character>;
+    private _loginHistories: Array<LoginHistory>;
+    private _sessions: Array<Session>;
+
+    public constructor(init?: Partial<User>) {
+        super(init);
+        this._accounts = new Array();
+        this._characters = new Array();
+        this._loginHistories = new Array();
+        this._sessions = new Array();
+    }
 
     public set id(value: number) {
-        if (!this._updateFields) this._updateFields = new Map();
-        this._updateFields.set('id', value);
-        this._id = value;
+        this.setUpdateField('id', value);
     }
 
     public get id(): number {
         return this._id;
     }
 
+    public set username(value: string) {
+        this.setUpdateField('username', value);
+    }
+
+    public get username(): string {
+        return this._username;
+    }
+
+    public set name(value: string) {
+        this.setUpdateField('name', value);
+    }
+
+    public get name(): string {
+        return this._name;
+    }
+
+    public set email(value: string) {
+        this.setUpdateField('email', value);
+    }
+
+    public get email(): string {
+        return this._email;
+    }
+
+    public set password(value: string) {
+        this.setUpdateField('password', value);
+    }
+
+    public get password(): string {
+        return this._password;
+    }
+
+    public set updatedAt(value: Date) {
+        this.setUpdateField('updatedAt', value);
+    }
+
+    public get updatedAt(): Date {
+        return this._updatedAt;
+    }
+
+    public set verified(value: boolean) {
+        this.setUpdateField('verified', value);
+    }
+
+    public get verified(): boolean {
+        return this._verified;
+    }
+
+    public set image(value: string) {
+        this.setUpdateField('image', value);
+    }
+
+    public get image(): string {
+        return this._image;
+    }
+
+    public set createdAt(value: Date) {
+        this.setUpdateField('createdAt', value);
+    }
+
+    public get createdAt(): Date {
+        return this._createdAt;
+    }
+
+    public set emailVerified(value: Date) {
+        this.setUpdateField('emailVerified', value);
+    }
+
+    public get emailVerified(): Date {
+        return this._emailVerified;
+    }
+
+    public set role(value: string) {
+        this.setUpdateField('role', value);
+    }
+
+    public get role(): string {
+        return this._role;
+    }
+
+    public async save(): Promise<void> {
+        await Database.getConnection().user.create({
+            data: {
+                username: this.username,
+                name: this.name,
+                email: this.email,
+                password: this.password,
+                updatedAt: this.updatedAt,
+                verified: this.verified,
+                image: this.image,
+                createdAt: this.createdAt,
+                emailVerified: this.emailVerified,
+                role: this.role as 'USER' | 'MOD' | 'ADMIN',
+            },
+        });
+    }
+
     public async update(): Promise<void> {
+        if (this._updateFields.size <= 0) return;
+
         const fields: { [key: string]: any } = Object.fromEntries(this._updateFields);
-        await Database.instance.PrismaClient.user.update({ data: { ...fields }, where: { id: this.id } });
+        await Database.getConnection().user.update({ data: { ...fields }, where: { id: this.id } });
+        this.updateLocalFields(fields);
+
+        // if (this._updateRelationFields.size <= 0) return;
+
+        // const relationFields: { [key: string]: any } = Object.fromEntries(this._updateRelationFields);
+        // await Database.getConnection().user.update({ data: {  } });
     }
 
     public async addAccount(account: Account): Promise<void> {
-        if (!this.accounts) this.accounts = new Array();
-        await Database.instance.PrismaClient.account.create({
+        await Database.getConnection().account.create({
             data: {
                 compoundId: account.compoundId,
                 providerAccountId: account.providerAccountId,
@@ -56,12 +164,11 @@ export default class User extends Entity<User> {
                 fkUser: { connect: { id: this.id } },
             },
         });
-        this.accounts.push(account);
+        this._accounts.push(account);
     }
 
     public async addCharacter(character: Character): Promise<void> {
-        if (!this.characters) this.characters = new Array();
-        await Database.instance.PrismaClient.character.create({
+        await Database.getConnection().character.create({
             data: {
                 armor: character.armor,
                 arrestTime: character.arrestTime,
@@ -77,11 +184,11 @@ export default class User extends Entity<User> {
                 phoneNumber: character.phoneNumber,
             },
         });
+        this._characters.push(character);
     }
 
     public async addLoginHistory(loginHistory: LoginHistory): Promise<void> {
-        if (!this.loginHistories) this.loginHistories = new Array();
-        await Database.instance.PrismaClient.loginHistory.create({
+        await Database.getConnection().loginHistory.create({
             data: {
                 fkUser: { connect: { id: this.id } },
                 hwidExHash: loginHistory.hwidExHash,
@@ -91,11 +198,11 @@ export default class User extends Entity<User> {
                 date: loginHistory.date,
             },
         });
+        this._loginHistories.push(loginHistory);
     }
 
     public async addSession(session: Session): Promise<void> {
-        if (!this.sessions) this.sessions = new Array();
-        await Database.instance.PrismaClient.session.create({
+        await Database.getConnection().session.create({
             data: {
                 accessToken: session.accessToken,
                 expires: session.expires,
@@ -105,6 +212,7 @@ export default class User extends Entity<User> {
                 updatedAt: session.updatedAt,
             },
         });
+        this._sessions.push(session);
     }
 
     public async delete(): Promise<void> {
@@ -136,17 +244,17 @@ export default class User extends Entity<User> {
     }
 
     public static async delete(args: Prisma.Subset<Prisma.UserDeleteArgs, Prisma.UserDeleteArgs>): Promise<User> {
-        const result = await Database.instance.PrismaClient.user.delete(args);
+        const result = await Database.getConnection().user.delete(args);
         return new User({ ...result });
     }
 
     public static async findFirst(args?: Prisma.Subset<Prisma.FindUniqueUserArgs, Prisma.FindFirstUserArgs>): Promise<User> {
-        const result = await Database.instance.PrismaClient.user.findFirst(args);
+        const result = await Database.getConnection().user.findFirst(args);
         return new User({ ...result });
     }
 
     public static async findMany(args?: Prisma.Subset<Prisma.FindManyUserArgs, Prisma.FindManyUserArgs>): Promise<User[]> {
-        const result = await Database.instance.PrismaClient.user.findMany(args);
+        const result = await Database.getConnection().user.findMany(args);
         const userList: User[] = new Array<User>();
         for (const user of result) {
             const newUser: User = new User({ ...user });
@@ -156,7 +264,7 @@ export default class User extends Entity<User> {
     }
 
     public static async findUnique(args: Prisma.Subset<Prisma.FindUniqueUserArgs, Prisma.FindUniqueUserArgs>): Promise<User> {
-        const result = await Database.instance.PrismaClient.user.findUnique(args);
+        const result = await Database.getConnection().user.findUnique(args);
         return new User({ ...result });
     }
 }

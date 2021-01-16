@@ -1,12 +1,12 @@
 import Entity from '../Entity';
-import CharacterHouse from './CharacterHouse';
-import HouseInventory from './HouseInventory';
+import Character from './Character';
+import Inventory from './Inventory';
 
 export default class House extends Entity<House> {
-    public price: number;
-    public locked: boolean;
-    public location: string;
-    public id: number;
-    public characterHouse: CharacterHouse;
-    public houseInventories: HouseInventory[];
+    private _price: number;
+    private _locked: boolean;
+    private _location: string;
+    private _id: number;
+    private _owner: Character;
+    private _inventories: Array<Inventory>;
 }

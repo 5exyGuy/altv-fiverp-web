@@ -1,10 +1,8 @@
 import Entity from '../Entity';
-import InventoryItem from './InventoryItem';
 
 export default class Item extends Entity<Item> {
-    public name: string;
-    public hash: string;
-    public weight: number;
-    public id: number;
-    public inventoryItems: InventoryItem[];
+    private _name: string;
+    private _hash: string;
+    private _weight: number;
+    private _id: number;
 }

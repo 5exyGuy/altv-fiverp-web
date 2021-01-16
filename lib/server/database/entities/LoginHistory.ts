@@ -2,12 +2,12 @@ import Entity from '../Entity';
 import User from './User';
 
 export default class LoginHistory extends Entity<LoginHistory> {
-    public date: Date;
-    public ip: string;
-    public socialId: string;
-    public hwidExHash: string;
-    public hwidHash: string;
-    public id: number;
-    public fkUserId: number;
-    public fkUser: User;
+    private _date: Date;
+    private _ip: string;
+    private _socialId: string;
+    private _hwidExHash: string;
+    private _hwidHash: string;
+    private _id: number;
+    private _userId: number;
+    private _user: User;
 }

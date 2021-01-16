@@ -2,11 +2,11 @@ import Entity from '../Entity';
 import Character from './Character';
 
 export default class Message extends Entity<Message> {
-    public content: string;
-    public date: Date;
-    public id: number;
-    public fkCharacterId1: number;
-    public fkCharacterId2: number;
-    public fkCharacter1: Character;
-    public fkCharacter2: Character;
+    private _content: string;
+    private _date: Date;
+    private _id: number;
+    private _fkCharacterId1: number;
+    private _fkCharacterId2: number;
+    private _fkCharacter1: Character;
+    private _fkCharacter2: Character;
 }

@@ -1,17 +1,24 @@
 import Entity from '../Entity';
 import User from './User';
+import { User } from '@prisma/client';
+import Database from '../Database';
 
 export default class Account extends Entity<Account> {
-    public compoundId: string;
-    public providerType: string;
-    public providerId: string;
-    public providerAccountId: string;
-    public refreshToken: string;
-    public accessToken: string;
-    public accessTokenExpires: Date;
-    public createdAt: Date;
-    public updatedAt: Date;
-    public id: number;
-    public fkUserId: number;
-    public fkUser: User;
+    private _compoundId: string;
+    private _providerType: string;
+    private _providerId: string;
+    private _providerAccountId: string;
+    private _refreshToken: string;
+    private _accessToken: string;
+    private _accessTokenExpires: Date;
+    private _createdAt: Date;
+    private _updatedAt: Date;
+    private _id: number;
+    private _userId: number;
+    private _user: User;
+
+    public constructor(init) {
+        super(init);
+        Database.getRepository(User);
+    }
 }

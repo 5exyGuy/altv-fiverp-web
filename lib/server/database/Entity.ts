@@ -1,6 +1,29 @@
 export default class Entity<T> {
+    protected _updateFields: Map<string, any>;
+    protected _updateRelationFields: Map<string, any>;
+
     public constructor(init?: Partial<T>) {
+        this._updateFields = new Map();
+        this._updateRelationFields = new Map();
         Object.assign(this, init);
+    }
+
+    protected setUpdateField(fieldName: string, value: any): void {
+        this._updateFields.set(fieldName, value);
+    }
+
+    protected setUpdateRelationField(fieldName: string, value: any): void {
+        this._updateRelationFields.set(fieldName, value);
+    }
+
+    protected updateLocalFields(fields?: { [key: string]: any }): void {
+        if (!fields) fields = Object.fromEntries(this._updateFields);
+        for (const fieldName in fields) this[`_${fieldName}`] = fields[fieldName];
+    }
+
+    protected updateLocalRelationFields(fields?: { [key: string]: any }): void {
+        if (!fields) fields = Object.fromEntries(this._updateRelationFields);
+        for (const fieldName in fields) this[`_${fieldName}`] = fields[fieldName];
     }
 
     protected parse(prismaEntity: { [key: string]: any }): void {

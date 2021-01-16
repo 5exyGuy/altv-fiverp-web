@@ -12,7 +12,7 @@ export default class ConfirmEmailRequestHandler extends RequestHandler {
             return response.status(StatusCodes.BAD_REQUEST).json({ message: ReasonPhrases.BAD_REQUEST });
 
         try {
-            const result = await Database.instance.PrismaClient.user.updateMany({
+            const result = await Database.getConnection().user.updateMany({
                 where: { AND: { email: { equals: email } } },
                 data: { verified: true },
             });

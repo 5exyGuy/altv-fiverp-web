@@ -17,7 +17,7 @@ export default class RegisterRequestHandler extends RequestHandler {
 
         try {
             // Checking if such a user already exists
-            const result = await Database.instance.PrismaClient.user.findFirst({
+            const result = await Database.getConnection().user.findFirst({
                 where: { OR: [{ name: { equals: username } }, { email: { equals: email } }] },
             });
             if (result) return response.status(StatusCodes.BAD_REQUEST).json({ message: ReasonPhrases.BAD_REQUEST });
@@ -36,7 +36,7 @@ export default class RegisterRequestHandler extends RequestHandler {
 
         try {
             // Create a new user with the received data
-            // await Database.instance.PrismaClient.user.create({
+            // await Database.getConnection().user.create({
             //     data: {
             //         ...(<Prisma.UserCreateInput>user.convertToObject()),
             //     },

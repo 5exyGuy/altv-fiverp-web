@@ -1,10 +1,10 @@
 import Entity from '../Entity';
 
 export default class ResetPasswordRequest extends Entity<ResetPasswordRequest> {
-    public identifier: string;
-    public token: string;
-    public expires: Date;
-    public createdAt: Date;
-    public updatedAt: Date;
-    public id: number;
+    private _identifier: string;
+    private _token: string;
+    private _expires: Date;
+    private _createdAt: Date;
+    private _updatedAt: Date;
+    private _id: number;
 }

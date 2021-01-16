@@ -9,8 +9,8 @@ import Inventory from './Inventory';
 import Item from './Item';
 import LoginHistory from './LoginHistory';
 import Message from './Message';
-import RegistrationVerificationRequest from './RegistrationRequest';
-import ResetPasswordVerificationRequest from './ResetPasswordRequest';
+import RegistrationRequest from './RegistrationRequest';
+import ResetPasswordRequest from './ResetPasswordRequest';
 import Session from './Session';
 import Skill from './Skill';
 import User from './User';
@@ -29,8 +29,8 @@ export {
     Item,
     LoginHistory,
     Message,
-    RegistrationVerificationRequest,
-    ResetPasswordVerificationRequest,
+    RegistrationRequest,
+    ResetPasswordRequest,
     Session,
     Skill,
     User,

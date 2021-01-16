@@ -11,7 +11,7 @@ export default class ForgotPasswordRequestHandler extends RequestHandler {
         if (!email) return response.status(StatusCodes.BAD_REQUEST).json({ message: ReasonPhrases.BAD_REQUEST });
 
         try {
-            const user = await Database.instance.PrismaClient.user.update({
+            const user = await Database.getConnection().user.update({
                 where: { email: email },
                 data: {},
             });

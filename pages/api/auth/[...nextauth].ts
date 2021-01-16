@@ -61,7 +61,7 @@ const options: InitOptions = {
 
                 if (!username || !password) return Promise.resolve(null);
 
-                const user = await Database.instance.PrismaClient.user.findFirst({ where: { username: username } });
+                const user = await Database.getConnection().user.findFirst({ where: { username: username } });
                 if (!user) return Promise.resolve(null);
                 if (!user.verified) return Promise.resolve(null);
                 if (!(await bcrypt.compare(password, user.password))) return Promise.resolve(null);
@@ -90,7 +90,7 @@ const options: InitOptions = {
     // * You must to install an appropriate node_module for your database
     // * The Email provider requires a database (OAuth providers do not)
     adapter: Adapters.Prisma.Adapter({
-        prisma: Database.instance.PrismaClient,
+        prisma: Database.getConnection(),
         modelMapping: { Account: 'account', Session: 'session', User: 'user', VerificationRequest: 'verificationRequest' },
     }),
 
