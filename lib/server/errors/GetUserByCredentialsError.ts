@@ -1,9 +1,9 @@
 import UnknownError from './UnknownError';
 
-export default class CreateUserError extends UnknownError {
+export default class GetUserByCredentialsError extends UnknownError {
     constructor(message) {
         super(message);
-        this.name = 'CreateUserError';
+        this.name = 'GetUserByCredentialsError';
         this.message = message;
     }
 }

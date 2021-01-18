@@ -1,7 +1,5 @@
 import Entity from '../Entity';
 import User from './User';
-import { User } from '@prisma/client';
-import Database from '../Database';
 
 export default class Account extends Entity<Account> {
     private _compoundId: string;
@@ -19,6 +17,5 @@ export default class Account extends Entity<Account> {
 
     public constructor(init) {
         super(init);
-        Database.getRepository(User);
     }
 }

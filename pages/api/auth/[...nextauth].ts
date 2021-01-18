@@ -1,25 +1,24 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import NextAuth, { InitOptions } from 'next-auth';
-import Adapters from 'next-auth/adapters';
 import Providers from 'next-auth/providers';
 import Database from '../../../lib/server/database/Database';
-import MailSender from '../../../lib/server/email/MailSender';
 import bcrypt from 'bcryptjs';
-import EventManager from '../../../lib/server/events/EventManager';
 import NextAuthEventManager from '../../../lib/server/events/NextAuthEventManager';
+import { Prisma } from '@prisma/client';
+import DatabaseAdapter from '../../../lib/server/database/DatabaseAdapter';
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
 const options: InitOptions = {
     // https://next-auth.js.org/configuration/providers
     providers: [
-        Providers.Email({
-            server: process.env.EMAIL_SERVER,
-            from: process.env.EMAIL_FROM,
-            sendVerificationRequest: async (options) => {
-                MailSender.instance.sendEmailLoginRequest(options);
-            },
-        }),
+        // Providers.Email({
+        //     server: process.env.EMAIL_SERVER,
+        //     from: process.env.EMAIL_FROM,
+        //     sendVerificationRequest: async (options) => {
+        //         MailSender.instance.sendEmailLoginRequest(options);
+        //     },
+        // }),
         // Providers.Apple({
         //     clientId: process.env.APPLE_ID,
         //     clientSecret: {
@@ -61,7 +60,7 @@ const options: InitOptions = {
 
                 if (!username || !password) return Promise.resolve(null);
 
-                const user = await Database.getConnection().user.findFirst({ where: { username: username } });
+                const user = await Database.getRepository<Prisma.UserDelegate>('user').findFirst({ where: { username: username } });
                 if (!user) return Promise.resolve(null);
                 if (!user.verified) return Promise.resolve(null);
                 if (!(await bcrypt.compare(password, user.password))) return Promise.resolve(null);
@@ -89,10 +88,7 @@ const options: InitOptions = {
     // Notes:
     // * You must to install an appropriate node_module for your database
     // * The Email provider requires a database (OAuth providers do not)
-    adapter: Adapters.Prisma.Adapter({
-        prisma: Database.getConnection(),
-        modelMapping: { Account: 'account', Session: 'session', User: 'user', VerificationRequest: 'verificationRequest' },
-    }),
+    adapter: DatabaseAdapter.Adapter(),
 
     // The secret should be set to a reasonably long random string.
     // It is used to sign cookies and to sign and encrypt JSON Web Tokens, unless

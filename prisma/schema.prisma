@@ -347,8 +347,8 @@ model ResetPasswordVerificationRequest {
 model Session {
   id           Int      @default(autoincrement()) @id
   expires      DateTime
-  sessionToken String   @map(name: "session_token")
-  accessToken  String   @map(name: "access_token")
+  sessionToken String   @unique @map(name: "session_token")
+  accessToken  String   @unique @map(name: "access_token")
   createdAt    DateTime @default(now()) @map(name: "created_at")
   updatedAt    DateTime @default(now()) @map(name: "updated_at")
   fkUserId     Int      @map(name: "user_id")

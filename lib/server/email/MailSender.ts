@@ -1,8 +1,6 @@
 import { createTransport, Transporter } from 'nodemailer';
-import { EmailLoginHtml, EmailLoginText } from './templates/EmailLogin';
 import { EmailConfirmHtml, EmailConfirmText } from './templates/EmailConfirm';
 import { ResetPasswordHtml, ResetPasswordText } from './templates/PasswordReset';
-import Router from 'next/router';
 
 interface VerificationRequestParams {
     identifier: string;
@@ -40,28 +38,6 @@ export default class MailSender {
                 user: '468163bac818f5',
                 pass: 'aa15aa5d008519',
             },
-        });
-    }
-
-    public async sendEmailLoginRequest(options: VerificationRequestParams): Promise<void> {
-        return new Promise((resolve, reject) => {
-            const { from } = options.provider;
-            const url: string = options.url;
-            const email: string = options.identifier;
-
-            this._transporter.sendMail(
-                {
-                    to: email,
-                    from,
-                    subject: `[FiveRP.LT] Prisijungimas elektroniniu paštu`,
-                    text: EmailLoginText(url),
-                    html: EmailLoginHtml(url),
-                },
-                (error) => {
-                    if (error) return reject(error);
-                    return resolve();
-                }
-            );
         });
     }
 

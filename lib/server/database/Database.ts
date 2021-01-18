@@ -1,6 +1,37 @@
 import { PrismaClient } from '@prisma/client';
 
-type Repository = 'account' | 'apartment' | 'apartmentInventory' | 'business' | 'businessInventory' | 'character';
+type Repository =
+    | 'account'
+    | 'apartment'
+    | 'apartmentInventory'
+    | 'business'
+    | 'businessInventory'
+    | 'character'
+    | 'characterApartment'
+    | 'characterBusiness'
+    | 'characterHouse'
+    | 'characterInventory'
+    | 'characterSkill'
+    | 'characterVehicle'
+    | 'contact'
+    | 'faction'
+    | 'factionMember'
+    | 'house'
+    | 'houseInventory'
+    | 'inventory'
+    | 'inventoryItem'
+    | 'item'
+    | 'loginHistory'
+    | 'message'
+    | 'registrationVerificationRequest'
+    | 'resetPasswordVerificationRequest'
+    | 'session'
+    | 'skill'
+    | 'user'
+    | 'vehicleInventory'
+    | 'vehicle'
+    | 'vehicleProperties'
+    | 'verificationRequest';
 
 export default class Database {
     private _prismaClient: PrismaClient = new PrismaClient();
@@ -14,8 +45,8 @@ export default class Database {
 
     private static _instance: Database = new Database();
 
-    public static getRepository(repository: Repository) {
-        return this.getConnection()[repository];
+    public static getRepository<T>(repository: Repository): T {
+        return <T>(<any>this.getConnection()[repository]);
     }
 
     public static getConnection(): PrismaClient {
