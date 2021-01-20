@@ -1,4 +1,4 @@
-import UnknownError from './UnknownError';
+import UnknownError from '../UnknownError';
 
 export default class GetUserByCredentialsError extends UnknownError {
     constructor(message) {

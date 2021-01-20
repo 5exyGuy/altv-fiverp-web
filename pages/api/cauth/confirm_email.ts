@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import ConfirmEmailRequestHandler from '../../../lib/server/request/auth/ConfirmEmailRH';
-import LoggedInRequestHandler from '../../../lib/server/request/auth/LoggedInRH';
+import ConfirmEmailRequestHandler from '../../../lib/server/request/auth/ConfirmEmail';
+import LoggedInRequestHandler from '../../../lib/server/request/auth/LoggedIn';
 import { RequestMethod } from '../../../lib/server/request/RequestMethod';
 
 const loggedInHandler: LoggedInRequestHandler = new LoggedInRequestHandler();

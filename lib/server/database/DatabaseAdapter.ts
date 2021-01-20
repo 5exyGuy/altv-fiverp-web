@@ -1,23 +1,41 @@
 import { Account, Prisma, User, Session, VerificationRequest } from '@prisma/client';
 import { createHash, randomBytes } from 'crypto';
 import { AppOptions } from 'next-auth';
-import { AdapterInstance } from 'next-auth/adapters';
-import CreateUserError from '../errors/CreateUserError';
-import GetUserByEmailError from '../errors/GetUserByEmailError';
-import GetUserByProviderAccountIdError from '../errors/GetUserByProviderAccountIdError';
-import GetUserError from '../errors/GetUserError';
-import LinkAccountError from '../errors/LinkAccountError';
-import UnlinkAccountError from '../errors/UnlinkAccountError';
-import UpdateUserError from '../errors/UpdateUserError';
+import { AdapterInstance, EmailSessionProvider } from 'next-auth/adapters';
+import { SessionProvider } from 'next-auth/client';
+import {
+    CreateSessionError,
+    CreateUserError,
+    CreateVerificationRequestError,
+    DeleteSessionError,
+    // DeleteUserError,
+    DeleteVerificationRequestError,
+    GetSessionError,
+    GetUserByEmailError,
+    GetUserByProviderAccountIdError,
+    GetUserError,
+    GetVerificationRequestError,
+    LinkAccountError,
+    // UnlinkAccountError,
+    UpdateSessionError,
+    UpdateUserError,
+} from '../errors/database';
 import NextAuthLogger from '../utilities/NextAuthLogger';
 import Database from './Database';
 
+interface Profile {
+    id: string;
+    name: string;
+    email: string | null;
+    image?: string | null;
+}
+
 const Adapter = () => {
-    function getCompoundId(providerId, providerAccountId) {
+    function getCompoundId(providerId: string, providerAccountId: string): string {
         return createHash('sha256').update(`${providerId}:${providerAccountId}`).digest('hex');
     }
 
-    async function getAdapter(appOptions: AppOptions): Promise<AdapterInstance<any, any, any, any>> {
+    async function getAdapter(appOptions: AppOptions): Promise<AdapterInstance<User, Profile, Session, VerificationRequest>> {
         const defaultSessionMaxAge: number = 30 * 24 * 60 * 60 * 1000;
         const sessionMaxAge: number =
             appOptions && appOptions.session && appOptions.session.maxAge ? appOptions.session.maxAge * 1000 : defaultSessionMaxAge;
@@ -40,16 +58,16 @@ const Adapter = () => {
             }
         }
 
-        async function getUser(id): Promise<User | null> {
+        async function getUser(id: string): Promise<User | null> {
             try {
-                return Database.getRepository<Prisma.UserDelegate>('user').findUnique({ where: { id } });
+                return Database.getRepository<Prisma.UserDelegate>('user').findUnique({ where: { id: parseInt(id) } });
             } catch (error) {
                 NextAuthLogger.error('GET_USER_BY_ID_ERROR', error);
                 return Promise.reject(new GetUserError(error));
             }
         }
 
-        async function getUserByEmail(email): Promise<User | null> {
+        async function getUserByEmail(email: string): Promise<User | null> {
             try {
                 if (!email) return Promise.resolve(null);
                 return Database.getRepository<Prisma.UserDelegate>('user').findUnique({ where: { email } });
@@ -59,7 +77,7 @@ const Adapter = () => {
             }
         }
 
-        async function getUserByProviderAccountId(providerId, providerAccountId): Promise<User | null> {
+        async function getUserByProviderAccountId(providerId: string, providerAccountId: string): Promise<User | null> {
             try {
                 const account: Account = await Database.getRepository<Prisma.AccountDelegate>('account').findUnique({
                     where: { compoundId: getCompoundId(providerId, providerAccountId) },
@@ -76,7 +94,7 @@ const Adapter = () => {
         //     return null;
         // }
 
-        async function updateUser(user): Promise<User> {
+        async function updateUser(user: User): Promise<User> {
             try {
                 const { id, name, email, image, emailVerified } = user;
                 return Database.getRepository<Prisma.UserDelegate>('user').update({
@@ -99,16 +117,16 @@ const Adapter = () => {
         // }
 
         async function linkAccount(
-            userId: number,
+            userId: string,
             providerId: string,
             providerType: string,
             providerAccountId: string,
             refreshToken: string,
             accessToken: string,
-            accessTokenExpires: Date
-        ): Promise<Account> {
+            accessTokenExpires: number
+        ): Promise<void> {
             try {
-                return Database.getRepository<Prisma.AccountDelegate>('account').create({
+                await Database.getRepository<Prisma.AccountDelegate>('account').create({
                     data: {
                         accessToken,
                         refreshToken,
@@ -116,8 +134,8 @@ const Adapter = () => {
                         providerAccountId: `${providerAccountId}`,
                         providerId,
                         providerType,
-                        accessTokenExpires,
-                        fkUser: { connect: { id: userId } },
+                        accessTokenExpires: new Date(accessTokenExpires),
+                        fkUser: { connect: { id: parseInt(userId) } },
                     },
                 });
             } catch (error) {
@@ -126,18 +144,18 @@ const Adapter = () => {
             }
         }
 
-        async function unlinkAccount(userId, providerId, providerAccountId): Promise<Account> {
-            try {
-                return Database.getRepository<Prisma.AccountDelegate>('account').delete({
-                    where: { compoundId: getCompoundId(providerId, providerAccountId) },
-                });
-            } catch (error) {
-                NextAuthLogger.error('UNLINK_ACCOUNT_ERROR', error);
-                return Promise.reject(new UnlinkAccountError(error));
-            }
-        }
+        // async function unlinkAccount(userId, providerId, providerAccountId): Promise<Account> {
+        //     try {
+        //         return Database.getRepository<Prisma.AccountDelegate>('account').delete({
+        //             where: { compoundId: getCompoundId(providerId, providerAccountId) },
+        //         });
+        //     } catch (error) {
+        //         NextAuthLogger.error('UNLINK_ACCOUNT_ERROR', error);
+        //         return Promise.reject(new UnlinkAccountError(error));
+        //     }
+        // }
 
-        async function createSession(user) {
+        async function createSession(user: User): Promise<Session> {
             try {
                 let expires = null;
                 if (sessionMaxAge) {
@@ -149,36 +167,36 @@ const Adapter = () => {
                 return Database.getRepository<Prisma.SessionDelegate>('session').create({
                     data: {
                         expires,
-                        fkUser: { connect: user.id },
+                        fkUser: { connect: { id: user.id } },
                         sessionToken: randomBytes(32).toString('hex'),
                         accessToken: randomBytes(32).toString('hex'),
                     },
                 });
             } catch (error) {
                 NextAuthLogger.error('CREATE_SESSION_ERROR', error);
-                // return Promise.reject(new UnlinkAccountError(error));
+                return Promise.reject(new CreateSessionError(error));
             }
         }
 
-        async function getSession(sessionToken) {
+        async function getSession(sessionToken: string): Promise<Session | null> {
             try {
                 const session: Session = await Database.getRepository<Prisma.SessionDelegate>('session').findUnique({
                     where: { sessionToken },
                 });
 
                 if (session && session.expires && new Date() > session.expires) {
-                    await Database.getRepository<Prisma.SessionDelegate>('session').delete({ where: sessionToken });
+                    await Database.getRepository<Prisma.SessionDelegate>('session').delete({ where: { sessionToken } });
                     return null;
                 }
 
                 return session;
             } catch (error) {
                 NextAuthLogger.error('GET_SESSION_ERROR', error);
-                // return Promise.reject(new UnlinkAccountError(error));
+                return Promise.reject(new GetSessionError(error));
             }
         }
 
-        async function updateSession(session, force) {
+        async function updateSession(session: Session, force?: boolean): Promise<Session> {
             try {
                 if (sessionMaxAge && (sessionUpdateAge || sessionUpdateAge === 0) && session.expires) {
                     const dateSessionIsDueToBeUpdated: Date = new Date(session.expires);
@@ -199,25 +217,35 @@ const Adapter = () => {
                 }
 
                 const { id, expires } = session;
-                return Database.getRepository<Prisma.SessionDelegate>('session').update({ where: { id }, data: { expires } });
+                return Database.getRepository<Prisma.SessionDelegate>('session').update({
+                    where: { id },
+                    data: { expires },
+                });
             } catch (error) {
                 NextAuthLogger.error('UPDATE_SESSION_ERROR', error);
-                // return Promise.reject(new UnlinkAccountError(error));
+                return Promise.reject(new UpdateSessionError(error));
             }
         }
 
-        async function deleteSession(sessionToken) {
+        async function deleteSession(sessionToken: string): Promise<void> {
             try {
-                return Database.getRepository<Prisma.SessionDelegate>('session').delete({ where: { sessionToken } });
+                await Database.getRepository<Prisma.SessionDelegate>('session').delete({ where: { sessionToken } });
             } catch (error) {
                 NextAuthLogger.error('DELETE_SESSION_ERROR', error);
-                // return Promise.reject(new UnlinkAccountError(error));
+                return Promise.reject(new DeleteSessionError(error));
             }
         }
 
-        async function createVerificationRequest(identifier, url, token, secret, provider) {
+        async function createVerificationRequest(
+            email: string,
+            url: string,
+            token: string,
+            secret: string,
+            provider: EmailSessionProvider,
+            options: AppOptions
+        ): Promise<VerificationRequest> {
             try {
-                const { baseUrl } = appOptions;
+                const { baseUrl } = options;
                 const { sendVerificationRequest, maxAge } = provider;
 
                 const hashedToken: string = createHash('sha256').update(`${token}${secret}`).digest('hex');
@@ -231,20 +259,25 @@ const Adapter = () => {
 
                 const verificationRequest: VerificationRequest = await Database.getRepository<Prisma.VerificationRequestDelegate>(
                     'verificationRequest'
-                ).create({ data: { identifier, token: hashedToken, expires } });
+                ).create({ data: { identifier: email, token: hashedToken, expires } });
 
-                await sendVerificationRequest({ identifier, url, token, baseUrl, provider });
+                await sendVerificationRequest({ identifier: email, url, token, baseUrl, provider });
 
                 return verificationRequest;
             } catch (error) {
                 NextAuthLogger.error('CREATE_VERIFICATION_REQUEST_ERROR', error);
-                // return Promise.reject(new UnlinkAccountError(error));
+                return Promise.reject(new CreateVerificationRequestError(error));
             }
         }
 
-        async function getVerificationRequest(identifier, token, secret, provider) {
+        async function getVerificationRequest(
+            email: string,
+            verificationToken: string,
+            secret: string,
+            provider: SessionProvider
+        ): Promise<VerificationRequest | null> {
             try {
-                const hashedToken: string = createHash('sha256').update(`${token}${secret}`).digest('hex');
+                const hashedToken: string = createHash('sha256').update(`${verificationToken}${secret}`).digest('hex');
                 const verificationRequest: VerificationRequest = await Database.getRepository<Prisma.VerificationRequestDelegate>(
                     'verificationRequest'
                 ).findUnique({ where: { token: hashedToken } });
@@ -259,19 +292,24 @@ const Adapter = () => {
                 return verificationRequest;
             } catch (error) {
                 NextAuthLogger.error('GET_VERIFICATION_REQUEST_ERROR', error);
-                // return Promise.reject(new UnlinkAccountError(error));
+                return Promise.reject(new GetVerificationRequestError(error));
             }
         }
 
-        async function deleteVerificationRequest(identifier, token, secret, provider) {
+        async function deleteVerificationRequest(
+            email: string,
+            verificationToken: string,
+            secret: string,
+            provider: SessionProvider
+        ): Promise<void> {
             try {
-                const hashedToken: string = createHash('sha256').update(`${token}${secret}`).digest('hex');
-                return Database.getRepository<Prisma.VerificationRequestDelegate>('verificationRequest').delete({
+                const hashedToken: string = createHash('sha256').update(`${verificationToken}${secret}`).digest('hex');
+                await Database.getRepository<Prisma.VerificationRequestDelegate>('verificationRequest').delete({
                     where: { token: hashedToken },
                 });
             } catch (error) {
                 NextAuthLogger.error('DELETE_VERIFICATION_REQUEST_ERROR', error);
-                // return Promise.reject(new UnlinkAccountError(error));
+                return Promise.reject(new DeleteVerificationRequestError(error));
             }
         }
 
@@ -284,7 +322,7 @@ const Adapter = () => {
             updateUser,
             // deleteUser,
             linkAccount,
-            unlinkAccount,
+            // unlinkAccount,
             createSession,
             getSession,
             updateSession,

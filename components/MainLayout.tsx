@@ -30,7 +30,7 @@ export default function MainLayout(
                             <Menu.SubMenu
                                 icon={<Avatar style={{ marginRight: '10px' }} shape="circle" src={session.user.image} />}
                                 style={{ float: 'right' }}
-                                title={session.user.name ? session.user.name : session.user.email}
+                                title={session.user.name}
                             >
                                 <Menu.Item
                                     key="setting:1"

@@ -23,8 +23,8 @@ type Repository =
     | 'item'
     | 'loginHistory'
     | 'message'
-    | 'registrationVerificationRequest'
-    | 'resetPasswordVerificationRequest'
+    | 'registrationRequest'
+    | 'resetPasswordRequest'
     | 'session'
     | 'skill'
     | 'user'
@@ -34,13 +34,19 @@ type Repository =
     | 'verificationRequest';
 
 export default class Database {
-    private _prismaClient: PrismaClient = new PrismaClient();
+    private _connection: PrismaClient;
 
     private constructor() {}
 
     public get prismaClient(): PrismaClient {
-        if (!this._prismaClient) this._prismaClient = new PrismaClient();
-        return this._prismaClient;
+        if (!this._connection)
+            if (process.env.NODE_ENV === 'production') this._connection = new PrismaClient();
+            else {
+                if (!(<any>global).prisma) (<any>global).prisma = new PrismaClient();
+                this._connection = (<any>global).prisma;
+            }
+
+        return this._connection;
     }
 
     private static _instance: Database = new Database();

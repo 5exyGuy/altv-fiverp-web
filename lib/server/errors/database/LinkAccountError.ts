@@ -1,4 +1,4 @@
-import UnknownError from './UnknownError';
+import UnknownError from '../UnknownError';
 
 export default class LinkAccountError extends UnknownError {
     constructor(message) {

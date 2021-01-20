@@ -3,7 +3,6 @@ import NextAuth, { InitOptions } from 'next-auth';
 import Providers from 'next-auth/providers';
 import Database from '../../../lib/server/database/Database';
 import bcrypt from 'bcryptjs';
-import NextAuthEventManager from '../../../lib/server/events/NextAuthEventManager';
 import { Prisma } from '@prisma/client';
 import DatabaseAdapter from '../../../lib/server/database/DatabaseAdapter';
 
@@ -51,7 +50,7 @@ const options: InitOptions = {
             // You can specify whatever fields you are expecting to be submitted.
             // e.g. domain, username, password, 2FA token, etc.
             credentials: {
-                username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
+                username: { label: 'Username', type: 'text' },
                 password: { label: 'Password', type: 'password' },
             },
             authorize: async (credentials) => {
@@ -151,13 +150,13 @@ const options: InitOptions = {
     // Events are useful for logging
     // https://next-auth.js.org/configuration/events
     events: {
-        createUser: async (message) => NextAuthEventManager.instance.notify('createUser', message),
-        error: async (message) => NextAuthEventManager.instance.notify('error', message),
-        linkAccount: async (message) => NextAuthEventManager.instance.notify('linkAccount', message),
-        session: async (message) => NextAuthEventManager.instance.notify('session', message),
-        signIn: async (message) => NextAuthEventManager.instance.notify('signIn', message),
-        signOut: async (message) => NextAuthEventManager.instance.notify('signOut', message),
-        updateUser: async (message) => NextAuthEventManager.instance.notify('updateUser', message),
+        // createUser: async (message) => NextAuthEventManager.instance.notify('createUser', message),
+        // error: async (message) => NextAuthEventManager.instance.notify('error', message),
+        // linkAccount: async (message) => NextAuthEventManager.instance.notify('linkAccount', message),
+        // session: async (message) => NextAuthEventManager.instance.notify('session', message),
+        // signIn: async (message) => NextAuthEventManager.instance.notify('signIn', message),
+        // signOut: async (message) => NextAuthEventManager.instance.notify('signOut', message),
+        // updateUser: async (message) => NextAuthEventManager.instance.notify('updateUser', message),
     },
 
     // Enable debug messages in the console if you are having problems

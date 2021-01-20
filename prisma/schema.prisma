@@ -16,8 +16,6 @@ model Account {
   refreshToken         String?   @map(name: "refresh_token")
   accessToken          String?   @map(name: "access_token")
   accessTokenExpires   DateTime? @map(name: "access_token_expires")
-  createdAt            DateTime  @default(now()) @map(name: "created_at")
-  updatedAt            DateTime  @default(now()) @map(name: "updated_at")
   fkUserId             Int       @map(name: "user_id")
   fkUser               User      @relation(fields: [fkUserId], references: [id])
 
@@ -322,26 +320,22 @@ model Message {
   @@map(name: "messages")
 }
 
-model RegistrationVerificationRequest {
+model RegistrationRequest {
   id         Int      @default(autoincrement()) @id
   identifier String
   token      String   @unique
   expires    DateTime
-  createdAt  DateTime @default(now()) @map(name: "created_at")
-  updatedAt  DateTime @default(now()) @map(name: "updated_at")
 
-  @@map(name: "registration_verification_requests")
+  @@map(name: "registration_requests")
 }
 
-model ResetPasswordVerificationRequest {
+model ResetPasswordRequest {
   id         Int      @default(autoincrement()) @id
   identifier String
   token      String   @unique
   expires    DateTime
-  createdAt  DateTime @default(now()) @map(name: "created_at")
-  updatedAt  DateTime @default(now()) @map(name: "updated_at")
 
-  @@map(name: "reset_password_verification_requests")
+  @@map(name: "reset_password_requests")
 }
 
 model Session {
@@ -349,8 +343,6 @@ model Session {
   expires      DateTime
   sessionToken String   @unique @map(name: "session_token")
   accessToken  String   @unique @map(name: "access_token")
-  createdAt    DateTime @default(now()) @map(name: "created_at")
-  updatedAt    DateTime @default(now()) @map(name: "updated_at")
   fkUserId     Int      @map(name: "user_id")
   fkUser       User     @relation(fields: [fkUserId], references: [id])
 
@@ -378,7 +370,6 @@ model User {
   verified       Boolean?
   image          String?
   createdAt      DateTime       @default(now()) @map(name: "created_at")
-  updatedAt      DateTime       @default(now()) @map(name: "updated_at")
   role           Role           @default(USER)
   id             Int            @id @default(autoincrement())
   accounts       Account[]
@@ -442,8 +433,6 @@ model VerificationRequest {
   identifier String
   token      String   @unique
   expires    DateTime
-  createdAt  DateTime @default(now()) @map(name: "created_at")
-  updatedAt  DateTime @default(now()) @map(name: "updated_at")
 
   @@map(name: "verification_requests")
 }

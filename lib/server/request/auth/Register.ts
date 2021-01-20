@@ -3,10 +3,9 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import Database from '../../database/Database';
 import RequestHandler from '../RequestHandler';
 import bcrypt from 'bcryptjs';
-import Prisma from '@prisma/client';
-import uniqid from 'uniqid';
-import User from '../../database/entities/User';
 import MailSender from '../../email/MailSender';
+import { Prisma } from '@prisma/client';
+import uniqid from 'uniqid';
 
 export default class RegisterRequestHandler extends RequestHandler {
     public async handle(request: NextApiRequest, response: NextApiResponse): Promise<void> {
@@ -26,6 +25,9 @@ export default class RegisterRequestHandler extends RequestHandler {
         }
 
         const hashedPassword: string = await bcrypt.hash(password, 10); // Hashed password
+        const emailVerifyToken: string = uniqid();
+        const expires: Date = new Date();
+        expires.setDate(expires.getDate() + 7);
 
         // const user: User = <User>new UserBuilder()
         //     .setUsername(username)
@@ -36,12 +38,11 @@ export default class RegisterRequestHandler extends RequestHandler {
 
         try {
             // Create a new user with the received data
-            // await Database.getConnection().user.create({
-            //     data: {
-            //         ...(<Prisma.UserCreateInput>user.convertToObject()),
-            //     },
-            // });
-            // await MailSender.instance.sendEmailConfirmRequest(user.email, user.emailVerifyToken);
+            await Database.getRepository<Prisma.UserDelegate>('user').create({ data: { email, username, password: hashedPassword } });
+            await Database.getRepository<Prisma.RegistrationRequestDelegate>('registrationRequest').create({
+                data: { token: emailVerifyToken, identifier: email, expires },
+            });
+            await MailSender.instance.sendEmailConfirmRequest(email, emailVerifyToken);
             response.status(StatusCodes.OK).json({ message: ReasonPhrases.OK });
         } catch (error) {
             response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: ReasonPhrases.INTERNAL_SERVER_ERROR });

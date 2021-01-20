@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import LoggedInRequestHandler from '../../../lib/server/request/auth/LoggedInRH';
-import ValidResetPasswordRequestHandler from '../../../lib/server/request/auth/ValidResetPasswordRH';
+import LoggedInRequestHandler from '../../../lib/server/request/auth/LoggedIn';
+import ValidResetPasswordRequestHandler from '../../../lib/server/request/auth/ValidResetPassword';
 import { RequestMethod } from '../../../lib/server/request/RequestMethod';
 
 const loggedInHandler: LoggedInRequestHandler = new LoggedInRequestHandler();

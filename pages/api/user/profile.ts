@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { RequestMethod } from '../../../lib/server/request/RequestMethod';
 import ProfileRequestHandler from '../../../lib/server/request/user/ProfileRH';
-import SessionRequestHandler from '../../../lib/server/request/auth/SessionRH';
+import SessionRequestHandler from '../../../lib/server/request/auth/Session';
 
 const sessionHandler: SessionRequestHandler = new SessionRequestHandler();
 const profileHandler: ProfileRequestHandler = new ProfileRequestHandler();

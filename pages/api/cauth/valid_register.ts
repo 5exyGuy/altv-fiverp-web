@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import LoggedInRequestHandler from '../../../lib/server/request/auth/LoggedIn';
-import ResetPasswordRequestHandler from '../../../lib/server/request/auth/ResetPassword';
+import ValidRegisterRequestHandler from '../../../lib/server/request/auth/ValidRegister';
 import { RequestMethod } from '../../../lib/server/request/RequestMethod';
 
 const loggedInHandler: LoggedInRequestHandler = new LoggedInRequestHandler();
-const resetPasswordHandler: ResetPasswordRequestHandler = new ResetPasswordRequestHandler();
+const validRegisterHandler: ValidRegisterRequestHandler = new ValidRegisterRequestHandler();
 
-loggedInHandler.use(resetPasswordHandler);
+loggedInHandler.use(validRegisterHandler);
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
     await loggedInHandler.handleMethod(RequestMethod.POST, request, response);

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import ForgotPasswordRequestHandler from '../../../lib/server/request/auth/ForgotPasswordRH';
-import LoggedInRequestHandler from '../../../lib/server/request/auth/LoggedInRH';
+import ForgotPasswordRequestHandler from '../../../lib/server/request/auth/ForgotPassword';
+import LoggedInRequestHandler from '../../../lib/server/request/auth/LoggedIn';
 import { RequestMethod } from '../../../lib/server/request/RequestMethod';
 
 const loggedInHandler: LoggedInRequestHandler = new LoggedInRequestHandler();

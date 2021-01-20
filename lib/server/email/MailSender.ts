@@ -35,8 +35,8 @@ export default class MailSender {
             host: 'smtp.mailtrap.io',
             port: 2525,
             auth: {
-                user: '468163bac818f5',
-                pass: 'aa15aa5d008519',
+                user: '9e1037e72610cd',
+                pass: 'e8a229d346cc49',
             },
         });
     }

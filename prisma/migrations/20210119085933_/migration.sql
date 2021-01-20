@@ -8,8 +8,6 @@ CREATE TABLE `accounts` (
     `refresh_token` VARCHAR(191),
     `access_token` VARCHAR(191),
     `access_token_expires` DATETIME(3),
-    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `user_id` INT NOT NULL,
 UNIQUE INDEX `accounts.compound_id_unique`(`compound_id`),
 INDEX `providerAccountId`(`provider_account_id`),
@@ -269,27 +267,23 @@ INDEX `fk_Character_id1`(`fk_Character_id1`),
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `registration_verification_requests` (
+CREATE TABLE `registration_requests` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `identifier` VARCHAR(191) NOT NULL,
     `token` VARCHAR(191) NOT NULL,
     `expires` DATETIME(3) NOT NULL,
-    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-UNIQUE INDEX `registration_verification_requests.token_unique`(`token`),
+UNIQUE INDEX `registration_requests.token_unique`(`token`),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `reset_password_verification_requests` (
+CREATE TABLE `reset_password_requests` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `identifier` VARCHAR(191) NOT NULL,
     `token` VARCHAR(191) NOT NULL,
     `expires` DATETIME(3) NOT NULL,
-    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-UNIQUE INDEX `reset_password_verification_requests.token_unique`(`token`),
+UNIQUE INDEX `reset_password_requests.token_unique`(`token`),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -300,9 +294,9 @@ CREATE TABLE `sessions` (
     `expires` DATETIME(3) NOT NULL,
     `session_token` VARCHAR(191) NOT NULL,
     `access_token` VARCHAR(191) NOT NULL,
-    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `user_id` INT NOT NULL,
+UNIQUE INDEX `sessions.session_token_unique`(`session_token`),
+UNIQUE INDEX `sessions.access_token_unique`(`access_token`),
 INDEX `fk_User_id`(`user_id`),
 
     PRIMARY KEY (`id`)
@@ -328,7 +322,6 @@ CREATE TABLE `users` (
     `verified` BOOLEAN,
     `image` VARCHAR(191),
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `role` ENUM('USER', 'MOD', 'ADMIN') NOT NULL DEFAULT 'USER',
     `id` INT NOT NULL AUTO_INCREMENT,
 UNIQUE INDEX `users.email_unique`(`email`),
@@ -384,8 +377,6 @@ CREATE TABLE `verification_requests` (
     `identifier` VARCHAR(191) NOT NULL,
     `token` VARCHAR(191) NOT NULL,
     `expires` DATETIME(3) NOT NULL,
-    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 UNIQUE INDEX `verification_requests.token_unique`(`token`),
 
     PRIMARY KEY (`id`)

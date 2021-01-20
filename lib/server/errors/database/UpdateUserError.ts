@@ -1,4 +1,4 @@
-import UnknownError from './UnknownError';
+import UnknownError from '../UnknownError';
 
 export default class UpdateUserError extends UnknownError {
     constructor(message) {

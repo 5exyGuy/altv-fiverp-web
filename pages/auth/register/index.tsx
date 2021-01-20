@@ -25,7 +25,7 @@ export default function Register(): JSX.Element {
     });
 
     const onFinish = async (data: RegistrationData) => {
-        const result: Response = await fetch('/api/authentication/register', {
+        const result: Response = await fetch('/api/cauth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
