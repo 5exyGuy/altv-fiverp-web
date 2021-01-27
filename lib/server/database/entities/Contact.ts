@@ -1,10 +1,37 @@
-import Entity from '../Entity';
+import { Model } from 'objection';
 import Character from './Character';
 
-export default class Contact extends Entity<Contact> {
-    private _id: number;
-    private _fkCharacterId1: number;
-    private _fkCharacterId2: number;
-    private _fkCharacter1: Character;
-    private _fkCharacter2: Character;
+export default class Contact extends Model {
+    public id!: number;
+    public holder!: Character;
+    public contact!: Character;
+
+    public static get tableName(): string {
+        return 'contacts';
+    }
+
+    public static get idColumn(): string {
+        return 'id';
+    }
+
+    public static relationMappings() {
+        return {
+            holder: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: Character,
+                join: {
+                    from: 'contacts.holder_id',
+                    to: 'characters.id',
+                },
+            },
+            contact: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: Character,
+                join: {
+                    from: 'contacts.contact_id',
+                    to: 'characters.id',
+                },
+            },
+        };
+    }
 }

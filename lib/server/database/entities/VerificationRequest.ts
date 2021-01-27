@@ -1,10 +1,30 @@
-import Entity from '../Entity';
+import { Model } from 'objection';
+import User from './User';
 
-export default class VerificationRequest extends Entity<VerificationRequest> {
-    private _identifier: string;
-    private _token: string;
-    private _expires: Date;
-    private _createdAt: Date;
-    private _updatedAt: Date;
-    private _id: number;
+export default class VerificationRequest extends Model {
+    public id!: number;
+    public token!: string;
+    public expires!: Date;
+    public user!: User;
+
+    public static get tableName(): string {
+        return 'verification_requests';
+    }
+
+    public static get idColumn(): string {
+        return 'id';
+    }
+
+    public static relationMappings() {
+        return {
+            user: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: User,
+                join: {
+                    from: 'verification_requests.user_id',
+                    to: 'users.id',
+                },
+            },
+        };
+    }
 }

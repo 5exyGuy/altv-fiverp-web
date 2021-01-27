@@ -1,21 +1,35 @@
-import Entity from '../Entity';
+import { Model } from 'objection';
 import User from './User';
 
-export default class Account extends Entity<Account> {
-    private _compoundId: string;
-    private _providerType: string;
-    private _providerId: string;
-    private _providerAccountId: string;
-    private _refreshToken: string;
-    private _accessToken: string;
-    private _accessTokenExpires: Date;
-    private _createdAt: Date;
-    private _updatedAt: Date;
-    private _id: number;
-    private _userId: number;
-    private _user: User;
+export default class Account extends Model {
+    public id!: number;
+    public compoundId!: string;
+    public providerType!: string;
+    public providerId!: string;
+    public providerAccountId!: string;
+    public refreshToken?: string;
+    public accessToken?: string;
+    public accessTokenExpires?: Date;
+    public user!: User;
 
-    public constructor(init) {
-        super(init);
+    public static get tableName(): string {
+        return 'accounts';
+    }
+
+    public static get idColumn(): string {
+        return 'id';
+    }
+
+    public static relationMappings() {
+        return {
+            user: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: User,
+                join: {
+                    from: 'accounts.user_id',
+                    to: 'users.id',
+                },
+            },
+        };
     }
 }

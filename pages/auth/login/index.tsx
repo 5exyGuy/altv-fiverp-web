@@ -17,7 +17,7 @@ export default function Login(): JSX.Element {
     if (!loading && session) Router.push('/');
 
     const onFinishWithCredentials = async (data: LoginData) => {
-        await signIn('Credentials', { username: data.username, password: data.password });
+        await signIn('credentials', { username: data.username, password: data.password });
     };
 
     return (

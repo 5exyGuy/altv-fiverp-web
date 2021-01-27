@@ -1,13 +1,31 @@
-import Entity from '../Entity';
+import { Model } from 'objection';
 import User from './User';
 
-export default class Session extends Entity<Session> {
-    private _expires: Date;
-    private _sessionToken: string;
-    private _accessToken: string;
-    private _createdAt: Date;
-    private _updatedAt: Date;
-    private _id: number;
-    private _userId: number;
-    private _user: User;
+export default class Session extends Model {
+    public id!: number;
+    public expires!: Date;
+    public sessionToken!: string;
+    public accessToken!: string;
+    public user!: User;
+
+    public static get tableName(): string {
+        return 'sessions';
+    }
+
+    public static get idColumn(): string {
+        return 'id';
+    }
+
+    public static relationMappings() {
+        return {
+            user: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: User,
+                join: {
+                    from: 'sessions.user_id',
+                    to: 'users.id',
+                },
+            },
+        };
+    }
 }
