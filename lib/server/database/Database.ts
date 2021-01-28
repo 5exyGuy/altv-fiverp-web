@@ -35,43 +35,40 @@ import { Model } from 'objection';
 //     | 'verificationRequest';
 
 export default class Database {
-    private static _connection: Knex;
+    private _connection: Knex;
 
-    private constructor() {}
-
-    public static connect(): void {
+    public connect(): void {
         if (this._connection) return;
-
-        if (process.env.NODE_ENV === 'production') {
-            this._connection = Knex({
-                client: 'mysql',
-                connection: {
-                    host: '127.0.0.1',
-                    user: 'root',
-                    password: '',
-                    database: 'fiverp',
-                },
-            });
-        } else {
-            if (!(<any>global).knex)
-                (<any>global).knex = Knex({
-                    client: 'mysql',
-                    connection: {
-                        host: '127.0.0.1',
-                        user: 'root',
-                        password: '',
-                        database: 'fiverp',
-                    },
-                });
-            this._connection = (<any>global).knex;
-        }
-
+        this._connection = Knex({
+            client: 'mysql',
+            connection: {
+                host: '127.0.0.1',
+                user: 'root',
+                password: '',
+                database: 'fiverp',
+            },
+        });
         Model.knex(this._connection);
     }
 
-    public static get isConnected(): boolean {
-        if (process.env.NODE_ENV === 'production') return !!this._connection;
-        return false;
+    public get isConnected(): boolean {
+        return !!this._connection;
+    }
+
+    private static _instance: Database;
+
+    public static getInstance(): Database {
+        if (process.env.NODE_ENV === 'production') {
+            if (!this._instance) this._instance = new Database();
+        } else {
+            if (!(<any>global)._instance) {
+                this._instance = new Database();
+                (<any>global)._instance = this._instance;
+            } else {
+                this._instance = (<any>global)._instance;
+            }
+        }
+        return this._instance;
     }
 
     // public static getRepository<T>(repository: Repository): T {

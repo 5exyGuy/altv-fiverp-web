@@ -1,11 +1,5 @@
-import uniqid from 'uniqid';
-
 export default class Singleton {
-    public value: string;
-
-    private constructor() {
-        this.value = uniqid();
-    }
+    protected constructor() {}
 
     private static _instance: Singleton;
 
