@@ -14,6 +14,8 @@ export default function MainLayout(
     const session: Session = props.session ? props.session : _session;
     const loading: boolean = props.loading ? props.loading : _loading;
 
+    if (typeof window !== 'undefined' && loading) return null;
+
     return (
         <div className="background">
             <Layout style={{ backgroundColor: 'transparent' }}>

@@ -6,6 +6,7 @@ export default class ExtendedModel<T> extends Model {
 
     public constructor(init?: Partial<T>) {
         super();
+        // TODO: Needs to be fixed, because it's causing sql syntax errors
         // this._updateFields = new Map();
         // this._updateRelationFields = new Map();
         Object.assign(this, init);

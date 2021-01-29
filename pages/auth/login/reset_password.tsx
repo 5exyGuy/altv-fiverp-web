@@ -46,11 +46,10 @@ export default function Reset(): JSX.Element {
             body: JSON.stringify({ email, token, password: data.password }),
         });
         if (result.status !== StatusCodes.OK) return; // TODO: Show an error message
-        await router.push('/auth/complete?type=resetpassword');
     };
 
     return (
-        <MainLayout headerTitle="Slaptažodžio atstatymas" session={session} loading={loading} protected={Boolean(!loading && session)}>
+        <MainLayout headerTitle="Slaptažodžio atstatymas" session={session} loading={loading} protected={Boolean(!valid || session)}>
             <Row justify="center" align="middle">
                 <Col span={10} style={{ margin: '10% 0' }}>
                     <Form onFinish={onFinish}>

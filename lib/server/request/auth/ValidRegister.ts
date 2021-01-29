@@ -16,11 +16,15 @@ export default class ValidRegisterRequestHandler extends RequestHandler {
 
             if (!user) return response.status(StatusCodes.NOT_FOUND).json({ message: ReasonPhrases.NOT_FOUND });
 
-            const registrationRequest: RegistrationRequest = await User.relatedQuery('registrationRequests')
+            const registrationRequest: RegistrationRequest = await User.relatedQuery<RegistrationRequest>('registrationRequests')
                 .for(user.id)
                 .findOne({ token });
 
             if (!registrationRequest) return response.status(StatusCodes.NOT_FOUND).json({ message: ReasonPhrases.NOT_FOUND });
+            if (new Date() > registrationRequest.expires) {
+                await User.relatedQuery<RegistrationRequest>('registrationRequests').for(user.id).delete().where({ token });
+                return response.status(StatusCodes.BAD_REQUEST).json({ message: ReasonPhrases.BAD_REQUEST });
+            }
 
             response.status(StatusCodes.OK).json({ message: ReasonPhrases.OK });
         } catch (error) {

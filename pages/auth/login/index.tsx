@@ -21,7 +21,7 @@ export default function Login(): JSX.Element {
     };
 
     return (
-        <MainLayout headerTitle="Prisijungimas" session={session} loading={loading} protected={Boolean(!loading && session)}>
+        <MainLayout headerTitle="Prisijungimas" session={session} loading={loading} protected={Boolean(session)}>
             <Row justify="center" align="middle">
                 <Col span={10} style={{ margin: '10% 0' }}>
                     <Form onFinish={onFinishWithCredentials}>
@@ -32,9 +32,7 @@ export default function Login(): JSX.Element {
                             <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" placeholder="Slaptažodis" />
                         </Form.Item>
                         <Form.Item>
-                            <a className="login-form-forgot" href="">
-                                Pamiršau slaptažodį
-                            </a>
+                            <Link href="/auth/login/forgot_password">Pamiršau slaptažodį</Link>
                         </Form.Item>
                         <Form.Item>
                             <Button type="primary" htmlType="submit" style={{ width: '100%' }}>

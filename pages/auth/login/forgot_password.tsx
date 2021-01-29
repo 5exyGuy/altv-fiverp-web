@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/client';
 import Router from 'next/router';
 import { MailOutlined } from '@ant-design/icons';
 import { StatusCodes } from 'http-status-codes';
+import ForgotPasswordRequestHandler from '../../../lib/server/request/auth/ForgotPassword';
 
 type ForgotData = { email: string };
 
@@ -12,6 +13,9 @@ export default function Forgot(): JSX.Element {
 
     if (!loading && session) Router.push('/');
 
+    /**
+     * @see {ForgotPasswordRequestHandler}
+     */
     const onFinish = async (data: ForgotData) => {
         const result: Response = await fetch('/api/cauth/forgot_password', { method: 'POST', body: JSON.stringify(data) });
         if (result.status !== StatusCodes.OK) return; // TODO: Show an error message
@@ -19,7 +23,7 @@ export default function Forgot(): JSX.Element {
     };
 
     return (
-        <MainLayout headerTitle="Slaptažodžio atstatymas" session={session} loading={loading} protected={Boolean(!loading && session)}>
+        <MainLayout headerTitle="Slaptažodžio atstatymas" session={session} loading={loading} protected={Boolean(session)}>
             <Row justify="center" align="middle">
                 <Col span={10} style={{ margin: '10% 0' }}>
                     <Form onFinish={onFinish}>

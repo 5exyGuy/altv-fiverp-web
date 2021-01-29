@@ -1,11 +1,11 @@
-import { Button, Col, Form, Input, Row } from 'antd';
+import { Button, Col, Form, Input, Row, Modal, Alert } from 'antd';
 import MainLayout from '../../../components/MainLayout';
 import { useSession } from 'next-auth/client';
-import Router from 'next/router';
+import Router, { NextRouter, useRouter } from 'next/router';
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { StatusCodes } from 'http-status-codes';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type RegistrationData = {
     username: string;
@@ -15,7 +15,11 @@ type RegistrationData = {
 };
 
 export default function Register(): JSX.Element {
+    const router: NextRouter = useRouter();
     const [session, loading] = useSession();
+    const [visible, setVisible] = useState(false);
+    const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState('');
 
     useEffect(() => {
         const check = async () => {
@@ -32,15 +36,45 @@ export default function Register(): JSX.Element {
             },
             body: JSON.stringify(data),
         });
-        if (result.status !== StatusCodes.OK) return; // TODO: Show an error message
-        // TODO: Show a success message
+        if (result.status === StatusCodes.INTERNAL_SERVER_ERROR) {
+            const message: string = (await result.json()).message;
+            setMessage(message);
+            setMessageType('error');
+        } else if (result.status === StatusCodes.BAD_REQUEST) {
+            const message: string = (await result.json()).message;
+            setMessage(message);
+            setMessageType('warning');
+        } else {
+            setMessage('Registracija sėkminga!');
+            setMessageType('success');
+            showModal();
+        }
+    };
+
+    const showModal = () => {
+        setVisible(true);
+    };
+
+    const handleOk = async () => {
+        await router.push('/');
+    };
+
+    const handleCancel = async () => {
+        await router.push('/');
     };
 
     return (
         <MainLayout headerTitle="Registracija" session={session} loading={loading} protected={Boolean(!loading && session)}>
             <Row justify="center" align="middle">
                 <Col span={10} style={{ margin: '10% 0' }}>
-                    <Form initialValues={{ remember: true }} onFinish={onFinish}>
+                    <Form onFinish={onFinish}>
+                        <Form.Item>
+                            <Alert
+                                className={message.length > 0 ? 'animate__animated animate__fadeIn' : 'animate__animated animate__fadeOut'}
+                                message={message}
+                                type={messageType as 'success' | 'info' | 'warning' | 'error'}
+                            />
+                        </Form.Item>
                         <Form.Item name="username" rules={[{ required: true, message: 'Prašome įvesti vartotojo vardą!' }]}>
                             <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Vartotojo vardas" />
                         </Form.Item>
@@ -83,6 +117,9 @@ export default function Register(): JSX.Element {
                     </Form>
                 </Col>
             </Row>
+            <Modal title="El. pašto patvirtinimas" visible={visible} onOk={handleOk} onCancel={handleCancel}>
+                <p></p>
+            </Modal>
         </MainLayout>
     );
 }

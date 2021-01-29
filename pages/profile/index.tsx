@@ -17,8 +17,6 @@ export default function Profile(): JSX.Element {
         fetchData();
     }, [session]);
 
-    if (typeof window !== 'undefined' && loading) return null;
-
     return (
         <MainLayout headerTitle="Profilis" session={session} loading={loading} protected={Boolean(!session)}>
             <Avatar shape="square" size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }} src={session?.user?.image} />

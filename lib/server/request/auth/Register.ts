@@ -4,7 +4,7 @@ import RequestHandler from '../RequestHandler';
 import bcrypt from 'bcryptjs';
 import MailSender from '../../email/MailSender';
 import uniqid from 'uniqid';
-import { RegistrationRequest, User } from '../../database/entities';
+import { User } from '../../database/entities';
 import { createHash } from 'crypto';
 
 export default class RegisterRequestHandler extends RequestHandler {
@@ -17,9 +17,9 @@ export default class RegisterRequestHandler extends RequestHandler {
         try {
             // Checking if such a user already exists
             const result: User = await User.query().findOne({ username, email });
-            if (result) return response.status(StatusCodes.BAD_REQUEST).json({ message: ReasonPhrases.BAD_REQUEST });
+            if (result) return response.status(StatusCodes.BAD_REQUEST).json({ message: 'Toks vartotojas jau egzistuoja!' });
         } catch (error) {
-            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: ReasonPhrases.INTERNAL_SERVER_ERROR });
+            return response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Serveryje įvyko netikėta klaida.' });
         }
 
         const hashedPassword: string = await bcrypt.hash(password, 10); // Hashed password
@@ -39,10 +39,10 @@ export default class RegisterRequestHandler extends RequestHandler {
             // const user: User = await User.query().insert({ email: email, username: username, password: hashedPassword });
             // await User.relatedQuery<RegistrationRequest>('registrationRequests').for(user.id).insert({ token: hashedToken, expires });
             await MailSender.instance.sendEmailConfirmRequest(email, hashedToken);
-            response.status(StatusCodes.OK).json({ message: ReasonPhrases.OK });
+            response.status(StatusCodes.OK).json({ message: 'Registracija sėkminga!' });
         } catch (error) {
             console.log(error);
-            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: ReasonPhrases.INTERNAL_SERVER_ERROR });
+            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Serveryje įvyko netikėta klaida.' });
         }
     }
 }
