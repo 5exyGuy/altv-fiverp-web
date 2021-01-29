@@ -1,3 +1,6 @@
+/**
+ * @deprecated Use instead ExtendedModel
+ */
 export default class Entity<T> {
     protected _updateFields: Map<string, any>;
     protected _updateRelationFields: Map<string, any>;
@@ -18,12 +21,12 @@ export default class Entity<T> {
 
     protected updateLocalFields(fields?: { [key: string]: any }): void {
         if (!fields) fields = Object.fromEntries(this._updateFields);
-        for (const fieldName in fields) this[`_${fieldName}`] = fields[fieldName];
+        for (const fieldName in fields) this[`${fieldName}`] = fields[fieldName];
     }
 
     protected updateLocalRelationFields(fields?: { [key: string]: any }): void {
         if (!fields) fields = Object.fromEntries(this._updateRelationFields);
-        for (const fieldName in fields) this[`_${fieldName}`] = fields[fieldName];
+        for (const fieldName in fields) this[`${fieldName}`] = fields[fieldName];
     }
 
     protected parse(prismaEntity: { [key: string]: any }): void {
@@ -47,5 +50,9 @@ export default class Entity<T> {
         const properties: { [key: string]: any } = {};
         for (const prop of propNames) properties[prop] = this[prop];
         return properties;
+    }
+
+    public convertUpdateFieldsToObject(): { [key: string]: any } {
+        return Object.fromEntries(this._updateFields);
     }
 }

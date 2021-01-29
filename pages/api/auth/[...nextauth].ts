@@ -4,6 +4,7 @@ import Providers from 'next-auth/providers';
 import Database from '../../../lib/server/database/Database';
 import bcrypt from 'bcryptjs';
 import DatabaseAdapter from '../../../lib/server/database/DatabaseAdapter';
+import { User } from '../../../lib/server/database/entities';
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -58,13 +59,13 @@ const options: InitOptions = {
 
                 if (!username || !password) return Promise.resolve(null);
 
-                // const user = await Database.getRepository<Prisma.UserDelegate>('user').findFirst({ where: { username: username } });
+                const user: User = await User.query().findOne({ username });
 
-                // if (!user) return Promise.reject(new Error('error message'));
-                // if (!user.verified) return Promise.resolve(null);
-                // if (!(await bcrypt.compare(password, user.password))) return Promise.resolve(null);
+                if (!user) return Promise.reject(new Error('error message'));
+                if (!user.verified) return Promise.resolve(null);
+                if (!(await bcrypt.compare(password, user.password))) return Promise.resolve(null);
 
-                // return Promise.resolve({ id: user.id, name: user.username, email: user.email });
+                return Promise.resolve({ id: user.id, name: user.username, email: user.email });
 
                 // const user = { id: 1, name: 'J Smith', email: 'jsmith@example.com' };
 

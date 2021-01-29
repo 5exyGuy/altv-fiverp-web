@@ -1,4 +1,3 @@
-import { Account, Prisma, User, Session, VerificationRequest } from '@prisma/client';
 import { createHash, randomBytes } from 'crypto';
 import { AppOptions } from 'next-auth';
 import { AdapterInstance, EmailSessionProvider } from 'next-auth/adapters';
@@ -21,7 +20,7 @@ import {
     UpdateUserError,
 } from '../errors/database';
 import NextAuthLogger from '../utilities/NextAuthLogger';
-import Database from './Database';
+import { Account, Session, User, VerificationRequest } from './entities';
 
 interface Profile {
     id: string;
@@ -44,13 +43,11 @@ const Adapter = () => {
 
         async function createUser(profile): Promise<User> {
             try {
-                return Database.getRepository<Prisma.UserDelegate>('user').create({
-                    data: {
-                        name: profile.name,
-                        email: profile.email,
-                        image: profile.image,
-                        emailVerified: profile.emailVerified ? profile.emailVerified.toISOString() : null,
-                    },
+                return User.query().insert({
+                    name: profile.name,
+                    email: profile.email,
+                    image: profile.image,
+                    emailVerified: profile.emailVerified ? profile.emailVerified : null,
                 });
             } catch (error) {
                 NextAuthLogger.error('CREATE_USER_ERROR', error);
@@ -60,7 +57,7 @@ const Adapter = () => {
 
         async function getUser(id: string): Promise<User | null> {
             try {
-                return Database.getRepository<Prisma.UserDelegate>('user').findUnique({ where: { id: parseInt(id) } });
+                return User.query().findOne({ id: parseInt(id) });
             } catch (error) {
                 NextAuthLogger.error('GET_USER_BY_ID_ERROR', error);
                 return Promise.reject(new GetUserError(error));
@@ -70,7 +67,7 @@ const Adapter = () => {
         async function getUserByEmail(email: string): Promise<User | null> {
             try {
                 if (!email) return Promise.resolve(null);
-                return Database.getRepository<Prisma.UserDelegate>('user').findUnique({ where: { email } });
+                return User.query().findOne({ email });
             } catch (error) {
                 NextAuthLogger.error('GET_USER_BY_EMAIL_ERROR', error);
                 return Promise.reject(new GetUserByEmailError(error));
@@ -79,11 +76,9 @@ const Adapter = () => {
 
         async function getUserByProviderAccountId(providerId: string, providerAccountId: string): Promise<User | null> {
             try {
-                const account: Account = await Database.getRepository<Prisma.AccountDelegate>('account').findUnique({
-                    where: { compoundId: getCompoundId(providerId, providerAccountId) },
-                });
+                const account: Account = await Account.query().findOne({ compoundId: getCompoundId(providerId, providerAccountId) });
                 if (!account) return null;
-                return Database.getRepository<Prisma.UserDelegate>('user').findUnique({ where: { id: account.id } });
+                return User.query().findOne({ id: account.id });
             } catch (error) {
                 NextAuthLogger.error('GET_USER_BY_PROVIDER_ACCOUNT_ID_ERROR', error);
                 return Promise.reject(new GetUserByProviderAccountIdError(error));
@@ -97,10 +92,9 @@ const Adapter = () => {
         async function updateUser(user: User): Promise<User> {
             try {
                 const { id, name, email, image, emailVerified } = user;
-                return Database.getRepository<Prisma.UserDelegate>('user').update({
-                    where: { id },
-                    data: { name, email, image, emailVerified: emailVerified ? emailVerified.toISOString() : null },
-                });
+                await User.query()
+                    .findById(id)
+                    .patch({ name, email, image, emailVerified: emailVerified ? emailVerified : null });
             } catch (error) {
                 NextAuthLogger.error('UPDATE_USER_ERROR', error);
                 return Promise.reject(new UpdateUserError(error));
@@ -126,8 +120,9 @@ const Adapter = () => {
             accessTokenExpires: number
         ): Promise<void> {
             try {
-                await Database.getRepository<Prisma.AccountDelegate>('account').create({
-                    data: {
+                await User.relatedQuery<Account>('accounts')
+                    .for(parseInt(userId))
+                    .insert({
                         accessToken,
                         refreshToken,
                         compoundId: getCompoundId(providerId, providerAccountId),
@@ -135,9 +130,7 @@ const Adapter = () => {
                         providerId,
                         providerType,
                         accessTokenExpires: new Date(accessTokenExpires),
-                        fkUser: { connect: { id: parseInt(userId) } },
-                    },
-                });
+                    });
             } catch (error) {
                 NextAuthLogger.error('LINK_ACCOUNT_ERROR', error);
                 return Promise.reject(new LinkAccountError(error));
@@ -157,21 +150,16 @@ const Adapter = () => {
 
         async function createSession(user: User): Promise<Session> {
             try {
-                let expires = null;
+                let expires: Date = null;
                 if (sessionMaxAge) {
                     const dateExpires: Date = new Date();
                     dateExpires.setTime(dateExpires.getTime() + sessionMaxAge);
-                    expires = dateExpires.toISOString();
+                    expires = dateExpires;
                 }
 
-                return Database.getRepository<Prisma.SessionDelegate>('session').create({
-                    data: {
-                        expires,
-                        fkUser: { connect: { id: user.id } },
-                        sessionToken: randomBytes(32).toString('hex'),
-                        accessToken: randomBytes(32).toString('hex'),
-                    },
-                });
+                return User.relatedQuery<Session>('sessions')
+                    .for(user.id)
+                    .insert({ expires, sessionToken: randomBytes(32).toString('hex'), accessToken: randomBytes(32).toString('hex') });
             } catch (error) {
                 NextAuthLogger.error('CREATE_SESSION_ERROR', error);
                 return Promise.reject(new CreateSessionError(error));
@@ -180,12 +168,10 @@ const Adapter = () => {
 
         async function getSession(sessionToken: string): Promise<Session | null> {
             try {
-                const session: Session = await Database.getRepository<Prisma.SessionDelegate>('session').findUnique({
-                    where: { sessionToken },
-                });
+                const session: Session = await Session.query().findOne({ sessionToken });
 
                 if (session && session.expires && new Date() > session.expires) {
-                    await Database.getRepository<Prisma.SessionDelegate>('session').delete({ where: { sessionToken } });
+                    await Session.query().delete().where('sessionToken', sessionToken);
                     return null;
                 }
 
@@ -207,20 +193,13 @@ const Adapter = () => {
                         const newExpiryDate: Date = new Date();
                         newExpiryDate.setTime(newExpiryDate.getTime() + sessionMaxAge);
                         session.expires = newExpiryDate;
-                    } else if (!force) {
-                        return null;
-                    }
+                    } else if (!force) return null;
                 } else {
-                    if (!force) {
-                        return null;
-                    }
+                    if (!force) return null;
                 }
 
                 const { id, expires } = session;
-                return Database.getRepository<Prisma.SessionDelegate>('session').update({
-                    where: { id },
-                    data: { expires },
-                });
+                await Session.query().findById(id).patch({ expires });
             } catch (error) {
                 NextAuthLogger.error('UPDATE_SESSION_ERROR', error);
                 return Promise.reject(new UpdateSessionError(error));
@@ -229,7 +208,7 @@ const Adapter = () => {
 
         async function deleteSession(sessionToken: string): Promise<void> {
             try {
-                await Database.getRepository<Prisma.SessionDelegate>('session').delete({ where: { sessionToken } });
+                await Session.query().delete().where('sessionToken', sessionToken);
             } catch (error) {
                 NextAuthLogger.error('DELETE_SESSION_ERROR', error);
                 return Promise.reject(new DeleteSessionError(error));
@@ -250,16 +229,17 @@ const Adapter = () => {
 
                 const hashedToken: string = createHash('sha256').update(`${token}${secret}`).digest('hex');
 
-                let expires = null;
+                let expires: Date = null;
                 if (maxAge) {
                     const dateExpires: Date = new Date();
                     dateExpires.setTime(dateExpires.getTime() + maxAge * 1000);
-                    expires = dateExpires.toISOString();
+                    expires = dateExpires;
                 }
 
-                const verificationRequest: VerificationRequest = await Database.getRepository<Prisma.VerificationRequestDelegate>(
-                    'verificationRequest'
-                ).create({ data: { identifier: email, token: hashedToken, expires } });
+                const user: User = await User.query().findOne({ email });
+                const verificationRequest: VerificationRequest = await User.relatedQuery<VerificationRequest>('verification_requests')
+                    .for(user.id)
+                    .insert({ token: hashedToken, expires });
 
                 await sendVerificationRequest({ identifier: email, url, token, baseUrl, provider });
 
@@ -278,14 +258,10 @@ const Adapter = () => {
         ): Promise<VerificationRequest | null> {
             try {
                 const hashedToken: string = createHash('sha256').update(`${verificationToken}${secret}`).digest('hex');
-                const verificationRequest: VerificationRequest = await Database.getRepository<Prisma.VerificationRequestDelegate>(
-                    'verificationRequest'
-                ).findUnique({ where: { token: hashedToken } });
+                const verificationRequest: VerificationRequest = await VerificationRequest.query().findOne({ token: hashedToken });
 
                 if (verificationRequest && verificationRequest.expires && new Date() > verificationRequest.expires) {
-                    await Database.getRepository<Prisma.VerificationRequestDelegate>('verificationRequest').delete({
-                        where: { token: hashedToken },
-                    });
+                    await VerificationRequest.query().delete().where('token', hashedToken);
                     return null;
                 }
 
@@ -304,9 +280,7 @@ const Adapter = () => {
         ): Promise<void> {
             try {
                 const hashedToken: string = createHash('sha256').update(`${verificationToken}${secret}`).digest('hex');
-                await Database.getRepository<Prisma.VerificationRequestDelegate>('verificationRequest').delete({
-                    where: { token: hashedToken },
-                });
+                await VerificationRequest.query().delete().where({ token: hashedToken });
             } catch (error) {
                 NextAuthLogger.error('DELETE_VERIFICATION_REQUEST_ERROR', error);
                 return Promise.reject(new DeleteVerificationRequestError(error));

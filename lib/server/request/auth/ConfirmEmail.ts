@@ -1,6 +1,7 @@
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { NextApiRequest, NextApiResponse } from 'next';
 import Database from '../../database/Database';
+import { User } from '../../database/entities';
 import RequestHandler from '../RequestHandler';
 
 export default class ConfirmEmailRequestHandler extends RequestHandler {
@@ -12,11 +13,8 @@ export default class ConfirmEmailRequestHandler extends RequestHandler {
             return response.status(StatusCodes.BAD_REQUEST).json({ message: ReasonPhrases.BAD_REQUEST });
 
         try {
-            const result = await Database.getConnection().user.updateMany({
-                where: { AND: { email: { equals: email } } },
-                data: { verified: true },
-            });
-            if (result.count <= 0) return response.status(StatusCodes.NOT_FOUND).json({ message: ReasonPhrases.NOT_FOUND });
+            const result = await User.query().patch({ verified: true }).where('email', email);
+            if (result <= 0) return response.status(StatusCodes.NOT_FOUND).json({ message: ReasonPhrases.NOT_FOUND });
 
             response.status(StatusCodes.OK).json({ message: ReasonPhrases.OK });
         } catch (error) {
