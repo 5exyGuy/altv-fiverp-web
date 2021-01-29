@@ -6,7 +6,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     const database: Database = Database.getInstance();
     // console.log(database);
     if (!database.isConnected) database.connect();
-    const users = await User.query().select('username', 'email');
+    const users = await User.query();
     // // console.log(users);
 
     response.json({ users });

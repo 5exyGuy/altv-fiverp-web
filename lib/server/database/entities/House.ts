@@ -26,8 +26,8 @@ export default class House extends Model {
                 join: {
                     from: 'houses.id',
                     through: {
-                        from: 'character_houses.house_id',
-                        to: 'character_houses.character_id',
+                        from: 'character_houses.houseId',
+                        to: 'character_houses.characterId',
                     },
                     to: 'characters.id',
                 },

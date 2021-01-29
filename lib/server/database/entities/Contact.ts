@@ -20,7 +20,7 @@ export default class Contact extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Character,
                 join: {
-                    from: 'contacts.holder_id',
+                    from: 'contacts.holderId',
                     to: 'characters.id',
                 },
             },
@@ -28,7 +28,7 @@ export default class Contact extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Character,
                 join: {
-                    from: 'contacts.contact_id',
+                    from: 'contacts.contactId',
                     to: 'characters.id',
                 },
             },

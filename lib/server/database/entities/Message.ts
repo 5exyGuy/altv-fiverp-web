@@ -22,7 +22,7 @@ export default class Message extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Character,
                 join: {
-                    from: 'messages.sender_id',
+                    from: 'messages.senderId',
                     to: 'characters.id',
                 },
             },
@@ -30,7 +30,7 @@ export default class Message extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Character,
                 join: {
-                    from: 'messages.receiver_id',
+                    from: 'messages.receiverId',
                     to: 'characters.id',
                 },
             },

@@ -75,7 +75,7 @@ export default function Register(): JSX.Element {
                         </Form.Item>
 
                         <Form.Item>
-                            <Button type="primary" htmlType="submit" className="login-form-button">
+                            <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
                                 Registruotis
                             </Button>
                             arba <Link href="/auth/login">prisijunk dabar!</Link>

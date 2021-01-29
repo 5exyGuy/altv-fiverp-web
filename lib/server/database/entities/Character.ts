@@ -50,7 +50,7 @@ export default class Character extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: User,
                 join: {
-                    from: 'characters.user_id',
+                    from: 'characters.userId',
                     to: 'users.id',
                 },
             },
@@ -60,7 +60,7 @@ export default class Character extends Model {
                 join: {
                     from: 'characters.id',
                     through: {
-                        from: 'character_apartments.character_id',
+                        from: 'character_apartments.characterId',
                         to: 'character_apartments.apartment_id',
                     },
                     to: 'apartments.id',
@@ -72,8 +72,8 @@ export default class Character extends Model {
                 join: {
                     from: 'characters.id',
                     through: {
-                        from: 'character_businesses.character_id',
-                        to: 'character_businesses.business_id',
+                        from: 'character_businesses.characterId',
+                        to: 'character_businesses.businessId',
                     },
                     to: 'businesses.id',
                 },
@@ -84,8 +84,8 @@ export default class Character extends Model {
                 join: {
                     from: 'characters.id',
                     through: {
-                        from: 'character_houses.character_id',
-                        to: 'character_houses.house_id',
+                        from: 'character_houses.characterId',
+                        to: 'character_houses.houseId',
                     },
                     to: 'houses.id',
                 },
@@ -96,8 +96,8 @@ export default class Character extends Model {
                 join: {
                     from: 'characters.id',
                     through: {
-                        from: 'character_inventories.character_id',
-                        to: 'character_inventories.inventory_id',
+                        from: 'character_inventories.characterId',
+                        to: 'character_inventories.inventoryId',
                     },
                     to: 'inventories.id',
                 },
@@ -108,8 +108,8 @@ export default class Character extends Model {
                 join: {
                     from: 'characters.id',
                     through: {
-                        from: 'character_skills.character_id',
-                        to: 'character_skills.skill_id',
+                        from: 'character_skills.characterId',
+                        to: 'character_skills.skillId',
                     },
                     to: 'skills.id',
                 },
@@ -120,8 +120,8 @@ export default class Character extends Model {
                 join: {
                     from: 'characters.id',
                     through: {
-                        from: 'character_vehicles.character_id',
-                        to: 'character_vehicles.vehicle_id',
+                        from: 'character_vehicles.characterId',
+                        to: 'character_vehicles.vehicleId',
                     },
                     to: 'vehicles.id',
                 },
@@ -132,7 +132,7 @@ export default class Character extends Model {
             //     join: {
             //         from: 'characters.id',
             //         through: {
-            //             from: 'character_contacts.character_id',
+            //             from: 'character_contacts.characterId',
             //             to: 'character_contacts.contact_id',
             //         },
             //         to: 'contacts.id',
@@ -143,7 +143,7 @@ export default class Character extends Model {
                 modelClass: Faction,
                 join: {
                     from: 'characters.id',
-                    to: 'factions.owner_id',
+                    to: 'factions.ownerId',
                 },
             },
             // messages: {
@@ -152,7 +152,7 @@ export default class Character extends Model {
             //     join: {
             //         from: 'characters.id',
             //         through: {
-            //             from: 'character_contacts.character_id',
+            //             from: 'character_contacts.characterId',
             //             to: 'character_contacts.message_id',
             //         },
             //         to: 'messages.id',

@@ -37,7 +37,7 @@ export default function Login(): JSX.Element {
                             </a>
                         </Form.Item>
                         <Form.Item>
-                            <Button type="primary" htmlType="submit" className="login-form-button">
+                            <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
                                 Prisijungti
                             </Button>
                             arba <Link href="/auth/register">registruokis dabar!</Link>

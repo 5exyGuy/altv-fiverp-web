@@ -22,7 +22,7 @@ export default class Session extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: User,
                 join: {
-                    from: 'sessions.user_id',
+                    from: 'sessions.userId',
                     to: 'users.id',
                 },
             },

@@ -21,7 +21,7 @@ export default class RegistrationRequest extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: User,
                 join: {
-                    from: 'registration_requests.user_id',
+                    from: 'registration_requests.userId',
                     to: 'users.id',
                 },
             },

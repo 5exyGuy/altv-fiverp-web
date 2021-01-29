@@ -21,8 +21,8 @@ export default class Inventory extends Model {
                 join: {
                     from: 'inventories.id',
                     through: {
-                        from: 'character_apartments.inventory_id',
-                        to: 'character_apartments.item_id',
+                        from: 'character_apartments.inventoryId',
+                        to: 'character_apartments.itemId',
                     },
                     to: 'items.id',
                 },

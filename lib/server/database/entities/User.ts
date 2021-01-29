@@ -38,6 +38,9 @@ export default class User extends ExtendedModel<User> {
     public characters?: Array<Character>;
     public loginHistories?: Array<LoginHistory>;
     public sessions?: Array<Session>;
+    public verificationRequests?: Array<VerificationRequest>;
+    public registrationRequests?: Array<RegistrationRequest>;
+    public resetPasswordRequests?: Array<ResetPasswordRequest>;
 
     // public setUsername(value: string): User {
     //     this.setUpdateField('username', value);
@@ -121,7 +124,7 @@ export default class User extends ExtendedModel<User> {
                 modelClass: Character,
                 join: {
                     from: 'users.id',
-                    to: 'characters.user_id',
+                    to: 'characters.userId',
                 },
             },
             loginHistories: {
@@ -129,7 +132,7 @@ export default class User extends ExtendedModel<User> {
                 modelClass: LoginHistory,
                 join: {
                     from: 'users.id',
-                    to: 'login_histories.user_id',
+                    to: 'login_histories.userId',
                 },
             },
             sessions: {
@@ -137,7 +140,7 @@ export default class User extends ExtendedModel<User> {
                 modelClass: Session,
                 join: {
                     from: 'users.id',
-                    to: 'sessions.user_id',
+                    to: 'sessions.userId',
                 },
             },
             registrationRequests: {
@@ -145,7 +148,7 @@ export default class User extends ExtendedModel<User> {
                 modelClass: RegistrationRequest,
                 join: {
                     from: 'users.id',
-                    to: 'registration_requests.user_id',
+                    to: 'registration_requests.userId',
                 },
             },
             resetPasswordRequests: {
@@ -153,7 +156,7 @@ export default class User extends ExtendedModel<User> {
                 modelClass: ResetPasswordRequest,
                 join: {
                     from: 'users.id',
-                    to: 'reset_password_requests.user_id',
+                    to: 'reset_password_requests.userId',
                 },
             },
             verificationRequest: {
@@ -161,7 +164,7 @@ export default class User extends ExtendedModel<User> {
                 modelClass: VerificationRequest,
                 join: {
                     from: 'users.id',
-                    to: 'verification_requests.user_id',
+                    to: 'verification_requests.userId',
                 },
             },
         };

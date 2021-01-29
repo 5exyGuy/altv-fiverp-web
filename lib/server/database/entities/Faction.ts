@@ -22,7 +22,7 @@ export default class Faction extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Character,
                 join: {
-                    from: 'factions.character_id',
+                    from: 'factions.characterId',
                     to: 'characters.id',
                 },
             },

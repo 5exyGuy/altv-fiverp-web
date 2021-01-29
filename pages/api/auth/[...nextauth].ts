@@ -62,8 +62,8 @@ const options: InitOptions = {
                 const user: User = await User.query().findOne({ username });
 
                 if (!user) return Promise.reject(new Error('error message'));
-                if (!user.verified) return Promise.resolve(null);
-                if (!(await bcrypt.compare(password, user.password))) return Promise.resolve(null);
+                // if (!user.verified) return Promise.resolve(null);
+                // if (!(await bcrypt.compare(password, user.password))) return Promise.resolve(null);
 
                 return Promise.resolve({ id: user.id, name: user.username, email: user.email });
 

@@ -26,8 +26,8 @@ export default class Apartment extends Model {
                 join: {
                     from: 'apartments.id',
                     through: {
-                        from: 'character_apartments.apartment_id',
-                        to: 'character_apartments.character_id',
+                        from: 'character_apartments.apartmentId',
+                        to: 'character_apartments.characterId',
                     },
                     to: 'characters.id',
                 },

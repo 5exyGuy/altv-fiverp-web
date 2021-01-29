@@ -26,8 +26,8 @@ export default class Business extends Model {
                 join: {
                     from: 'businesses.id',
                     through: {
-                        from: 'character_businesses.business_id',
-                        to: 'character_businesses.character_id',
+                        from: 'character_businesses.businessId',
+                        to: 'character_businesses.characterId',
                     },
                     to: 'characters.id',
                 },

@@ -1,13 +1,13 @@
 import { Model } from 'objection';
 
 export default class ExtendedModel<T> extends Model {
-    protected _updateFields: Map<string, any>;
-    protected _updateRelationFields: Map<string, any>;
+    protected _updateFields?: Map<string, any>;
+    protected _updateRelationFields?: Map<string, any>;
 
     public constructor(init?: Partial<T>) {
         super();
-        this._updateFields = new Map();
-        this._updateRelationFields = new Map();
+        // this._updateFields = new Map();
+        // this._updateRelationFields = new Map();
         Object.assign(this, init);
     }
 

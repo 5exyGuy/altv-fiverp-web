@@ -1,6 +1,6 @@
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { NextApiRequest, NextApiResponse } from 'next';
-// import Database from '../../database/Database';
+import { ResetPasswordRequest, User } from '../../database/entities';
 import RequestHandler from '../RequestHandler';
 
 export default class ValidResetPasswordRequestHandler extends RequestHandler {
@@ -12,11 +12,15 @@ export default class ValidResetPasswordRequestHandler extends RequestHandler {
             return response.status(StatusCodes.BAD_REQUEST).json({ message: ReasonPhrases.BAD_REQUEST });
 
         try {
-            // const result = await Database.getConnection().user.updateMany({
-            //     where: { AND: { email: { equals: email }, passwordVerifyToken: { equals: token } } },
-            //     data: { passwordVerifyToken: null, password: null },
-            // });
-            // if (result.count <= 0) return response.status(StatusCodes.NOT_FOUND).json({ message: ReasonPhrases.NOT_FOUND });
+            const user: User = await User.query().findOne({ email });
+
+            if (!user) return response.status(StatusCodes.NOT_FOUND).json({ message: ReasonPhrases.NOT_FOUND });
+
+            const resetPasswordRequest: ResetPasswordRequest = await User.relatedQuery('resetPasswordRequests')
+                .for(user.id)
+                .findOne({ token });
+
+            if (!resetPasswordRequest) return response.status(StatusCodes.NOT_FOUND).json({ message: ReasonPhrases.NOT_FOUND });
 
             response.status(StatusCodes.OK).json({ message: ReasonPhrases.OK });
         } catch (error) {

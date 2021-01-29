@@ -21,7 +21,7 @@ export default class ResetPasswordRequest extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: User,
                 join: {
-                    from: 'reset_password_requests.user_id',
+                    from: 'reset_password_requests.userId',
                     to: 'users.id',
                 },
             },

@@ -21,7 +21,7 @@ export default class VerificationRequest extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: User,
                 join: {
-                    from: 'verification_requests.user_id',
+                    from: 'verification_requests.userId',
                     to: 'users.id',
                 },
             },

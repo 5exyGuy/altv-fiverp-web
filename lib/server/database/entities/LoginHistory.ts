@@ -24,7 +24,7 @@ export default class LoginHistory extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: User,
                 join: {
-                    from: 'login_histories.user_id',
+                    from: 'login_histories.userId',
                     to: 'users.id',
                 },
             },

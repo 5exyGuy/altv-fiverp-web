@@ -26,7 +26,7 @@ export default class Account extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: User,
                 join: {
-                    from: 'accounts.user_id',
+                    from: 'accounts.userId',
                     to: 'users.id',
                 },
             },
