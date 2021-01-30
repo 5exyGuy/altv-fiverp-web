@@ -44,6 +44,7 @@
     },
     "license": "MIT",
     "devDependencies": {
+        "@altv/types-webview": "^1.0.2",
         "@babel/plugin-proposal-class-properties": "^7.12.1",
         "@babel/plugin-proposal-decorators": "^7.12.12",
         "@types/bcryptjs": "^2.4.2",

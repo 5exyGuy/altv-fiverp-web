@@ -17,7 +17,16 @@ export default function Login(): JSX.Element {
     if (!loading && session) Router.push('/');
 
     const onFinishWithCredentials = async (data: LoginData) => {
-        await signIn('credentials', { username: data.username, password: data.password });
+        signIn('credentials', { username: data.username, password: data.password })
+            .then(() => {
+                if ('alt' in window) {
+                    const token: string = 'test123'; // TODO: Create a database table for generating login tokens
+                    alt.emit('pushToken', token);
+                }
+            })
+            .catch(() => {
+                if ('alt' in window) alt.emit('pushToken', 'error');
+            });
     };
 
     return (

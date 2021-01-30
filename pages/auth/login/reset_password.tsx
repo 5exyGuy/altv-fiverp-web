@@ -1,10 +1,11 @@
-import { Button, Col, Form, Input, Row } from 'antd';
+import { Button, Col, Form, Input, Result, Row } from 'antd';
 import MainLayout from '../../../components/MainLayout';
 import { useSession } from 'next-auth/client';
 import { NextRouter, useRouter } from 'next/router';
 import { LockOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { StatusCodes } from 'http-status-codes';
+import Link from 'next/link';
 
 type ResetPasswordData = {
     password: string;
@@ -12,9 +13,10 @@ type ResetPasswordData = {
 };
 
 export default function Reset(): JSX.Element {
+    const router: NextRouter = useRouter();
     const [session, loading] = useSession();
     const [valid, setValid] = useState(false);
-    const router: NextRouter = useRouter();
+    const [visible, setVisible] = useState(false);
 
     const { email, token } = router.query;
 
@@ -35,7 +37,7 @@ export default function Reset(): JSX.Element {
             setValid(true);
         };
         fetchData();
-    }, [session, loading]);
+    }, [session, loading, email, token, valid]);
 
     const onFinish = async (data: ResetPasswordData) => {
         const result: Response = await fetch('/api/cauth/reset_password', {
@@ -45,51 +47,66 @@ export default function Reset(): JSX.Element {
             },
             body: JSON.stringify({ email, token, password: data.password }),
         });
-        if (result.status !== StatusCodes.OK) return; // TODO: Show an error message
+        if (result.status === StatusCodes.OK) setVisible(true);
     };
 
     return (
         <MainLayout headerTitle="Slaptažodžio atstatymas" session={session} loading={loading} protected={Boolean(!valid || session)}>
             <Row justify="center" align="middle">
                 <Col span={10} style={{ margin: '10% 0' }}>
-                    <Form onFinish={onFinish}>
-                        <Form.Item name="password" rules={[{ required: true, message: 'Prašome įvesti naują slaptažodį!' }]}>
-                            <Input
-                                prefix={<LockOutlined className="site-form-item-icon" />}
-                                type="password"
-                                placeholder="Naujas slaptažodis"
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name="repeatpassword"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Prašome patvirtinti naują slaptažodį!',
-                                },
-                                ({ getFieldValue }) => ({
-                                    validator(rule, value) {
-                                        if (!value || getFieldValue('password') === value) {
-                                            return Promise.resolve();
-                                        }
-                                        return Promise.reject('Slaptažodžiai nesutampa!');
-                                    },
-                                }),
+                    {visible ? (
+                        <Result
+                            status="success"
+                            subTitle="Slaptažodis sėkmingai atstatytas. Dabar galite prisijungti prie sistemos."
+                            extra={[
+                                <Link href="/auth/login">
+                                    <Button key="login">Prisijungti</Button>
+                                </Link>,
+                                <Link href="/">
+                                    <Button key="home">Grįžti į pagrindinį</Button>
+                                </Link>,
                             ]}
-                        >
-                            <Input
-                                prefix={<LockOutlined className="site-form-item-icon" />}
-                                type="password"
-                                placeholder="Pakartokite naują slaptažodį"
-                            />
-                        </Form.Item>
+                        />
+                    ) : (
+                        <Form onFinish={onFinish}>
+                            <Form.Item name="password" rules={[{ required: true, message: 'Prašome įvesti naują slaptažodį!' }]}>
+                                <Input
+                                    prefix={<LockOutlined className="site-form-item-icon" />}
+                                    type="password"
+                                    placeholder="Naujas slaptažodis"
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                name="repeatpassword"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Prašome patvirtinti naują slaptažodį!',
+                                    },
+                                    ({ getFieldValue }) => ({
+                                        validator(rule, value) {
+                                            if (!value || getFieldValue('password') === value) {
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject('Slaptažodžiai nesutampa!');
+                                        },
+                                    }),
+                                ]}
+                            >
+                                <Input
+                                    prefix={<LockOutlined className="site-form-item-icon" />}
+                                    type="password"
+                                    placeholder="Pakartokite naują slaptažodį"
+                                />
+                            </Form.Item>
 
-                        <Form.Item>
-                            <Button type="primary" htmlType="submit" className="login-form-button">
-                                Atstatyti
-                            </Button>
-                        </Form.Item>
-                    </Form>
+                            <Form.Item>
+                                <Button type="primary" htmlType="submit" className="login-form-button">
+                                    Atstatyti
+                                </Button>
+                            </Form.Item>
+                        </Form>
+                    )}
                 </Col>
             </Row>
         </MainLayout>
