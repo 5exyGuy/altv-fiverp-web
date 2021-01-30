@@ -10,16 +10,23 @@ import { JsonMessage, MessageType } from '../JsonMessage';
 export default class ForgotPasswordRequestHandler extends RequestHandler {
     public async handle(request: NextApiRequest, response: NextApiResponse): Promise<void> {
         const { email } = request.body;
-        if (!email) return response.status(StatusCodes.BAD_REQUEST).json(JsonMessage.convert('Neteisingi duomenys!', MessageType.WARNING));
+        if (!email)
+            return response
+                .status(StatusCodes.BAD_REQUEST)
+                .json(JsonMessage.convert('Neteisingi duomenys!', MessageType.WARNING));
 
         try {
             const user: User = await User.query().findOne({ email });
 
             if (!user)
-                return response.status(StatusCodes.NOT_FOUND).json(JsonMessage.convert('Nepavyko rasti vartotojo.', MessageType.WARNING));
+                return response
+                    .status(StatusCodes.NOT_FOUND)
+                    .json(JsonMessage.convert('Nepavyko rasti vartotojo.', MessageType.WARNING));
 
             // TODO: Finish spam protection
-            const resetPasswordRequest: ResetPasswordRequest = await User.relatedQuery<ResetPasswordRequest>('resetPasswordRequests')
+            const resetPasswordRequest: ResetPasswordRequest = await User.relatedQuery<ResetPasswordRequest>(
+                'resetPasswordRequests'
+            )
                 .for(user.id)
                 .orderBy('expires', 'DESC')
                 .first();
@@ -54,18 +61,22 @@ export default class ForgotPasswordRequestHandler extends RequestHandler {
             const expires: Date = new Date();
             expires.setDate(expires.getDate() + 7);
 
-            await User.relatedQuery<ResetPasswordRequest>('resetPasswordRequests').for(user.id).insert({ expires, token: hashedToken });
+            await User.relatedQuery<ResetPasswordRequest>('resetPasswordRequests')
+                .for(user.id)
+                .insert({ expires, token: hashedToken });
 
             await MailSender.instance.sendResetPasswordRequest(email, hashedToken);
             response
                 .status(StatusCodes.OK)
-                .json(JsonMessage.convert('Patvirtinimas sėkmingai išsiųstas į nurodytą el. paštą.', MessageType.WARNING));
+                .json(
+                    JsonMessage.convert('Patvirtinimas sėkmingai išsiųstas į nurodytą el. paštą.', MessageType.WARNING)
+                );
         } catch (error) {
             response
                 .status(StatusCodes.INTERNAL_SERVER_ERROR)
                 .json(
                     JsonMessage.convert(
-                        'Serveryje įvyko netikėta klaida. Jei ši klaida kartojasi, prašome tai pranešti administracijai.',
+                        'Serveryje įvyko netikėta klaida. Jei ši klaida kartojasi, prašome apie tai pranešti administracijai.',
                         MessageType.ERROR
                     )
                 );

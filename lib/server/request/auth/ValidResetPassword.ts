@@ -1,13 +1,15 @@
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ResetPasswordRequest, User } from '../../database/entities';
+import { JsonMessage, MessageType } from '../JsonMessage';
 import RequestHandler from '../RequestHandler';
 
 export default class ValidResetPasswordRequestHandler extends RequestHandler {
     public async handle(request: NextApiRequest, response: NextApiResponse): Promise<void> {
         const { email, token } = request.query;
 
-        if (!email || !token) return response.status(StatusCodes.BAD_REQUEST).json({ message: ReasonPhrases.BAD_REQUEST });
+        if (!email || !token)
+            return response.status(StatusCodes.BAD_REQUEST).json({ message: ReasonPhrases.BAD_REQUEST });
         if (Array.isArray(email) || Array.isArray(token))
             return response.status(StatusCodes.BAD_REQUEST).json({ message: ReasonPhrases.BAD_REQUEST });
 
@@ -20,11 +22,19 @@ export default class ValidResetPasswordRequestHandler extends RequestHandler {
                 .for(user.id)
                 .findOne({ token });
 
-            if (!resetPasswordRequest) return response.status(StatusCodes.NOT_FOUND).json({ message: ReasonPhrases.NOT_FOUND });
+            if (!resetPasswordRequest)
+                return response.status(StatusCodes.NOT_FOUND).json({ message: ReasonPhrases.NOT_FOUND });
 
             response.status(StatusCodes.OK).json({ message: ReasonPhrases.OK });
         } catch (error) {
-            response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: ReasonPhrases.INTERNAL_SERVER_ERROR });
+            response
+                .status(StatusCodes.INTERNAL_SERVER_ERROR)
+                .json(
+                    JsonMessage.convert(
+                        'Serveryje įvyko netikėta klaida. Jei ši klaida kartojasi, prašome apie tai pranešti administracijai.',
+                        MessageType.ERROR
+                    )
+                );
         }
     }
 }

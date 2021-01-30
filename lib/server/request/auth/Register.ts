@@ -14,7 +14,9 @@ export default class RegisterRequestHandler extends RequestHandler {
 
         // Check that all parameters are received
         if (!username || !email || !password)
-            return response.status(StatusCodes.BAD_REQUEST).json(JsonMessage.convert('Neteisingi duomenys!', MessageType.WARNING));
+            return response
+                .status(StatusCodes.BAD_REQUEST)
+                .json(JsonMessage.convert('Neteisingi duomenys!', MessageType.WARNING));
 
         try {
             // Checking if such a user already exists
@@ -29,7 +31,7 @@ export default class RegisterRequestHandler extends RequestHandler {
                 .status(StatusCodes.INTERNAL_SERVER_ERROR)
                 .json(
                     JsonMessage.convert(
-                        'Serveryje įvyko netikėta klaida. Jei ši klaida kartojasi, prašome tai pranešti administracijai.',
+                        'Serveryje įvyko netikėta klaida. Jei ši klaida kartojasi, prašome apie tai pranešti administracijai.',
                         MessageType.ERROR
                     )
                 );
@@ -55,14 +57,19 @@ export default class RegisterRequestHandler extends RequestHandler {
 
             response
                 .status(StatusCodes.OK)
-                .json(JsonMessage.convert('Registracija sėkminga! Patvirtinimas išsiųstas į nurodytą el. paštą.', MessageType.SUCCESS));
+                .json(
+                    JsonMessage.convert(
+                        'Registracija sėkminga! Patvirtinimas išsiųstas į nurodytą el. paštą.',
+                        MessageType.SUCCESS
+                    )
+                );
         } catch (error) {
             console.log(error);
             response
                 .status(StatusCodes.INTERNAL_SERVER_ERROR)
                 .json(
                     JsonMessage.convert(
-                        'Serveryje įvyko netikėta klaida. Jei ši klaida kartojasi, prašome tai pranešti administracijai.',
+                        'Serveryje įvyko netikėta klaida. Jei ši klaida kartojasi, prašome apie tai pranešti administracijai.',
                         MessageType.ERROR
                     )
                 );
