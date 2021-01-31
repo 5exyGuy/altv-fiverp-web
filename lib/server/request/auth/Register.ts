@@ -16,7 +16,7 @@ export default class RegisterRequestHandler extends RequestHandler {
         if (!username || !email || !password)
             return response
                 .status(StatusCodes.BAD_REQUEST)
-                .json(JsonMessage.convert('Neteisingi duomenys!', MessageType.WARNING));
+                .json(JsonMessage.convert('Trūksta duomenų!', MessageType.WARNING));
 
         try {
             // Checking if such a user already exists
@@ -51,15 +51,13 @@ export default class RegisterRequestHandler extends RequestHandler {
                 registrationRequests: [{ expires, token: hashedToken }],
             });
 
-            // const user: User = await User.query().insert({ email: email, username: username, password: hashedPassword });
-            // await User.relatedQuery<RegistrationRequest>('registrationRequests').for(user.id).insert({ token: hashedToken, expires });
             await MailSender.instance.sendEmailConfirmRequest(email, hashedToken);
 
             response
                 .status(StatusCodes.OK)
                 .json(
                     JsonMessage.convert(
-                        'Registracija sėkminga! Patvirtinimas išsiųstas į nurodytą el. paštą.',
+                        'Registracijos patvirtinimas išsiųstas į nurodytą el. paštą.',
                         MessageType.SUCCESS
                     )
                 );

@@ -1,5 +1,7 @@
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { AuthenticationTranslations } from '../../../../translations/Authentication';
+import { CommonTranslations } from '../../../../translations/Common';
 import Database from '../../database/Database';
 import { JsonMessage, MessageType } from '../JsonMessage';
 import RequestHandler from '../RequestHandler';
@@ -13,12 +15,7 @@ export default class DatabaseConnectionRequestHandler extends RequestHandler {
         } catch (error) {
             response
                 .status(StatusCodes.INTERNAL_SERVER_ERROR)
-                .json(
-                    JsonMessage.convert(
-                        'Serveryje įvyko netikėta klaida. Jei ši klaida kartojasi, prašome apie tai pranešti administracijai.',
-                        MessageType.ERROR
-                    )
-                );
+                .json(JsonMessage.convert(CommonTranslations.SERVER_ERROR, MessageType.ERROR));
         }
     }
 }

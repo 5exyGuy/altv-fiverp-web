@@ -1,6 +1,7 @@
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession, Session } from 'next-auth/client';
+import { AuthenticationTranslations } from '../../../../translations/Authentication';
 import { JsonMessage, MessageType } from '../JsonMessage';
 import RequestHandler from '../RequestHandler';
 import ConfirmEmailRequestHandler from './ConfirmEmail';
@@ -16,6 +17,6 @@ export default class SessionRequestHandler extends RequestHandler {
         ConfirmEmailRequestHandler;
         response
             .status(StatusCodes.UNAUTHORIZED)
-            .json(JsonMessage.convert('Jūs neturite teisių tai atlikti!.', MessageType.WARNING));
+            .json(JsonMessage.convert(AuthenticationTranslations.NOT_AUTHORIZED, MessageType.WARNING));
     }
 }
