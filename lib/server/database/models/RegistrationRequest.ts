@@ -1,17 +1,14 @@
-import { Model } from 'objection';
 import User from './User';
+import { Model } from 'objection';
 
-export default class LoginHistory extends Model {
+export default class RegistrationRequest extends Model {
     public id!: number;
-    public date!: Date;
-    public ip!: string;
-    public socialId!: string;
-    public hwidExHash!: string;
-    public hwidHash!: string;
+    public token!: string;
+    public expires!: Date;
     public user!: User;
 
     public static get tableName(): string {
-        return 'login_histories';
+        return 'registration_requests';
     }
 
     public static get idColumn(): string {
@@ -24,7 +21,7 @@ export default class LoginHistory extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: User,
                 join: {
-                    from: 'login_histories.userId',
+                    from: 'registration_requests.userId',
                     to: 'users.id',
                 },
             },

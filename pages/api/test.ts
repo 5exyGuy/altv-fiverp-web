@@ -1,13 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { User } from '../../lib/server/database/models';
 import Database from '../../lib/server/database/Database';
-import { User } from '../../lib/server/database/entities';
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
-    const database: Database = Database.getInstance();
-    // console.log(database);
-    if (!database.isConnected) database.connect();
-    const users = await User.query();
-    // // console.log(users);
-
-    response.json({ users });
+    Database.getInstance().connect();
+    const characters = await User.relatedQuery('characters').for(10);
+    const apartments = await characters[0].$relatedQuery('apartments');
+    response.json({ apartments });
 };

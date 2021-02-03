@@ -1,7 +1,7 @@
-import { Button, Col, Form, Input, Row, Modal, Alert, Result } from 'antd';
+import { Button, Col, Form, Input, Row, Alert, Result } from 'antd';
 import MainLayout from '../../../components/MainLayout';
 import { useSession } from 'next-auth/client';
-import Router, { NextRouter, useRouter } from 'next/router';
+import { NextRouter, useRouter } from 'next/router';
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { StatusCodes } from 'http-status-codes';
@@ -15,6 +15,7 @@ type RegistrationData = {
 };
 
 export default function Register(): JSX.Element {
+    const router: NextRouter = useRouter();
     const [session, loading] = useSession();
     const [visible, setVisible] = useState(false);
     const [message, setMessage] = useState('');
@@ -22,7 +23,7 @@ export default function Register(): JSX.Element {
 
     useEffect(() => {
         const check = async () => {
-            if (!loading && session) await Router.push('/');
+            if (!loading && session) await router.push('/');
         };
         check();
     });
@@ -56,7 +57,7 @@ export default function Register(): JSX.Element {
                             status="success"
                             subTitle="Registracijos patvirtinimas sėkmingai išsiųstas į nurodytą elektroninį paštą."
                             extra={[
-                                <Link href="/">
+                                <Link key="home" href="/">
                                     <Button key="home">Grįžti į pagrindinį</Button>
                                 </Link>,
                             ]}
@@ -66,7 +67,9 @@ export default function Register(): JSX.Element {
                             <Form.Item>
                                 <Alert
                                     className={
-                                        message.length > 0 ? 'animate__animated animate__fadeIn' : 'animate__animated animate__fadeOut'
+                                        message.length > 0
+                                            ? 'animate__animated animate__fadeIn'
+                                            : 'animate__animated animate__fadeOut'
                                     }
                                     message={message}
                                     type={messageType as 'success' | 'info' | 'warning' | 'error'}
@@ -75,8 +78,15 @@ export default function Register(): JSX.Element {
                             <Form.Item name="username" rules={[{ required: true, message: 'Prašome įvesti vartotojo vardą!' }]}>
                                 <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Vartotojo vardas" />
                             </Form.Item>
-                            <Form.Item name="email" rules={[{ required: true, message: 'Prašome įvesti elektroninio pašto adresą!' }]}>
-                                <Input prefix={<MailOutlined className="site-form-item-icon" />} type="email" placeholder="El. paštas" />
+                            <Form.Item
+                                name="email"
+                                rules={[{ required: true, message: 'Prašome įvesti elektroninio pašto adresą!' }]}
+                            >
+                                <Input
+                                    prefix={<MailOutlined className="site-form-item-icon" />}
+                                    type="email"
+                                    placeholder="El. paštas"
+                                />
                             </Form.Item>
                             <Form.Item name="password" rules={[{ required: true, message: 'Prašome įvesti slaptažodį!' }]}>
                                 <Input

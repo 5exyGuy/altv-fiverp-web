@@ -1,12 +1,14 @@
-import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import { NextApiRequest, NextApiResponse } from 'next';
 import RequestHandler from '../RequestHandler';
 import bcrypt from 'bcryptjs';
 import MailSender from '../../email/MailSender';
 import uniqid from 'uniqid';
-import { User } from '../../database/entities';
+import { User } from '../../database/models';
 import { createHash } from 'crypto';
 import { JsonMessage, MessageType } from '../JsonMessage';
+import { CommonTranslations } from '../../../../translations/Common';
+import { AuthenticationTranslations } from '../../../../translations/Authentication';
 
 export default class RegisterRequestHandler extends RequestHandler {
     public async handle(request: NextApiRequest, response: NextApiResponse): Promise<void> {
@@ -16,25 +18,30 @@ export default class RegisterRequestHandler extends RequestHandler {
         if (!username || !email || !password)
             return response
                 .status(StatusCodes.BAD_REQUEST)
-                .json(JsonMessage.convert('Trūksta duomenų!', MessageType.WARNING));
+                .json(
+                    JsonMessage.convert(
+                        AuthenticationTranslations.NOT_ENOUGH_DATA,
+                        MessageType.WARNING
+                    )
+                );
 
         try {
             // Checking if such a user already exists
-            const result: User = await User.query().findOne({ username, email });
+            const user: User = await User.query().findOne({ username, email });
 
-            if (result)
+            if (user)
                 return response
                     .status(StatusCodes.BAD_REQUEST)
-                    .json(JsonMessage.convert('Toks vartotojas jau egzistuoja!', MessageType.WARNING));
+                    .json(
+                        JsonMessage.convert(
+                            AuthenticationTranslations.SUCH_USER_ALREADY_EXISTS,
+                            MessageType.WARNING
+                        )
+                    );
         } catch (error) {
             return response
                 .status(StatusCodes.INTERNAL_SERVER_ERROR)
-                .json(
-                    JsonMessage.convert(
-                        'Serveryje įvyko netikėta klaida. Jei ši klaida kartojasi, prašome apie tai pranešti administracijai.',
-                        MessageType.ERROR
-                    )
-                );
+                .json(JsonMessage.convert(CommonTranslations.SERVER_ERROR, MessageType.ERROR));
         }
 
         const hashedPassword: string = await bcrypt.hash(password, 10); // Hashed password
@@ -57,20 +64,14 @@ export default class RegisterRequestHandler extends RequestHandler {
                 .status(StatusCodes.OK)
                 .json(
                     JsonMessage.convert(
-                        'Registracijos patvirtinimas išsiųstas į nurodytą el. paštą.',
+                        AuthenticationTranslations.REGISTRATION_REQUEST_HAS_BEEN_SUCCESSFULY_SENT,
                         MessageType.SUCCESS
                     )
                 );
         } catch (error) {
-            console.log(error);
             response
                 .status(StatusCodes.INTERNAL_SERVER_ERROR)
-                .json(
-                    JsonMessage.convert(
-                        'Serveryje įvyko netikėta klaida. Jei ši klaida kartojasi, prašome apie tai pranešti administracijai.',
-                        MessageType.ERROR
-                    )
-                );
+                .json(JsonMessage.convert(CommonTranslations.SERVER_ERROR, MessageType.ERROR));
         }
     }
 }

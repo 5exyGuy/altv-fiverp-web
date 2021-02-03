@@ -1,38 +1,5 @@
-import Knex from 'knex';
 import { Model } from 'objection';
-
-// type Repository =
-//     | 'account'
-//     | 'apartment'
-//     | 'apartmentInventory'
-//     | 'business'
-//     | 'businessInventory'
-//     | 'character'
-//     | 'characterApartment'
-//     | 'characterBusiness'
-//     | 'characterHouse'
-//     | 'characterInventory'
-//     | 'characterSkill'
-//     | 'characterVehicle'
-//     | 'contact'
-//     | 'faction'
-//     | 'factionMember'
-//     | 'house'
-//     | 'houseInventory'
-//     | 'inventory'
-//     | 'inventoryItem'
-//     | 'item'
-//     | 'loginHistory'
-//     | 'message'
-//     | 'registrationRequest'
-//     | 'resetPasswordRequest'
-//     | 'session'
-//     | 'skill'
-//     | 'user'
-//     | 'vehicleInventory'
-//     | 'vehicle'
-//     | 'vehicleProperties'
-//     | 'verificationRequest';
+import Knex from 'knex';
 
 export default class Database {
     private _connection: Knex;
@@ -70,8 +37,4 @@ export default class Database {
         }
         return this._instance;
     }
-
-    // public static getRepository<T>(repository: Repository): T {
-    //     return <T>(<any>this.getConnection()[repository]);
-    // }
 }

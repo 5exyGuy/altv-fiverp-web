@@ -1,4 +1,3 @@
-import { Model } from 'objection';
 import Apartment from './Apartment';
 import Business from './Business';
 import Contact from './Contact';
@@ -9,6 +8,7 @@ import Message from './Message';
 import Skill from './Skill';
 import User from './User';
 import Vehicle from './Vehicle';
+import { Model, RelationMappings } from 'objection';
 
 export default class Character extends Model {
     public id!: number;
@@ -44,7 +44,7 @@ export default class Character extends Model {
         return 'id';
     }
 
-    public static relationMappings() {
+    public static relationMappings(): RelationMappings {
         return {
             user: {
                 relation: Model.BelongsToOneRelation,
@@ -61,7 +61,7 @@ export default class Character extends Model {
                     from: 'characters.id',
                     through: {
                         from: 'character_apartments.characterId',
-                        to: 'character_apartments.apartment_id',
+                        to: 'character_apartments.apartmentid',
                     },
                     to: 'apartments.id',
                 },

@@ -1,7 +1,8 @@
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthenticationTranslations } from '../../../../translations/Authentication';
-import { ResetPasswordRequest, User } from '../../database/entities';
+import { CommonTranslations } from '../../../../translations/Common';
+import { ResetPasswordRequest, User } from '../../database/models';
 import { JsonMessage, MessageType } from '../JsonMessage';
 import RequestHandler from '../RequestHandler';
 
@@ -13,7 +14,12 @@ export default class ValidResetPasswordRequestHandler extends RequestHandler {
         if (!email || !token)
             return response
                 .status(StatusCodes.BAD_REQUEST)
-                .json(JsonMessage.convert(AuthenticationTranslations.NOT_ENOUGH_DATA, MessageType.WARNING));
+                .json(
+                    JsonMessage.convert(
+                        AuthenticationTranslations.NOT_ENOUGH_DATA,
+                        MessageType.WARNING
+                    )
+                );
 
         try {
             const user: User = await User.query().findOne({ email });
@@ -22,10 +28,15 @@ export default class ValidResetPasswordRequestHandler extends RequestHandler {
                 return response
                     .status(StatusCodes.NOT_FOUND)
                     .json(
-                        JsonMessage.convert(AuthenticationTranslations.COULD_NOT_FIND_SUCH_USER, MessageType.WARNING)
+                        JsonMessage.convert(
+                            AuthenticationTranslations.COULD_NOT_FIND_SUCH_USER,
+                            MessageType.WARNING
+                        )
                     );
 
-            const resetPasswordRequest: ResetPasswordRequest = await User.relatedQuery('resetPasswordRequests')
+            const resetPasswordRequest: ResetPasswordRequest = await User.relatedQuery(
+                'resetPasswordRequests'
+            )
                 .for(user.id)
                 .findOne({ token });
 
@@ -43,7 +54,7 @@ export default class ValidResetPasswordRequestHandler extends RequestHandler {
         } catch (error) {
             response
                 .status(StatusCodes.INTERNAL_SERVER_ERROR)
-                .json(JsonMessage.convert(AuthenticationTranslations.SERVER_ERROR, MessageType.ERROR));
+                .json(JsonMessage.convert(CommonTranslations.SERVER_ERROR, MessageType.ERROR));
         }
     }
 }

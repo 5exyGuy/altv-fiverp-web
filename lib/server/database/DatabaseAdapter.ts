@@ -1,7 +1,7 @@
 import { createHash, randomBytes } from 'crypto';
 import { AppOptions } from 'next-auth';
 import { AdapterInstance, EmailSessionProvider } from 'next-auth/adapters';
-import { SessionProvider } from 'next-auth/client';
+// import { SessionProvider } from 'next-auth/client';
 import {
     CreateSessionError,
     CreateUserError,
@@ -20,7 +20,7 @@ import {
     UpdateUserError,
 } from '../errors/database';
 import NextAuthLogger from '../utilities/NextAuthLogger';
-import { Account, Session, User, VerificationRequest } from './entities';
+import { Account, Session, User, VerificationRequest } from './models';
 
 interface Profile {
     id: string;
@@ -34,12 +34,18 @@ const Adapter = () => {
         return createHash('sha256').update(`${providerId}:${providerAccountId}`).digest('hex');
     }
 
-    async function getAdapter(appOptions: AppOptions): Promise<AdapterInstance<User, Profile, Session, VerificationRequest>> {
+    async function getAdapter(
+        appOptions: AppOptions
+    ): Promise<AdapterInstance<User, Profile, Session, VerificationRequest>> {
         const defaultSessionMaxAge: number = 30 * 24 * 60 * 60 * 1000;
         const sessionMaxAge: number =
-            appOptions && appOptions.session && appOptions.session.maxAge ? appOptions.session.maxAge * 1000 : defaultSessionMaxAge;
+            appOptions && appOptions.session && appOptions.session.maxAge
+                ? appOptions.session.maxAge * 1000
+                : defaultSessionMaxAge;
         const sessionUpdateAge: number =
-            appOptions && appOptions.session && appOptions.session.updateAge ? appOptions.session.updateAge * 1000 : 0;
+            appOptions && appOptions.session && appOptions.session.updateAge
+                ? appOptions.session.updateAge * 1000
+                : 0;
 
         async function createUser(profile): Promise<User> {
             try {
@@ -74,9 +80,14 @@ const Adapter = () => {
             }
         }
 
-        async function getUserByProviderAccountId(providerId: string, providerAccountId: string): Promise<User | null> {
+        async function getUserByProviderAccountId(
+            providerId: string,
+            providerAccountId: string
+        ): Promise<User | null> {
             try {
-                const account: Account = await Account.query().findOne({ compoundId: getCompoundId(providerId, providerAccountId) });
+                const account: Account = await Account.query().findOne({
+                    compoundId: getCompoundId(providerId, providerAccountId),
+                });
                 if (!account) return null;
                 return User.query().findOne({ id: account.id });
             } catch (error) {
@@ -94,7 +105,12 @@ const Adapter = () => {
                 const { id, name, email, image, emailVerified } = user;
                 await User.query()
                     .findById(id)
-                    .patch({ name, email, image, emailVerified: emailVerified ? emailVerified : null });
+                    .patch({
+                        name,
+                        email,
+                        image,
+                        emailVerified: emailVerified ? emailVerified : null,
+                    });
             } catch (error) {
                 NextAuthLogger.error('UPDATE_USER_ERROR', error);
                 return Promise.reject(new UpdateUserError(error));
@@ -159,7 +175,11 @@ const Adapter = () => {
 
                 return User.relatedQuery<Session>('sessions')
                     .for(user.id)
-                    .insert({ expires, sessionToken: randomBytes(32).toString('hex'), accessToken: randomBytes(32).toString('hex') });
+                    .insert({
+                        expires,
+                        sessionToken: randomBytes(32).toString('hex'),
+                        accessToken: randomBytes(32).toString('hex'),
+                    });
             } catch (error) {
                 NextAuthLogger.error('CREATE_SESSION_ERROR', error);
                 return Promise.reject(new CreateSessionError(error));
@@ -184,10 +204,18 @@ const Adapter = () => {
 
         async function updateSession(session: Session, force?: boolean): Promise<Session> {
             try {
-                if (sessionMaxAge && (sessionUpdateAge || sessionUpdateAge === 0) && session.expires) {
+                if (
+                    sessionMaxAge &&
+                    (sessionUpdateAge || sessionUpdateAge === 0) &&
+                    session.expires
+                ) {
                     const dateSessionIsDueToBeUpdated: Date = new Date(session.expires);
-                    dateSessionIsDueToBeUpdated.setTime(dateSessionIsDueToBeUpdated.getTime() - sessionMaxAge);
-                    dateSessionIsDueToBeUpdated.setTime(dateSessionIsDueToBeUpdated.getTime() + sessionUpdateAge);
+                    dateSessionIsDueToBeUpdated.setTime(
+                        dateSessionIsDueToBeUpdated.getTime() - sessionMaxAge
+                    );
+                    dateSessionIsDueToBeUpdated.setTime(
+                        dateSessionIsDueToBeUpdated.getTime() + sessionUpdateAge
+                    );
 
                     if (new Date() > dateSessionIsDueToBeUpdated) {
                         const newExpiryDate: Date = new Date();
@@ -227,7 +255,9 @@ const Adapter = () => {
                 const { baseUrl } = options;
                 const { sendVerificationRequest, maxAge } = provider;
 
-                const hashedToken: string = createHash('sha256').update(`${token}${secret}`).digest('hex');
+                const hashedToken: string = createHash('sha256')
+                    .update(`${token}${secret}`)
+                    .digest('hex');
 
                 let expires: Date = null;
                 if (maxAge) {
@@ -237,7 +267,9 @@ const Adapter = () => {
                 }
 
                 const user: User = await User.query().findOne({ email });
-                const verificationRequest: VerificationRequest = await User.relatedQuery<VerificationRequest>('verification_requests')
+                const verificationRequest: VerificationRequest = await User.relatedQuery<VerificationRequest>(
+                    'verification_requests'
+                )
                     .for(user.id)
                     .insert({ token: hashedToken, expires });
 
@@ -253,14 +285,22 @@ const Adapter = () => {
         async function getVerificationRequest(
             email: string,
             verificationToken: string,
-            secret: string,
-            provider: SessionProvider
+            secret: string
+            // provider: SessionProvider
         ): Promise<VerificationRequest | null> {
             try {
-                const hashedToken: string = createHash('sha256').update(`${verificationToken}${secret}`).digest('hex');
-                const verificationRequest: VerificationRequest = await VerificationRequest.query().findOne({ token: hashedToken });
+                const hashedToken: string = createHash('sha256')
+                    .update(`${verificationToken}${secret}`)
+                    .digest('hex');
+                const verificationRequest: VerificationRequest = await VerificationRequest.query().findOne(
+                    { token: hashedToken }
+                );
 
-                if (verificationRequest && verificationRequest.expires && new Date() > verificationRequest.expires) {
+                if (
+                    verificationRequest &&
+                    verificationRequest.expires &&
+                    new Date() > verificationRequest.expires
+                ) {
                     await VerificationRequest.query().delete().where('token', hashedToken);
                     return null;
                 }
@@ -275,11 +315,13 @@ const Adapter = () => {
         async function deleteVerificationRequest(
             email: string,
             verificationToken: string,
-            secret: string,
-            provider: SessionProvider
+            secret: string
+            // provider: SessionProvider
         ): Promise<void> {
             try {
-                const hashedToken: string = createHash('sha256').update(`${verificationToken}${secret}`).digest('hex');
+                const hashedToken: string = createHash('sha256')
+                    .update(`${verificationToken}${secret}`)
+                    .digest('hex');
                 await VerificationRequest.query().delete().where({ token: hashedToken });
             } catch (error) {
                 NextAuthLogger.error('DELETE_VERIFICATION_REQUEST_ERROR', error);

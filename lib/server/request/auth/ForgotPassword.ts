@@ -1,7 +1,7 @@
 import { createHash } from 'crypto';
-import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ResetPasswordRequest, User } from '../../database/entities';
+import { ResetPasswordRequest, User } from '../../database/models';
 import MailSender from '../../email/MailSender';
 import RequestHandler from '../RequestHandler';
 import uniqid from 'uniqid';
@@ -15,7 +15,12 @@ export default class ForgotPasswordRequestHandler extends RequestHandler {
         if (!email)
             return response
                 .status(StatusCodes.BAD_REQUEST)
-                .json(JsonMessage.convert(AuthenticationTranslations.NOT_ENOUGH_DATA, MessageType.WARNING));
+                .json(
+                    JsonMessage.convert(
+                        AuthenticationTranslations.NOT_ENOUGH_DATA,
+                        MessageType.WARNING
+                    )
+                );
 
         try {
             const user: User = await User.query().findOne({ email });
@@ -24,7 +29,10 @@ export default class ForgotPasswordRequestHandler extends RequestHandler {
                 return response
                     .status(StatusCodes.NOT_FOUND)
                     .json(
-                        JsonMessage.convert(AuthenticationTranslations.COULD_NOT_FIND_SUCH_USER, MessageType.WARNING)
+                        JsonMessage.convert(
+                            AuthenticationTranslations.COULD_NOT_FIND_SUCH_USER,
+                            MessageType.WARNING
+                        )
                     );
 
             // Spam protection
@@ -71,7 +79,7 @@ export default class ForgotPasswordRequestHandler extends RequestHandler {
                 .status(StatusCodes.OK)
                 .json(
                     JsonMessage.convert(
-                        'Slaptažodžio atstatymo patvirtinimas sėkmingai išsiųstas į nurodytą el. paštą.',
+                        AuthenticationTranslations.RESET_PASSWORD_REQUEST_HAS_BEEN_SUCCESSFULY_SENT,
                         MessageType.WARNING
                     )
                 );

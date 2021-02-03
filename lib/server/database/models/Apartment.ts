@@ -1,17 +1,17 @@
-import { Model } from 'objection';
 import Character from './Character';
 import Inventory from './Inventory';
+import { Model } from 'objection';
 
-export default class Business extends Model {
+export default class Apartment extends Model {
     public id!: number;
     public price!: number;
     public locked!: boolean;
     public location!: string;
-    public inventories?: Inventory[];
+    public inventories?: Array<Inventory>;
     public character?: Character;
 
     public static get tableName(): string {
-        return 'businesses';
+        return 'apartments';
     }
 
     public static get idColumn(): string {
@@ -24,10 +24,10 @@ export default class Business extends Model {
                 relation: Model.ManyToManyRelation,
                 modelClass: Character,
                 join: {
-                    from: 'businesses.id',
+                    from: 'apartments.id',
                     through: {
-                        from: 'character_businesses.businessId',
-                        to: 'character_businesses.characterId',
+                        from: 'character_apartments.apartmentId',
+                        to: 'character_apartments.characterId',
                     },
                     to: 'characters.id',
                 },

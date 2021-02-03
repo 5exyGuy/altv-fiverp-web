@@ -1,13 +1,15 @@
-import { Model } from 'objection';
 import Character from './Character';
+import { Model } from 'objection';
 
-export default class Contact extends Model {
+export default class Message extends Model {
     public id!: number;
-    public holder!: Character;
-    public contact!: Character;
+    public content!: string;
+    public date!: Date;
+    public sender!: Character;
+    public receiver!: Character;
 
     public static get tableName(): string {
-        return 'contacts';
+        return 'messages';
     }
 
     public static get idColumn(): string {
@@ -16,19 +18,19 @@ export default class Contact extends Model {
 
     public static relationMappings() {
         return {
-            holder: {
+            sender: {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Character,
                 join: {
-                    from: 'contacts.holderId',
+                    from: 'messages.senderId',
                     to: 'characters.id',
                 },
             },
-            contact: {
+            receiver: {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Character,
                 join: {
-                    from: 'contacts.contactId',
+                    from: 'messages.receiverId',
                     to: 'characters.id',
                 },
             },

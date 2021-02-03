@@ -1,15 +1,17 @@
-import { Model } from 'objection';
 import User from './User';
+import { Model } from 'objection';
 
-export default class Session extends Model {
+export default class LoginHistory extends Model {
     public id!: number;
-    public expires!: Date;
-    public sessionToken!: string;
-    public accessToken!: string;
+    public date!: Date;
+    public ip!: string;
+    public socialId!: string;
+    public hwidExHash!: string;
+    public hwidHash!: string;
     public user!: User;
 
     public static get tableName(): string {
-        return 'sessions';
+        return 'login_histories';
     }
 
     public static get idColumn(): string {
@@ -22,7 +24,7 @@ export default class Session extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: User,
                 join: {
-                    from: 'sessions.userId',
+                    from: 'login_histories.userId',
                     to: 'users.id',
                 },
             },

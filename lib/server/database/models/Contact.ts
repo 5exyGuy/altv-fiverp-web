@@ -1,36 +1,34 @@
-import { Model } from 'objection';
 import Character from './Character';
+import { Model, RelationMappings } from 'objection';
 
-export default class Message extends Model {
+export default class Contact extends Model {
     public id!: number;
-    public content!: string;
-    public date!: Date;
-    public sender!: Character;
-    public receiver!: Character;
+    public holder!: Character;
+    public contact!: Character;
 
     public static get tableName(): string {
-        return 'messages';
+        return 'contacts';
     }
 
     public static get idColumn(): string {
         return 'id';
     }
 
-    public static relationMappings() {
+    public static relationMappings(): RelationMappings {
         return {
-            sender: {
+            holder: {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Character,
                 join: {
-                    from: 'messages.senderId',
+                    from: 'contacts.holderId',
                     to: 'characters.id',
                 },
             },
-            receiver: {
+            contact: {
                 relation: Model.BelongsToOneRelation,
                 modelClass: Character,
                 join: {
-                    from: 'messages.receiverId',
+                    from: 'contacts.contactId',
                     to: 'characters.id',
                 },
             },

@@ -1,8 +1,8 @@
-import { Model } from 'objection';
 import Character from './Character';
 import Inventory from './Inventory';
+import { Model } from 'objection';
 
-export default class Apartment extends Model {
+export default class House extends Model {
     public id!: number;
     public price!: number;
     public locked!: boolean;
@@ -11,7 +11,7 @@ export default class Apartment extends Model {
     public character?: Character;
 
     public static get tableName(): string {
-        return 'apartments';
+        return 'houses';
     }
 
     public static get idColumn(): string {
@@ -24,10 +24,10 @@ export default class Apartment extends Model {
                 relation: Model.ManyToManyRelation,
                 modelClass: Character,
                 join: {
-                    from: 'apartments.id',
+                    from: 'houses.id',
                     through: {
-                        from: 'character_apartments.apartmentId',
-                        to: 'character_apartments.characterId',
+                        from: 'character_houses.houseId',
+                        to: 'character_houses.characterId',
                     },
                     to: 'characters.id',
                 },

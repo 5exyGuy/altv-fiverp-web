@@ -1,10 +1,11 @@
-import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ResetPasswordRequest, User } from '../../database/entities';
+import { ResetPasswordRequest, User } from '../../database/models';
 import RequestHandler from '../RequestHandler';
 import bcrypt from 'bcryptjs';
 import { JsonMessage, MessageType } from '../JsonMessage';
 import { AuthenticationTranslations } from '../../../../translations/Authentication';
+import { CommonTranslations } from '../../../../translations/Common';
 
 export default class ResetPasswordRequestHandler extends RequestHandler {
     public async handle(request: NextApiRequest, response: NextApiResponse): Promise<void> {
@@ -13,7 +14,12 @@ export default class ResetPasswordRequestHandler extends RequestHandler {
         if (!email || !token || !password)
             return response
                 .status(StatusCodes.BAD_REQUEST)
-                .json(JsonMessage.convert(AuthenticationTranslations.NOT_ENOUGH_DATA, MessageType.WARNING));
+                .json(
+                    JsonMessage.convert(
+                        AuthenticationTranslations.NOT_ENOUGH_DATA,
+                        MessageType.WARNING
+                    )
+                );
 
         try {
             const user: User = await User.query().findOne({ email });
@@ -21,7 +27,10 @@ export default class ResetPasswordRequestHandler extends RequestHandler {
                 return response
                     .status(StatusCodes.BAD_REQUEST)
                     .json(
-                        JsonMessage.convert(AuthenticationTranslations.COULD_NOT_FIND_SUCH_USER, MessageType.WARNING)
+                        JsonMessage.convert(
+                            AuthenticationTranslations.COULD_NOT_FIND_SUCH_USER,
+                            MessageType.WARNING
+                        )
                     );
 
             const resetPasswordRequest: ResetPasswordRequest = await User.relatedQuery<ResetPasswordRequest>(
@@ -41,15 +50,22 @@ export default class ResetPasswordRequestHandler extends RequestHandler {
 
             const hashedPassword: string = await bcrypt.hash(password, 10);
             await User.query().for(user.id).patch({ password: hashedPassword });
-            await User.relatedQuery<ResetPasswordRequest>('resetPasswordRequests').for(user.id).delete();
+            await User.relatedQuery<ResetPasswordRequest>('resetPasswordRequests')
+                .for(user.id)
+                .delete();
 
             response
                 .status(StatusCodes.OK)
-                .json(JsonMessage.convert('Slaptažodis sėkmingai atstatytas!', MessageType.SUCCESS));
+                .json(
+                    JsonMessage.convert(
+                        AuthenticationTranslations.RESET_PASSWORD_REQUEST_HAS_BEEN_SUCCESSFULY_COMPLETED,
+                        MessageType.SUCCESS
+                    )
+                );
         } catch (error) {
             response
                 .status(StatusCodes.INTERNAL_SERVER_ERROR)
-                .json(JsonMessage.convert(AuthenticationTranslations.SERVER_ERROR, MessageType.ERROR));
+                .json(JsonMessage.convert(CommonTranslations.SERVER_ERROR, MessageType.ERROR));
         }
     }
 }

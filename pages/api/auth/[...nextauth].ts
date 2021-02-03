@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import NextAuth, { InitOptions } from 'next-auth';
 import Providers from 'next-auth/providers';
-import Database from '../../../lib/server/database/Database';
 import bcrypt from 'bcryptjs';
 import DatabaseAdapter from '../../../lib/server/database/DatabaseAdapter';
-import { User } from '../../../lib/server/database/entities';
+import { User } from '../../../lib/server/database/models';
+import Database from '../../../lib/server/database/Database';
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -59,26 +59,25 @@ const options: InitOptions = {
 
                 if (!username || !password) return Promise.resolve(null);
 
-                const user: User = await User.query().findOne({ username });
+                try {
+                    const database: Database = Database.getInstance();
+                    if (!database.isConnected) database.connect();
 
-                if (!user) return Promise.reject(new Error('error message'));
-                // if (!user.verified) return Promise.resolve(null);
-                // if (!(await bcrypt.compare(password, user.password))) return Promise.resolve(null);
+                    const user: User = await User.query().findOne({ username });
 
-                return Promise.resolve({ id: user.id, name: user.username, email: user.email });
+                    if (!user) throw '/auth/login?error=COULD_NOT_FIND_SUCH_USER';
+                    if (!user.verified) throw '/auth/login?error=USER_IS_NOT_VERIFIED';
+                    if (!(await bcrypt.compare(password, user.password)))
+                        throw '/auth/login?error=PASSWORD_IS_NOT_CORRECT';
 
-                // const user = { id: 1, name: 'J Smith', email: 'jsmith@example.com' };
-
-                // if (user) {
-                //     // Any object returned will be saved in `user` property of the JWT
-                //     return Promise.resolve(user);
-                // } else {
-                //     // If you return null or false then the credentials will be rejected
-                //     return Promise.resolve(null);
-                //     // You can also Reject this callback with an Error or with a URL:
-                //     // return Promise.reject(new Error('error message')) // Redirect to error page
-                //     // return Promise.reject('/path/to/redirect')        // Redirect to a URL
-                // }
+                    return { id: user.id, name: user.username, email: user.email };
+                } catch (error) {
+                    const url: string =
+                        typeof error === 'string'
+                            ? (error as string)
+                            : '/auth/login?error=SERVER_ERROR';
+                    throw url;
+                }
             },
         }),
     ],
@@ -130,9 +129,9 @@ const options: InitOptions = {
     // https://next-auth.js.org/configuration/pages
     pages: {
         signIn: '/auth/login', // Displays signin buttons
-        signOut: '/auth/logout', // Displays form with sign out button
-        error: '/auth/error', // Error code passed in query string as ?error=
-        verifyRequest: '/auth/login/verify', // Used for check email page
+        // signOut: '/auth/logout', // Displays form with sign out button
+        // error: '/auth/error', // Error code passed in query string as ?error=
+        // verifyRequest: '/auth/login/verify', // Used for check email page
         newUser: '/', // If set, new users will be directed here on first sign in
     },
 
@@ -164,4 +163,5 @@ const options: InitOptions = {
     debug: true,
 };
 
-export default (request: NextApiRequest, response: NextApiResponse) => NextAuth(request, response, options);
+export default (request: NextApiRequest, response: NextApiResponse) =>
+    NextAuth(request, response, options);

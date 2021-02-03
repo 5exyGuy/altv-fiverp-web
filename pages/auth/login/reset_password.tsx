@@ -51,7 +51,12 @@ export default function Reset(): JSX.Element {
     };
 
     return (
-        <MainLayout headerTitle="Slaptažodžio atstatymas" session={session} loading={loading} protected={Boolean(!valid || session)}>
+        <MainLayout
+            headerTitle="Slaptažodžio atstatymas"
+            session={session}
+            loading={loading}
+            protected={Boolean(!valid || session)}
+        >
             <Row justify="center" align="middle">
                 <Col span={10} style={{ margin: '10% 0' }}>
                     {visible ? (
@@ -59,10 +64,10 @@ export default function Reset(): JSX.Element {
                             status="success"
                             subTitle="Slaptažodis sėkmingai atstatytas. Dabar galite prisijungti prie sistemos."
                             extra={[
-                                <Link href="/auth/login">
+                                <Link key="login" href="/auth/login">
                                     <Button key="login">Prisijungti</Button>
                                 </Link>,
-                                <Link href="/">
+                                <Link key="home" href="/">
                                     <Button key="home">Grįžti į pagrindinį</Button>
                                 </Link>,
                             ]}

@@ -1,4 +1,4 @@
-import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession, Session } from 'next-auth/client';
 import { AuthenticationTranslations } from '../../../../translations/Authentication';
@@ -15,7 +15,7 @@ export default class LoggedInRequestHandler extends RequestHandler {
                 .json(JsonMessage.convert(AuthenticationTranslations.ALREADY_LOGGED_IN, MessageType.ERROR));
         else {
             this.setNextHandlerMeta('session', session);
-            super.next(request, response);
+            await super.next(request, response);
         }
     }
 }

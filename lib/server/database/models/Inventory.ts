@@ -1,5 +1,5 @@
-import { Model } from 'objection';
 import Item from './Item';
+import { Model, RelationMappings } from 'objection';
 
 export default class Inventory extends Model {
     public id!: number;
@@ -13,7 +13,7 @@ export default class Inventory extends Model {
         return 'id';
     }
 
-    public static relationMappings() {
+    public static relationMappings(): RelationMappings {
         return {
             character: {
                 relation: Model.HasManyRelation,

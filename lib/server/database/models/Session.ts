@@ -1,14 +1,15 @@
-import { Model } from 'objection';
 import User from './User';
+import { Model } from 'objection';
 
-export default class VerificationRequest extends Model {
+export default class Session extends Model {
     public id!: number;
-    public token!: string;
     public expires!: Date;
+    public sessionToken!: string;
+    public accessToken!: string;
     public user!: User;
 
     public static get tableName(): string {
-        return 'verification_requests';
+        return 'sessions';
     }
 
     public static get idColumn(): string {
@@ -21,7 +22,7 @@ export default class VerificationRequest extends Model {
                 relation: Model.BelongsToOneRelation,
                 modelClass: User,
                 join: {
-                    from: 'verification_requests.userId',
+                    from: 'sessions.userId',
                     to: 'users.id',
                 },
             },

@@ -1,5 +1,5 @@
-import { Model } from 'objection';
 import Character from './Character';
+import { Model } from 'objection';
 
 export default class Faction extends Model {
     public id!: number;

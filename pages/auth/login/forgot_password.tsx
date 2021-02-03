@@ -1,16 +1,17 @@
-import { Alert, Button, Col, Form, Input, Modal, Result, Row } from 'antd';
+import { Alert, Button, Col, Form, Input, Result, Row } from 'antd';
 import MainLayout from '../../../components/MainLayout';
 import { useSession } from 'next-auth/client';
-import Router, { NextRouter, useRouter } from 'next/router';
 import { MailOutlined } from '@ant-design/icons';
 import { StatusCodes } from 'http-status-codes';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { MessageType } from '../../../lib/server/request/JsonMessage';
+import { NextRouter, useRouter } from 'next/router';
 
 type ForgotData = { email: string };
 
 export default function Forgot(): JSX.Element {
+    const router: NextRouter = useRouter();
     const [session, loading] = useSession();
     const [visible, setVisible] = useState(false);
     const [message, setMessage] = useState('');
@@ -18,10 +19,10 @@ export default function Forgot(): JSX.Element {
 
     useEffect(() => {
         const check = async () => {
-            if (!loading && session) await Router.push('/');
+            if (!loading && session) await router.push('/');
         };
         check();
-    });
+    }, [loading, session]);
 
     const showMessage = (content: string, type: MessageType) => {
         setMessage(content);
@@ -45,7 +46,7 @@ export default function Forgot(): JSX.Element {
                             status="success"
                             subTitle="Slaptažodžio atstatymo patvirtinimas sėkmingai išsiųstas į nurodytą elektroninį paštą."
                             extra={[
-                                <Link href="/">
+                                <Link key="home" href="/">
                                     <Button key="home">Grįžti į pagrindinį</Button>
                                 </Link>,
                             ]}
@@ -53,11 +54,18 @@ export default function Forgot(): JSX.Element {
                     ) : (
                         <Form onFinish={onFinish}>
                             <Alert
-                                className={message.length > 0 ? 'animate__animated animate__fadeIn' : 'animate__animated animate__fadeOut'}
+                                className={
+                                    message.length > 0
+                                        ? 'animate__animated animate__fadeIn'
+                                        : 'animate__animated animate__fadeOut'
+                                }
                                 message={message}
-                                type={messageType as 'success' | 'info' | 'warning' | 'error'}
+                                type={messageType as MessageType}
                             />
-                            <Form.Item name="email" rules={[{ required: true, message: 'Prašome įvesti elektroninio pašto adresą!' }]}>
+                            <Form.Item
+                                name="email"
+                                rules={[{ required: true, message: 'Prašome įvesti elektroninio pašto adresą!' }]}
+                            >
                                 <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="El. paštas" />
                             </Form.Item>
 
