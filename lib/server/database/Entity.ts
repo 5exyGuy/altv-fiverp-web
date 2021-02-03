@@ -1,6 +1,10 @@
-export default abstract class Entity {
+import { Model } from 'objection';
+
+export default abstract class Entity<T extends Model> {
     private readonly _updateFields: Map<string, any>;
     private readonly _updateRelationFields: Map<string, any>;
+
+    private _entityModel: T;
 
     protected constructor() {
         this._updateFields = new Map();

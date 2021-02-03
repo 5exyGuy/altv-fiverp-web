@@ -1,6 +1,6 @@
 import { Model } from 'objection';
 
-export default class Skill extends Model {
+export default class SkillModel extends Model {
     public id!: number;
     public name!: string;
     public hash!: string;

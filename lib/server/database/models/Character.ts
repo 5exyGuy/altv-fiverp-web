@@ -10,7 +10,7 @@ import User from './User';
 import Vehicle from './Vehicle';
 import { Model, RelationMappings } from 'objection';
 
-export default class Character extends Model {
+export default class CharacterModel extends Model {
     public id!: number;
     public firstName!: string;
     public lastName!: string;
@@ -23,6 +23,7 @@ export default class Character extends Model {
     public arrestTime?: number;
     public dimension!: number;
     public lastPosition!: string;
+    public lastRotation!: string;
     public user!: User;
     public apartments?: Array<Apartment>;
     public businesses?: Array<Business>;

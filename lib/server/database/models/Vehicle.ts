@@ -1,6 +1,6 @@
 import { Model } from 'objection';
 
-export default class Vehicle extends Model {
+export default class VehicleModel extends Model {
     public id!: number;
     public name!: string;
     public hash!: string;

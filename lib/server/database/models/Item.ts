@@ -1,6 +1,6 @@
 import { Model } from 'objection';
 
-export default class Item extends Model {
+export default class ItemModel extends Model {
     public id!: number;
     public name!: string;
     public hash!: string;

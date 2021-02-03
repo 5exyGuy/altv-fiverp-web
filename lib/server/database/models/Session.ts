@@ -1,7 +1,7 @@
 import User from './User';
-import { Model } from 'objection';
+import { Model, RelationMappings } from 'objection';
 
-export default class Session extends Model {
+export default class SessionModel extends Model {
     public id!: number;
     public expires!: Date;
     public sessionToken!: string;
@@ -16,7 +16,7 @@ export default class Session extends Model {
         return 'id';
     }
 
-    public static relationMappings() {
+    public static relationMappings(): RelationMappings {
         return {
             user: {
                 relation: Model.BelongsToOneRelation,

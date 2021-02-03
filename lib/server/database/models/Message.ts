@@ -1,7 +1,7 @@
 import Character from './Character';
-import { Model } from 'objection';
+import { Model, RelationMappings } from 'objection';
 
-export default class Message extends Model {
+export default class MessageModel extends Model {
     public id!: number;
     public content!: string;
     public date!: Date;
@@ -16,7 +16,7 @@ export default class Message extends Model {
         return 'id';
     }
 
-    public static relationMappings() {
+    public static relationMappings(): RelationMappings {
         return {
             sender: {
                 relation: Model.BelongsToOneRelation,

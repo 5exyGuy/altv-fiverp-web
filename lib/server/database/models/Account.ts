@@ -1,7 +1,7 @@
 import User from './User';
-import { Model } from 'objection';
+import { Model, RelationMappings } from 'objection';
 
-export default class Account extends Model {
+export default class AccountModel extends Model {
     public id!: number;
     public compoundId!: string;
     public providerType!: string;
@@ -20,7 +20,7 @@ export default class Account extends Model {
         return 'id';
     }
 
-    public static relationMappings() {
+    public static relationMappings(): RelationMappings {
         return {
             user: {
                 relation: Model.BelongsToOneRelation,

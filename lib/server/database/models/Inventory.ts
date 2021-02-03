@@ -1,7 +1,7 @@
 import Item from './Item';
 import { Model, RelationMappings } from 'objection';
 
-export default class Inventory extends Model {
+export default class InventoryModel extends Model {
     public id!: number;
     public items?: Array<Item>;
 

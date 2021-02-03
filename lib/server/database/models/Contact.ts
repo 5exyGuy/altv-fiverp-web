@@ -1,7 +1,7 @@
 import Character from './Character';
 import { Model, RelationMappings } from 'objection';
 
-export default class Contact extends Model {
+export default class ContactModel extends Model {
     public id!: number;
     public holder!: Character;
     public contact!: Character;

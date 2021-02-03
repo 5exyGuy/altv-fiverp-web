@@ -8,7 +8,7 @@ import Account from './Account';
 import { Model, RelationMappings } from 'objection';
 import { UserRole } from '../../../shared/enums/UserRole';
 
-export default class User extends Model {
+export default class UserModel extends Model {
     public id!: number;
     public username!: string;
     public name?: string;

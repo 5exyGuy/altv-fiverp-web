@@ -1,7 +1,7 @@
 import User from './User';
-import { Model } from 'objection';
+import { Model, RelationMappings } from 'objection';
 
-export default class LoginHistory extends Model {
+export default class LoginHistoryModel extends Model {
     public id!: number;
     public date!: Date;
     public ip!: string;
@@ -18,7 +18,7 @@ export default class LoginHistory extends Model {
         return 'id';
     }
 
-    public static relationMappings() {
+    public static relationMappings(): RelationMappings {
         return {
             user: {
                 relation: Model.BelongsToOneRelation,

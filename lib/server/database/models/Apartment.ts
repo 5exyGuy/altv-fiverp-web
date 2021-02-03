@@ -1,8 +1,8 @@
 import Character from './Character';
 import Inventory from './Inventory';
-import { Model } from 'objection';
+import { Model, RelationMappings } from 'objection';
 
-export default class Apartment extends Model {
+export default class ApartmentModel extends Model {
     public id!: number;
     public price!: number;
     public locked!: boolean;
@@ -18,7 +18,7 @@ export default class Apartment extends Model {
         return 'id';
     }
 
-    public static relationMappings() {
+    public static relationMappings(): RelationMappings {
         return {
             character: {
                 relation: Model.ManyToManyRelation,

@@ -1,7 +1,7 @@
 import Character from './Character';
-import { Model } from 'objection';
+import { Model, RelationMappings } from 'objection';
 
-export default class Faction extends Model {
+export default class FactionModel extends Model {
     public id!: number;
     public name!: string;
     public createdAt!: Date;
@@ -16,7 +16,7 @@ export default class Faction extends Model {
         return 'id';
     }
 
-    public static relationMappings() {
+    public static relationMappings(): RelationMappings {
         return {
             character: {
                 relation: Model.BelongsToOneRelation,

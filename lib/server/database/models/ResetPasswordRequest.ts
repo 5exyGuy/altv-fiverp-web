@@ -1,7 +1,7 @@
 import User from './User';
-import { Model } from 'objection';
+import { Model, RelationMappings } from 'objection';
 
-export default class ResetPasswordRequest extends Model {
+export default class ResetPasswordRequestModel extends Model {
     public id!: number;
     public token!: string;
     public expires!: Date;
@@ -15,7 +15,7 @@ export default class ResetPasswordRequest extends Model {
         return 'id';
     }
 
-    public static relationMappings() {
+    public static relationMappings(): RelationMappings {
         return {
             user: {
                 relation: Model.BelongsToOneRelation,
