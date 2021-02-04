@@ -1,14 +1,28 @@
 import { Model } from 'objection';
+import { Builder, IBuilder } from '../utilities/Builder';
+import { EntityValidate } from './EntityValidate';
 
-export default abstract class Entity<T extends Model> {
+export interface IEntity {
+    id?: number;
+}
+
+export abstract class Entity<TModelConstructor extends typeof Model, TModel extends Model, T extends IEntity> {
     private readonly _updateFields: Map<string, any>;
     private readonly _updateRelationFields: Map<string, any>;
 
-    private _entityModel: T;
+    public entityModelConstructor: TModelConstructor;
+    public entityModel: TModel;
 
-    protected constructor() {
+    protected constructor(builder?: IBuilder<T>) {
         this._updateFields = new Map();
         this._updateRelationFields = new Map();
+
+        if (builder) {
+            const entity: T = builder.build();
+            for (const prop in entity) {
+                this[<string>prop] = entity[prop];
+            }
+        }
     }
 
     protected setUpdateField(fieldName: string, value: any): void {
@@ -35,5 +49,15 @@ export default abstract class Entity<T extends Model> {
     protected updateLocalRelationFields(fields?: { [key: string]: any }): void {
         if (!fields) fields = Object.fromEntries(this._updateRelationFields);
         for (const fieldName in fields) this[`_${fieldName}`] = fields[fieldName];
+    }
+
+    public static Builder(): IBuilder<IEntity> {
+        return Builder<IEntity>();
+    }
+
+    public static get validate(): EntityValidate {
+        return {
+            id: { type: 'number' },
+        };
     }
 }

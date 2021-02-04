@@ -1,4 +1,20 @@
-import Entity from '../Entity';
+import { Entity, IEntity } from '../Entity';
 import HouseModel from '../models/House';
+import { Builder, IBuilder } from '../../utilities/Builder';
 
-export default class House extends Entity<HouseModel> {}
+interface IHouse extends IEntity {
+    price: number;
+    locked: boolean;
+    location: string;
+}
+
+export default class House extends Entity<typeof HouseModel, HouseModel, IHouse> {
+    public constructor(builder: IBuilder<IHouse>) {
+        super(builder);
+        this.entityModelConstructor = HouseModel;
+    }
+
+    public static Builder(): IBuilder<IHouse> {
+        return Builder<IHouse>();
+    }
+}

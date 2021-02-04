@@ -1,4 +1,16 @@
-import Entity from '../Entity';
+import { Entity, IEntity } from '../Entity';
 import InventoryModel from '../models/Inventory';
+import { Builder, IBuilder } from '../../utilities/Builder';
 
-export default class Inventory extends Entity<InventoryModel> {}
+type IInventory = IEntity;
+
+export default class Inventory extends Entity<typeof InventoryModel, InventoryModel, IInventory> {
+    public constructor(builder: IBuilder<IInventory>) {
+        super(builder);
+        this.entityModelConstructor = InventoryModel;
+    }
+
+    public static Builder(): IBuilder<IInventory> {
+        return Builder<IInventory>();
+    }
+}
